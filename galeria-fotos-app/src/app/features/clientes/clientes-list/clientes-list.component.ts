@@ -64,8 +64,8 @@ export class ClientesListComponent implements OnInit {
   }
 
   deleteCliente(cliente: Cliente): void {
-    if (!this.session.canWrite) {
-      this.error = 'Esta accion requiere iniciar sesion.';
+    if (!this.session.isAdmin) {
+      this.error = 'No tenes permisos para realizar esta accion.';
       return;
     }
 

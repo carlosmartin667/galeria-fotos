@@ -5,6 +5,7 @@ export interface Pedido {
   fotoIds?: string[];
   estado?: string;
   total?: number;
+  moneda?: string;
   fechaCreacionUtc?: string;
 }
 

@@ -68,8 +68,8 @@ export class FotosListComponent implements OnInit {
   }
 
   deleteFoto(foto: Foto): void {
-    if (!this.session.canWrite) {
-      this.error = 'Esta accion requiere iniciar sesion.';
+    if (!this.session.isAdmin) {
+      this.error = 'No tenes permisos para realizar esta accion.';
       return;
     }
 

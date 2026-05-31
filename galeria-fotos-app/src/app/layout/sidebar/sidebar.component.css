@@ -1,13 +1,14 @@
 .app-sidebar {
   position: sticky;
-  top: 0;
+  top: 92px;
   display: flex;
   flex-direction: column;
-  width: 280px;
-  min-height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - 120px);
   padding: 28px 0;
   background: #111;
   color: #fff;
+  border-radius: 8px;
 }
 
 .app-brand {
@@ -44,6 +45,7 @@
 @media (max-width: 991px) {
   .app-sidebar {
     position: relative;
+    top: auto;
     width: 100%;
     min-height: auto;
   }

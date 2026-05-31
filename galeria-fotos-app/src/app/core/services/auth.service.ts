@@ -20,13 +20,7 @@ export class AuthService {
   }
 
   register(payload: RegisterRequest): Observable<LoginResponse> {
-    return this.api.post<LoginResponse>('/Auth/register', payload).pipe(
-      tap((response) => {
-        if (response.token) {
-          this.session.setAuthenticated(response);
-        }
-      })
-    );
+    return this.api.post<LoginResponse>('/Auth/register', payload);
   }
 
   enterGuestMode(): void {
@@ -37,11 +31,11 @@ export class AuthService {
     this.session.clear();
   }
 
-  private requireToken(response: LoginResponse): LoginResponse {
+  private requireToken(response: LoginResponse): LoginResponse & { token: string } {
     if (!response.token) {
       throw new Error('La API no devolvio un token de acceso.');
     }
 
-    return response;
+    return { ...response, token: response.token };
   }
 }

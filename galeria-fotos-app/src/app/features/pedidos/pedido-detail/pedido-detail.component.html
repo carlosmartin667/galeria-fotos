@@ -16,7 +16,7 @@
       <div class="col-md-6"><strong>Estado:</strong> {{ item.estado || '-' }}</div>
       <div class="col-md-6"><strong>Evento:</strong> <span class="text-break">{{ item.eventoId }}</span></div>
       <div class="col-md-6"><strong>Cliente:</strong> <span class="text-break">{{ item.clienteId }}</span></div>
-      <div class="col-md-6"><strong>Total:</strong> {{ item.total ?? 0 | currency }}</div>
+      <div class="col-md-6"><strong>Total:</strong> {{ item.total ?? 0 | currency:(item.moneda || 'USD') }}</div>
       <div class="col-md-6"><strong>Fecha:</strong> {{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</div>
       <div class="col-12">
         <strong>Fotos:</strong>

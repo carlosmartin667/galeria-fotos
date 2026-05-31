@@ -1,6 +1,6 @@
 import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
 import { ClientesService } from '../../core/services/clientes.service';
@@ -27,26 +27,55 @@ export class DashboardComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
   private readonly eventosService = inject(EventosService);
   private readonly pedidosService = inject(PedidosService);
+  private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
   loading = false;
   error = '';
-  cards: SummaryCard[] = [
-    { label: 'Clientes', value: '-', link: '/clientes', icon: 'fas fa-users' },
-    { label: 'Eventos', value: '-', link: '/eventos', icon: 'fas fa-calendar-alt' },
-    { label: 'Fotos', value: 'Por evento', link: '/fotos/evento', icon: 'fas fa-images' },
-    { label: 'Pedidos', value: '-', link: '/pedidos', icon: 'fas fa-shopping-cart' }
-  ];
+  message = '';
+  cards: SummaryCard[] = [];
 
   ngOnInit(): void {
+    this.message = this.route.snapshot.queryParamMap.get('message') ?? '';
+    this.load();
+  }
+
+  get quickLinks(): SummaryCard[] {
+    if (this.session.isAdmin) {
+      return [
+        { label: 'Clientes', value: '', link: '/clientes', icon: 'fas fa-users' },
+        { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
+        { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
+      ];
+    }
+
+    if (this.session.isAuthenticated) {
+      return [
+        { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
+        { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
+        { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
+      ];
+    }
+
+    return [
+      { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
+      { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+      { label: 'Perfil publico', value: '', link: '/admin/perfil-publico', icon: 'fas fa-address-card' },
+      { label: 'Iniciar sesion', value: '', link: '/login', icon: 'fas fa-sign-in-alt' }
+    ];
+  }
+
+  load(): void {
     this.loading = true;
     this.error = '';
 
     forkJoin({
-      clientes: this.clientesService.list().pipe(catchError((error: unknown) => this.fallback(error))),
+      clientes: this.session.isAdmin ? this.clientesService.list().pipe(catchError((error: unknown) => this.fallback(error))) : of([]),
       eventos: this.eventosService.list().pipe(catchError((error: unknown) => this.fallback(error))),
-      pedidos: this.pedidosService.list().pipe(catchError((error: unknown) => this.fallback(error)))
+      pedidos: this.session.isAuthenticated ? this.pedidosService.list().pipe(catchError((error: unknown) => this.fallback(error))) : of([])
     }).pipe(
       finalize(() => {
         this.loading = false;
@@ -54,15 +83,28 @@ export class DashboardComponent implements OnInit {
       })
     ).subscribe({
       next: ({ clientes, eventos, pedidos }) => {
-        this.setCard('Clientes', clientes.length);
-        this.setCard('Eventos', eventos.length);
-        this.setCard('Pedidos', pedidos.length);
+        this.cards = this.buildCards(clientes.length, eventos.length, pedidos.length);
       }
     });
   }
 
-  private setCard(label: string, value: number): void {
-    this.cards = this.cards.map((card) => card.label === label ? { ...card, value } : card);
+  private buildCards(clientes: number, eventos: number, pedidos: number): SummaryCard[] {
+    const cards: SummaryCard[] = [
+      { label: 'Eventos', value: eventos, link: '/eventos', icon: 'fas fa-calendar-alt' },
+      { label: 'Fotos', value: 'Por evento', link: '/fotos/evento', icon: 'fas fa-images' },
+      { label: 'Perfil publico', value: 'Visible', link: '/admin/perfil-publico', icon: 'fas fa-address-card' }
+    ];
+
+    if (this.session.isAuthenticated) {
+      cards.push({ label: this.session.isAdmin ? 'Pedidos' : 'Mis pedidos', value: pedidos, link: '/pedidos', icon: 'fas fa-shopping-cart' });
+      cards.push({ label: this.session.isAdmin ? 'Favoritos' : 'Mis favoritos', value: 'Ver', link: '/favoritos', icon: 'fas fa-heart' });
+    }
+
+    if (this.session.isAdmin) {
+      cards.unshift({ label: 'Clientes', value: clientes, link: '/clientes', icon: 'fas fa-users' });
+    }
+
+    return cards;
   }
 
   private captureError(error: unknown): void {

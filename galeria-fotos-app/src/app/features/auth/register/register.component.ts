@@ -50,15 +50,9 @@ export class RegisterComponent {
       email: raw.email.trim(),
       password: raw.password
     }).subscribe({
-      next: (response) => {
+      next: () => {
         this.loading = false;
         this.cdr.markForCheck();
-
-        if (response.token) {
-          void this.router.navigate(['/dashboard']);
-          return;
-        }
-
         void this.router.navigate(['/login'], { queryParams: { message: 'Cuenta creada. Ya podes iniciar sesion.' } });
       },
       error: (error: unknown) => {

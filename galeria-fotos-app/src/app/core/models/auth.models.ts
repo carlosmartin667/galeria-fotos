@@ -10,7 +10,7 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
-  token: string;
+  token?: string;
   usuario?: {
     id?: string;
     nombre?: string;
@@ -20,12 +20,17 @@ export interface LoginResponse {
   nombre?: string;
   email?: string;
   rol?: string;
+  userId?: string;
+  id?: string;
 }
 
 export interface CurrentSession {
   token: string | null;
   guestMode: boolean;
+  userId?: string;
   nombre?: string;
   email?: string;
   rol?: string;
 }
+
+export type AppRole = 'Admin' | 'Usuario' | 'Invitado';

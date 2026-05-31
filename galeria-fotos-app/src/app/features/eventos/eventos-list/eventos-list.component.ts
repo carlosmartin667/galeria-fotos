@@ -50,8 +50,8 @@ export class EventosListComponent implements OnInit {
   }
 
   deleteEvento(evento: Evento): void {
-    if (!this.session.canWrite) {
-      this.error = 'Esta accion requiere iniciar sesion.';
+    if (!this.session.isAdmin) {
+      this.error = 'No tenes permisos para realizar esta accion.';
       return;
     }
 

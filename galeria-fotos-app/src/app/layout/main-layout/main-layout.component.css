@@ -25,6 +25,17 @@
   padding: 34px 0 44px;
 }
 
+.app-content-grid {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.app-content {
+  min-width: 0;
+}
+
 .app-footer {
   padding: 44px 0;
   background: #050709;
@@ -76,5 +87,11 @@
 
   .app-main {
     padding: 22px 0 30px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .app-content-grid {
+    grid-template-columns: 1fr;
   }
 }

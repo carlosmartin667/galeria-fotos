@@ -4,7 +4,7 @@
       <small class="app-kicker">Fotos</small>
       <h2 class="h3 mb-0">Fotos por evento</h2>
     </div>
-    <a *ngIf="session.canWrite && eventoId" [routerLink]="['/fotos/metadata/nuevo']" [queryParams]="{ eventoId: eventoId }" class="btn btn-primary rounded-pill px-4">Crear metadata</a>
+    <a *ngIf="session.isAdmin && eventoId" [routerLink]="['/fotos/metadata']" [queryParams]="{ eventoId: eventoId }" class="btn btn-primary rounded-pill px-4">Crear metadata</a>
   </div>
 
   <div class="app-panel-body">
@@ -30,9 +30,12 @@
           <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo }}</h3>
           <p class="mb-1"><strong>Precio:</strong> {{ foto.precioUnitario ?? 0 | currency }}</p>
           <p class="mb-3"><strong>Activa:</strong> {{ foto.activa === false ? 'No' : 'Si' }}</p>
-          <div *ngIf="session.canWrite" class="app-actions">
+          <div class="app-actions">
+            <a [routerLink]="['/fotos', foto.id]" class="btn btn-sm btn-primary rounded-pill">Ver detalle</a>
+            <ng-container *ngIf="session.isAdmin">
             <a [routerLink]="['/fotos/editar', foto.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar metadata</a>
             <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteFoto(foto)">Eliminar</button>
+            </ng-container>
           </div>
         </div>
       </article>

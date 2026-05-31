@@ -1,35 +1,33 @@
-import { CanActivateChildFn, CanActivateFn, Router, UrlTree } from '@angular/router';
 import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, UrlTree } from '@angular/router';
 
+import { AppRole } from '../models/auth.models';
 import { SessionService } from '../services/session.service';
 
-function checkAccess(requiresUser = false): boolean | UrlTree {
+function checkAccess(route: ActivatedRouteSnapshot): boolean | UrlTree {
   const session = inject(SessionService);
   const router = inject(Router);
+  const requiresUser = route.data['requiresUser'] === true;
+  const roles = route.data['roles'] as AppRole[] | undefined;
 
-  if (requiresUser && session.guestMode) {
-    return router.createUrlTree(['/login'], {
-      queryParams: { message: 'Esta seccion requiere iniciar sesion.' }
-    });
-  }
-
-  if (requiresUser && !session.isAuthenticated) {
-    return router.createUrlTree(['/login'], {
-      queryParams: { message: 'Esta seccion requiere iniciar sesion.' }
-    });
-  }
-
-  if (session.canRead) {
+  if (!requiresUser && !roles?.length) {
     return true;
   }
 
-  return router.createUrlTree(['/login']);
+  if (!session.isAuthenticated) {
+    return router.createUrlTree(['/login'], {
+      queryParams: { message: 'Esta seccion requiere iniciar sesion.' }
+    });
+  }
+
+  if (roles?.length && !roles.includes(session.role)) {
+    return router.createUrlTree(['/dashboard'], {
+      queryParams: { message: 'No tenes permisos para acceder a esta seccion.' }
+    });
+  }
+
+  return true;
 }
 
-export const authGuard: CanActivateFn = (route) => {
-  return checkAccess(route.data['requiresUser'] === true);
-};
-
-export const authChildGuard: CanActivateChildFn = (route) => {
-  return checkAccess(route.data['requiresUser'] === true);
-};
+export const authGuard: CanActivateFn = (route) => checkAccess(route);
+export const authChildGuard: CanActivateChildFn = (route) => checkAccess(route);

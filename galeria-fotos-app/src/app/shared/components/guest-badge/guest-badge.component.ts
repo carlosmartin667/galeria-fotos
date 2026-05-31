@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 import { SessionService } from '../../../core/services/session.service';
@@ -6,8 +5,11 @@ import { SessionService } from '../../../core/services/session.service';
 @Component({
   selector: 'app-guest-badge',
   standalone: true,
-  imports: [NgIf],
-  template: `<span *ngIf="session.guestMode" class="badge bg-warning text-dark">Modo invitado</span>`
+  template: `
+    <span class="badge" [class.bg-warning]="!session.isAuthenticated" [class.text-dark]="!session.isAuthenticated" [class.bg-success]="session.isUser" [class.bg-primary]="session.isAdmin">
+      {{ session.displayRole }}
+    </span>
+  `
 })
 export class GuestBadgeComponent {
   readonly session = inject(SessionService);

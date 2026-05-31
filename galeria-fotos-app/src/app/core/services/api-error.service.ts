@@ -28,6 +28,14 @@ export class ApiErrorService {
       return 'Sesion expirada o esta seccion requiere iniciar sesion.';
     }
 
+    if (error.status === 403) {
+      return 'No tenes permisos para realizar esta accion.';
+    }
+
+    if (error.status === 404) {
+      return 'No se encontro el recurso solicitado.';
+    }
+
     if (error.status === 500) {
       return 'Error del servidor. Intenta nuevamente mas tarde.';
     }

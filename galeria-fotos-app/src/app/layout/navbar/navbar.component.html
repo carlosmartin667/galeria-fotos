@@ -20,18 +20,23 @@
       <div class="collapse navbar-collapse" id="appNavbar">
         <div class="navbar-nav mx-auto">
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
-          <a routerLink="/clientes" routerLinkActive="active" class="nav-item nav-link">Clientes</a>
+          <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active" class="nav-item nav-link">Clientes</a>
           <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
           <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
-          <a routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Pedidos</a>
-          <a *ngIf="session.canWrite" routerLink="/pagos" routerLinkActive="active" class="nav-item nav-link">Pagos</a>
-          <a *ngIf="session.canWrite" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Descargas</a>
+          <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
+          <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
+          <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active" class="nav-item nav-link">Pagos</a>
+          <a *ngIf="session.isAuthenticated" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Descargas</a>
+          <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
+          <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil admin</a>
+          <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
         </div>
 
         <div class="app-nav-user">
           <app-guest-badge></app-guest-badge>
-          <span class="app-nav-name">{{ session.session().email || session.session().nombre || 'Usuario' }}</span>
-          <button type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
+          <span class="app-nav-name">{{ session.email || session.nombre || 'Invitado' }}</span>
+          <button *ngIf="session.isAuthenticated" type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
+          <a *ngIf="!session.isAuthenticated" routerLink="/login" class="btn btn-primary rounded-pill py-2 px-4">Iniciar sesion</a>
         </div>
       </div>
     </nav>

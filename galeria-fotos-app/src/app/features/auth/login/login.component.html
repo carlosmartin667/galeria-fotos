@@ -11,7 +11,7 @@
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <div class="mb-3">
         <label class="form-label" for="loginEmail">Email</label>
-        <input id="loginEmail" type="email" class="form-control" formControlName="email" autocomplete="email">
+        <input id="loginEmail" type="email" class="form-control" formControlName="email" autocomplete="username">
         <small *ngIf="showError('email')" class="text-danger">Ingresa un email valido.</small>
       </div>
 

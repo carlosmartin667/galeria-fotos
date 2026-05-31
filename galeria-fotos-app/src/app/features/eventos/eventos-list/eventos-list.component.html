@@ -4,7 +4,7 @@
       <small class="app-kicker">Eventos</small>
       <h2 class="h3 mb-0">Listado</h2>
     </div>
-    <a *ngIf="session.canWrite" routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
+    <a *ngIf="session.isAdmin" routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
   </div>
 
   <div class="app-panel-body">
@@ -26,9 +26,10 @@
           </div>
 
           <div class="app-actions mt-3">
+            <a [routerLink]="['/eventos', evento.id]" class="btn btn-sm btn-primary rounded-pill">Ver detalle</a>
             <a [routerLink]="['/fotos/evento', evento.id]" class="btn btn-sm btn-outline-dark rounded-pill">Ver fotos</a>
-            <a *ngIf="session.canWrite" [routerLink]="['/eventos/editar', evento.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
-            <button *ngIf="session.canWrite" type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteEvento(evento)">Eliminar</button>
+            <a *ngIf="session.isAdmin" [routerLink]="['/eventos/editar', evento.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
+            <button *ngIf="session.isAdmin" type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteEvento(evento)">Eliminar</button>
           </div>
         </div>
       </div>

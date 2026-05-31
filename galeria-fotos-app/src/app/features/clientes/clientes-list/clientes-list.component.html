@@ -4,7 +4,7 @@
       <small class="app-kicker">Clientes</small>
       <h2 class="h3 mb-0">Listado</h2>
     </div>
-    <a *ngIf="session.canWrite" routerLink="/clientes/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo cliente</a>
+    <a *ngIf="session.isAdmin" routerLink="/clientes/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo cliente</a>
   </div>
 
   <div class="app-panel-body">
@@ -30,7 +30,7 @@
             <th>Email</th>
             <th>Telefono</th>
             <th>Documento</th>
-            <th *ngIf="session.canWrite" class="text-end">Acciones</th>
+            <th *ngIf="session.isAdmin" class="text-end">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +39,7 @@
             <td>{{ cliente.email }}</td>
             <td>{{ cliente.telefono || '-' }}</td>
             <td>{{ cliente.documento || '-' }}</td>
-            <td *ngIf="session.canWrite" class="text-end">
+            <td *ngIf="session.isAdmin" class="text-end">
               <div class="app-actions justify-content-end">
                 <a [routerLink]="['/clientes/editar', cliente.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteCliente(cliente)">Eliminar</button>

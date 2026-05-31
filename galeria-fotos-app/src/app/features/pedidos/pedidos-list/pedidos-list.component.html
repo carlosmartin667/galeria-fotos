@@ -31,7 +31,7 @@
             <td class="text-break">{{ pedido.eventoId }}</td>
             <td class="text-break">{{ pedido.clienteId }}</td>
             <td>{{ pedido.estado || '-' }}</td>
-            <td>{{ pedido.total ?? 0 | currency }}</td>
+            <td>{{ pedido.total ?? 0 | currency:(pedido.moneda || 'USD') }}</td>
             <td>{{ pedido.fechaCreacionUtc ? (pedido.fechaCreacionUtc | date:'short') : '-' }}</td>
             <td><a [routerLink]="['/pedidos', pedido.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a></td>
           </tr>
