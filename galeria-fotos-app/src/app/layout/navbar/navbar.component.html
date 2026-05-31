@@ -34,6 +34,14 @@
 
         <div class="app-nav-user">
           <app-guest-badge></app-guest-badge>
+          <button
+            type="button"
+            class="btn app-theme-toggle rounded-pill"
+            (click)="themeService.toggleTheme()"
+            [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+            <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+            <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+          </button>
           <span class="app-nav-name">{{ session.email || session.nombre || 'Invitado' }}</span>
           <button *ngIf="session.isAuthenticated" type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
           <a *ngIf="!session.isAuthenticated" routerLink="/login" class="btn btn-primary rounded-pill py-2 px-4">Iniciar sesion</a>

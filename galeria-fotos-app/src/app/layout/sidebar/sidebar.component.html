@@ -7,6 +7,17 @@
     <app-guest-badge></app-guest-badge>
   </div>
 
+  <div class="px-4 mb-3">
+    <button
+      type="button"
+      class="app-sidebar-theme"
+      (click)="themeService.toggleTheme()"
+      [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+      <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+    </button>
+  </div>
+
   <nav class="app-menu">
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
     <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>

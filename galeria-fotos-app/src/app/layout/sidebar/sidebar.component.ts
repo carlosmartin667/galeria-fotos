@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SessionService } from '../../core/services/session.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { GuestBadgeComponent } from '../../shared/components/guest-badge/guest-badge.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { GuestBadgeComponent } from '../../shared/components/guest-badge/guest-b
 })
 export class SidebarComponent {
   readonly session = inject(SessionService);
+  readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
 
   logout(): void {

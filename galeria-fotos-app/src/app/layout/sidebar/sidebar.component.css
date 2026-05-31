@@ -11,6 +11,12 @@
   border-radius: 8px;
 }
 
+:host-context(.dark-theme) .app-sidebar {
+  border: 1px solid var(--app-line);
+  background: linear-gradient(180deg, #111318, #090a0d);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .3);
+}
+
 .app-brand {
   display: inline-flex;
   gap: 4px;
@@ -20,6 +26,11 @@
   color: #fff;
   text-decoration: none;
   font-family: 'Playball', cursive;
+}
+
+:host-context(.dark-theme) .app-brand,
+:host-context(.dark-theme) .app-brand span {
+  color: #fff;
 }
 
 .app-menu {
@@ -36,10 +47,33 @@
   font-weight: 600;
 }
 
+:host-context(.dark-theme) .app-menu a {
+  color: rgba(255, 255, 255, .82);
+}
+
 .app-menu a:hover,
 .app-menu a.active {
   color: #111;
   background: var(--bs-primary);
+}
+
+.app-sidebar-theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+  min-height: 42px;
+  border: 1px solid rgba(212, 167, 98, .46);
+  border-radius: 999px;
+  background: rgba(212, 167, 98, .12);
+  color: #fff;
+  font-weight: 700;
+}
+
+.app-sidebar-theme:hover {
+  background: var(--bs-primary);
+  color: #111;
 }
 
 @media (max-width: 991px) {

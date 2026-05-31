@@ -3,6 +3,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
 import { TemplateScriptsService } from './core/template-scripts.service';
+import { ThemeService } from './core/services/theme.service';
 import { BackToTopComponent } from './shared/back-to-top/back-to-top.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 
@@ -16,11 +17,13 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly title = signal('galeria-fotos-app');
   private readonly router = inject(Router);
   private readonly templateScripts = inject(TemplateScriptsService);
+  private readonly themeService = inject(ThemeService);
   private readonly routerEvents: Subscription = this.router.events
     .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
     .subscribe(() => this.templateScripts.refresh());
 
   ngAfterViewInit(): void {
+    this.themeService.setTheme(this.themeService.getTheme());
     this.templateScripts.refresh();
   }
 

@@ -13,3 +13,21 @@
   background: rgba(255, 255, 255, .96);
   box-shadow: 0 20px 50px rgba(0, 0, 0, .12);
 }
+
+:host-context(.dark-theme) .auth-page {
+  background:
+    linear-gradient(rgba(15, 17, 21, .82), rgba(15, 17, 21, .88)),
+    url('/assets/caterserv/img/background-site.jpg') center/cover fixed;
+}
+
+:host-context(.dark-theme) .auth-card {
+  border: 1px solid var(--app-line);
+  background: rgba(23, 25, 31, .96);
+  color: var(--app-text);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .38);
+}
+
+:host-context(.dark-theme) .auth-card h1,
+:host-context(.dark-theme) .auth-card .text-dark {
+  color: var(--app-heading) !important;
+}

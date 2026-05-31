@@ -1,6 +1,6 @@
 .app-shell {
   min-height: 100vh;
-  background: #f7f8fb;
+  background: var(--app-bg);
 }
 
 .app-hero {
@@ -12,6 +12,13 @@
   border-bottom: 1px solid rgba(5, 7, 9, .08);
 }
 
+:host-context(.dark-theme) .app-hero {
+  background:
+    linear-gradient(90deg, rgba(15, 17, 21, .95), rgba(15, 17, 21, .78)),
+    url('/assets/caterserv/img/background-site.jpg') center / cover;
+  border-bottom-color: var(--app-line);
+}
+
 .app-hero-content {
   max-width: 760px;
 }
@@ -19,6 +26,22 @@
 .app-hero .breadcrumb {
   --bs-breadcrumb-divider-color: #667085;
   font-weight: 700;
+}
+
+:host-context(.dark-theme) .app-hero,
+:host-context(.dark-theme) .app-hero h1,
+:host-context(.dark-theme) .app-hero .breadcrumb,
+:host-context(.dark-theme) .app-hero .breadcrumb a,
+:host-context(.dark-theme) .app-hero .breadcrumb-item {
+  color: var(--app-heading);
+}
+
+:host-context(.dark-theme) .app-hero .breadcrumb {
+  --bs-breadcrumb-divider-color: var(--app-muted);
+}
+
+:host-context(.dark-theme) .app-hero .breadcrumb .text-dark {
+  color: var(--app-heading) !important;
 }
 
 .app-main {
@@ -40,6 +63,11 @@
   padding: 44px 0;
   background: #050709;
   color: rgba(255, 255, 255, .72);
+}
+
+:host-context(.dark-theme) .app-footer {
+  background: #08090c;
+  border-top: 1px solid var(--app-line);
 }
 
 .footer-brand {
@@ -78,6 +106,11 @@
   background: #111;
   color: rgba(255, 255, 255, .72);
   font-size: .92rem;
+}
+
+:host-context(.dark-theme) .app-copyright {
+  background: #07080a;
+  border-top: 1px solid rgba(216, 170, 88, .14);
 }
 
 @media (max-width: 767.98px) {

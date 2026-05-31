@@ -43,6 +43,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Proteger rutas y tambien ocultar/deshabilitar botones segun rol.
 - El menu debe adaptarse para Invitado, Cliente y Admin.
 
+## Tema visual
+
+- El proyecto soporta modo claro y modo oscuro.
+- El tema global se maneja con `ThemeService`.
+- La preferencia se guarda en `localStorage` con la clave `theme_mode`.
+- Valores validos de `theme_mode`: `light` y `dark`.
+- Si no hay preferencia guardada, usar `prefers-color-scheme` de forma segura con validacion de plataforma.
+- Aplicar las clases globales `light-theme` y `dark-theme` en `document.documentElement`.
+- No modificar la logica de autenticacion para cambiar tema.
+- No tocar `auth_token` ni `guest_mode` al alternar tema.
+- Mantener la estetica CaterServ en ambos temas, incluyendo dorado, tipografia, layout, navbar, sidebar, cards, tablas, formularios y botones.
+- No eliminar assets ni estilos globales de CaterServ.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
