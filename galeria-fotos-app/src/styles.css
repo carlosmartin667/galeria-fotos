@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global app styles live here; CaterServ styles are registered in angular.json. */
+
+.admin-panel {
+  border: 1px solid rgba(0, 0, 0, .08);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .05);
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, .08);
+}
+
+.admin-panel-body {
+  padding: 20px;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-empty {
+  padding: 36px;
+  text-align: center;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.admin-thumb {
+  width: 72px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f8f9fa;
+}

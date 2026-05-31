@@ -1,0 +1,44 @@
+<div class="admin-panel">
+  <div class="admin-panel-header">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Pedidos</small>
+      <h2 class="h3 mb-0">Listado</h2>
+    </div>
+    <a routerLink="/admin/pedidos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo pedido</a>
+  </div>
+
+  <div class="admin-panel-body">
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!loading && pedidos.length === 0" class="admin-empty">No hay pedidos para mostrar.</div>
+
+    <div *ngIf="!loading && pedidos.length > 0" class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Evento</th>
+            <th>Cliente</th>
+            <th>Fotos</th>
+            <th>Estado</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pedido of pedidos; trackBy: trackById">
+            <td class="text-break">{{ pedido.id }}</td>
+            <td class="text-break">{{ pedido.eventoId }}</td>
+            <td class="text-break">{{ pedido.clienteId }}</td>
+            <td>{{ fotoCount(pedido) }}</td>
+            <td>{{ pedido.estado || '-' }}</td>
+            <td>{{ total(pedido) | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

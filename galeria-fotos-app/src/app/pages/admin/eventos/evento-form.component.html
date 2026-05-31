@@ -1,0 +1,46 @@
+<div class="admin-panel">
+  <div class="admin-panel-header">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Eventos</small>
+      <h2 class="h3 mb-0">{{ isEdit ? 'Editar evento' : 'Nuevo evento' }}</h2>
+    </div>
+    <a routerLink="/admin/eventos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+  </div>
+
+  <div class="admin-panel-body">
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="eventoNombre">Nombre</label>
+        <input id="eventoNombre" type="text" class="form-control" formControlName="nombre">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="eventoFecha">Fecha del evento</label>
+        <input id="eventoFecha" type="datetime-local" class="form-control" formControlName="fechaEventoUtc">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="eventoEstado">Estado</label>
+        <input id="eventoEstado" type="text" class="form-control" formControlName="estado">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="eventoCliente">Cliente principal ID</label>
+        <input id="eventoCliente" type="text" class="form-control" formControlName="clientePrincipalId">
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="eventoDescripcion">Descripcion</label>
+        <textarea id="eventoDescripcion" rows="4" class="form-control" formControlName="descripcion"></textarea>
+      </div>
+      <div class="col-12 admin-actions">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
