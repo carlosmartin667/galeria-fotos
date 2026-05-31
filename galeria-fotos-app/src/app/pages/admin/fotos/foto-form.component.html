@@ -1,0 +1,78 @@
+<div class="admin-panel">
+  <div class="admin-panel-header">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Fotos</small>
+      <h2 class="h3 mb-0">{{ isEdit ? 'Editar foto' : 'Nueva foto metadata' }}</h2>
+    </div>
+    <a routerLink="/admin/fotos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+  </div>
+
+  <div class="admin-panel-body">
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="fotoEvento">Evento ID</label>
+        <input id="fotoEvento" type="text" class="form-control" formControlName="eventoId">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoArchivo">Nombre archivo</label>
+        <input id="fotoArchivo" type="text" class="form-control" formControlName="nombreArchivo">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoContentType">Content type</label>
+        <input id="fotoContentType" type="text" class="form-control" formControlName="contentType">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoPrecio">Precio unitario</label>
+        <input id="fotoPrecio" type="number" min="0" step="0.01" class="form-control" formControlName="precioUnitario">
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="fotoStorageKey">Storage key</label>
+        <div class="input-group">
+          <input id="fotoStorageKey" type="text" class="form-control" formControlName="storageKey">
+          <button type="button" class="btn btn-outline-primary" (click)="generateStorageKey()" [disabled]="generatingKey || isEdit">
+            <span *ngIf="generatingKey" class="spinner-border spinner-border-sm me-2"></span>
+            Generar
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoPreview">Preview URL</label>
+        <input id="fotoPreview" type="url" class="form-control" formControlName="previewUrl">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoMarca">Marca de agua storage key</label>
+        <input id="fotoMarca" type="text" class="form-control" formControlName="marcaAguaStorageKey">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoSize">Size bytes</label>
+        <input id="fotoSize" type="number" min="0" class="form-control" formControlName="sizeInBytes">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoWidth">Width</label>
+        <input id="fotoWidth" type="number" min="0" class="form-control" formControlName="width">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoHeight">Height</label>
+        <input id="fotoHeight" type="number" min="0" class="form-control" formControlName="height">
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input id="fotoActiva" type="checkbox" class="form-check-input" formControlName="activa">
+          <label class="form-check-label" for="fotoActiva">Activa</label>
+        </div>
+      </div>
+      <div class="col-12 admin-actions">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

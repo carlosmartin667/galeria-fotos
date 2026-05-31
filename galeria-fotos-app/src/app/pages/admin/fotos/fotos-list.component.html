@@ -1,0 +1,60 @@
+<div class="admin-panel">
+  <div class="admin-panel-header">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Fotos</small>
+      <h2 class="h3 mb-0">Fotos por evento</h2>
+    </div>
+    <a routerLink="/admin/fotos/nuevo" [queryParams]="{ eventoId: eventoId || null }" class="btn btn-primary rounded-pill px-4">Nueva foto</a>
+  </div>
+
+  <div class="admin-panel-body">
+    <div class="row g-3 align-items-end mb-4">
+      <div class="col-md-9">
+        <label class="form-label" for="eventoId">Evento ID</label>
+        <input id="eventoId" type="text" class="form-control" [(ngModel)]="eventoId" placeholder="UUID del evento">
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-primary rounded-pill w-100" (click)="load()">Buscar</button>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!loading && fotos.length === 0" class="admin-empty">No hay fotos para mostrar.</div>
+
+    <div *ngIf="!loading && fotos.length > 0" class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Preview</th>
+            <th>Archivo</th>
+            <th>Precio</th>
+            <th>Activa</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let foto of fotos; trackBy: trackById">
+            <td>
+              <img *ngIf="foto.previewUrl" [src]="foto.previewUrl" alt="" class="admin-thumb">
+              <span *ngIf="!foto.previewUrl">-</span>
+            </td>
+            <td>{{ foto.nombreArchivo }}</td>
+            <td>{{ foto.precioUnitario ?? 0 | currency }}</td>
+            <td>{{ foto.activa === false ? 'No' : 'Si' }}</td>
+            <td class="text-end">
+              <div class="admin-actions justify-content-end">
+                <a [routerLink]="['/admin/fotos', foto.id, 'editar']" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteFoto(foto)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

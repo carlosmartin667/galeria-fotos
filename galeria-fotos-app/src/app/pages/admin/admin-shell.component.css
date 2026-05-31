@@ -1,4 +1,18 @@
-/* Global app styles live here; CaterServ styles are registered in angular.json. */
+.admin-area {
+  min-height: 560px;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-toolbar .active {
+  color: #fff;
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
 
 .admin-panel {
   border: 1px solid rgba(0, 0, 0, .08);
@@ -32,12 +46,4 @@
   color: #6c757d;
   background: #f8f9fa;
   border-radius: 8px;
-}
-
-.admin-thumb {
-  width: 72px;
-  height: 56px;
-  object-fit: cover;
-  border-radius: 6px;
-  background: #f8f9fa;
 }
