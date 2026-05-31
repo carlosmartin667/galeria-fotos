@@ -1,24 +1,80 @@
 .app-shell {
-  display: flex;
   min-height: 100vh;
   background: #f7f8fb;
 }
 
-.app-content {
-  flex: 1;
-  min-width: 0;
+.app-hero {
+  position: relative;
+  padding: 56px 0;
+  background:
+    linear-gradient(90deg, rgba(255, 252, 248, .95), rgba(255, 252, 248, .72)),
+    url('/assets/caterserv/img/background-site.jpg') center / cover;
+  border-bottom: 1px solid rgba(5, 7, 9, .08);
+}
+
+.app-hero-content {
+  max-width: 760px;
+}
+
+.app-hero .breadcrumb {
+  --bs-breadcrumb-divider-color: #667085;
+  font-weight: 700;
 }
 
 .app-main {
-  padding: 30px;
+  padding: 34px 0 44px;
 }
 
-@media (max-width: 991px) {
-  .app-shell {
-    flex-direction: column;
+.app-footer {
+  padding: 44px 0;
+  background: #050709;
+  color: rgba(255, 255, 255, .72);
+}
+
+.footer-brand {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: #fff;
+  font-family: 'Playball', cursive;
+  font-size: 2.2rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.footer-brand:hover,
+.footer-links a:hover {
+  color: var(--bs-primary);
+}
+
+.app-footer-copy {
+  max-width: 420px;
+}
+
+.footer-links {
+  display: grid;
+  gap: 8px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, .72);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.app-copyright {
+  padding: 16px 0;
+  background: #111;
+  color: rgba(255, 255, 255, .72);
+  font-size: .92rem;
+}
+
+@media (max-width: 767.98px) {
+  .app-hero {
+    padding: 34px 0;
   }
 
   .app-main {
-    padding: 18px;
+    padding: 22px 0 30px;
   }
 }

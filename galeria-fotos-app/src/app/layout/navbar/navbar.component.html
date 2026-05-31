@@ -1,10 +1,40 @@
-<header class="internal-navbar">
-  <div>
-    <small class="text-uppercase text-muted fw-bold">Panel fotografico</small>
-    <h1 class="h3 mb-0">Administracion</h1>
+<!-- Navbar Start -->
+<div class="container-fluid nav-bar app-nav px-0">
+  <div class="container">
+    <nav class="navbar navbar-light navbar-expand-lg py-3">
+      <a routerLink="/dashboard" class="navbar-brand">
+        <h1 class="text-primary mb-0">Galeria<span class="text-dark">Fotos</span></h1>
+      </a>
+
+      <button
+        class="navbar-toggler py-2 px-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#appNavbar"
+        aria-controls="appNavbar"
+        aria-expanded="false"
+        aria-label="Abrir menu">
+        <span class="fa fa-bars text-primary"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="appNavbar">
+        <div class="navbar-nav mx-auto">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
+          <a routerLink="/clientes" routerLinkActive="active" class="nav-item nav-link">Clientes</a>
+          <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
+          <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
+          <a routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Pedidos</a>
+          <a *ngIf="session.canWrite" routerLink="/pagos" routerLinkActive="active" class="nav-item nav-link">Pagos</a>
+          <a *ngIf="session.canWrite" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Descargas</a>
+        </div>
+
+        <div class="app-nav-user">
+          <app-guest-badge></app-guest-badge>
+          <span class="app-nav-name">{{ session.session().email || session.session().nombre || 'Usuario' }}</span>
+          <button type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
+        </div>
+      </div>
+    </nav>
   </div>
-  <div class="d-flex align-items-center gap-3">
-    <app-guest-badge></app-guest-badge>
-    <span class="text-muted">{{ session.session().email || session.session().nombre || 'Usuario' }}</span>
-  </div>
-</header>
+</div>
+<!-- Navbar End -->

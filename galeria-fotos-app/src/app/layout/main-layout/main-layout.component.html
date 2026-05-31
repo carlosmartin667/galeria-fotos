@@ -1,9 +1,67 @@
 <div class="app-shell">
-  <app-sidebar></app-sidebar>
-  <div class="app-content">
-    <app-internal-navbar></app-internal-navbar>
-    <main class="app-main">
+  <app-internal-navbar></app-internal-navbar>
+
+  <!-- Hero Start -->
+  <section class="app-hero">
+    <div class="container">
+      <div class="app-hero-content animated bounceInDown">
+        <small class="app-kicker">Panel fotografico</small>
+        <h1 class="display-5 mb-2">Hola, {{ displayName() }}</h1>
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item text-dark" aria-current="page">GaleriaFotos</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+  <!-- Hero End -->
+
+  <main class="app-main">
+    <div class="container">
       <router-outlet></router-outlet>
-    </main>
+    </div>
+  </main>
+
+  <!-- Footer Start -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+          <a routerLink="/dashboard" class="footer-brand">
+            <span class="text-primary">Galeria</span><span>Fotos</span>
+          </a>
+          <p class="mb-0 app-footer-copy">Panel interno</p>
+        </div>
+
+        <div class="col-sm-6 col-lg-3">
+          <h3 class="h6 text-white mb-3">Navegacion</h3>
+          <div class="footer-links">
+            <a routerLink="/dashboard">Dashboard</a>
+            <a routerLink="/clientes">Clientes</a>
+            <a routerLink="/eventos">Eventos</a>
+            <a routerLink="/fotos/evento">Fotos</a>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+          <h3 class="h6 text-white mb-3">Operaciones</h3>
+          <div class="footer-links">
+            <a routerLink="/pedidos">Pedidos</a>
+            <a *ngIf="session.canWrite" routerLink="/pagos">Pagos</a>
+            <a *ngIf="session.canWrite" routerLink="/descargas">Descargas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Footer End -->
+
+  <!-- Copyright Start -->
+  <div class="app-copyright">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <span>&copy; {{ year }} GaleriaFotos</span>
+      <span>Sesion activa</span>
+    </div>
   </div>
+  <!-- Copyright End -->
 </div>

@@ -1,16 +1,50 @@
-.internal-navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 24px 30px;
-  background: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, .08);
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  box-shadow: 0 10px 30px rgba(5, 7, 9, .06);
 }
 
-@media (max-width: 640px) {
-  .internal-navbar {
-    align-items: flex-start;
+.navbar-brand h1 {
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.app-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-nav-name {
+  max-width: 220px;
+  color: #667085;
+  font-size: .92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar .navbar-nav .nav-link {
+  border-radius: 999px;
+}
+
+.navbar .navbar-nav .nav-link.active {
+  background: rgba(212, 167, 98, .16);
+}
+
+@media (max-width: 991.98px) {
+  .app-nav-user {
+    align-items: stretch;
     flex-direction: column;
+    margin-top: 16px;
+  }
+
+  .app-nav-user .btn {
+    width: 100%;
+  }
+
+  .app-nav-name {
+    max-width: 100%;
   }
 }
