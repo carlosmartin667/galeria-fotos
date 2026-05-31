@@ -1,43 +1,163 @@
 /* Global app styles live here; CaterServ styles are registered in angular.json. */
 
-.admin-panel {
-  border: 1px solid rgba(0, 0, 0, .08);
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, .05);
+:root {
+  --app-ink: #1f2933;
+  --app-muted: #667085;
+  --app-line: rgba(31, 41, 51, .12);
+  --app-surface: #fff;
+  --app-soft: #f7f9fb;
+  --app-success: #1f8a70;
 }
 
-.admin-panel-header {
+body {
+  color: var(--app-ink);
+}
+
+.app-panel {
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+  box-shadow: 0 12px 30px rgba(31, 41, 51, .06);
+}
+
+.app-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, .08);
+  border-bottom: 1px solid var(--app-line);
 }
 
-.admin-panel-body {
+.app-panel-body {
   padding: 20px;
 }
 
-.admin-actions {
+.app-kicker {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 14px;
+  border: 1px solid rgba(209, 152, 69, .45);
+  border-radius: 999px;
+  background: #fff8ec;
+  color: #7a4b12;
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.app-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.admin-empty {
-  padding: 36px;
-  text-align: center;
-  color: #6c757d;
-  background: #f8f9fa;
-  border-radius: 8px;
+.app-meta {
+  color: var(--app-muted);
+  font-size: .92rem;
 }
 
-.admin-thumb {
-  width: 72px;
-  height: 56px;
+.dashboard-card {
+  display: grid;
+  min-height: 150px;
+  padding: 22px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--app-ink);
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(31, 41, 51, .05);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.dashboard-card:hover {
+  border-color: rgba(209, 152, 69, .65);
+  box-shadow: 0 16px 32px rgba(31, 41, 51, .09);
+  color: var(--app-ink);
+  transform: translateY(-2px);
+}
+
+.dashboard-card i {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  background: #eaf7f2;
+  color: var(--app-success);
+  font-size: 1.2rem;
+}
+
+.dashboard-card span {
+  color: var(--app-muted);
+  font-weight: 700;
+}
+
+.dashboard-card strong {
+  margin-top: 8px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.event-card,
+.photo-card {
+  height: 100%;
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.photo-card img,
+.photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  background: var(--app-soft);
   object-fit: cover;
-  border-radius: 6px;
-  background: #f8f9fa;
+}
+
+.photo-placeholder {
+  display: grid;
+  place-items: center;
+  color: #98a2b3;
+  font-size: 2rem;
+}
+
+.table {
+  vertical-align: middle;
+}
+
+.form-control,
+.form-select {
+  min-height: 44px;
+}
+
+@media (max-width: 767.98px) {
+  .app-panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .app-panel-header .btn {
+    width: 100%;
+  }
+
+  .dashboard-card {
+    min-height: 130px;
+  }
 }

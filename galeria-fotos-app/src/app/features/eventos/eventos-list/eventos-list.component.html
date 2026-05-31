@@ -1,0 +1,37 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Eventos</small>
+      <h2 class="h3 mb-0">Listado</h2>
+    </div>
+    <a *ngIf="session.canWrite" routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading"></app-loading>
+    <app-empty-state *ngIf="!loading && eventos.length === 0" text="No hay eventos para mostrar."></app-empty-state>
+
+    <div *ngIf="!loading && eventos.length > 0" class="row g-4">
+      <div class="col-lg-6" *ngFor="let evento of eventos; trackBy: trackById">
+        <div class="event-card">
+          <div class="d-flex justify-content-between gap-3">
+            <div>
+              <h3 class="h5 mb-2">{{ evento.nombre }}</h3>
+              <p class="text-muted mb-2">{{ evento.descripcion || 'Sin descripcion' }}</p>
+              <p class="mb-1"><strong>Fecha:</strong> {{ evento.fechaEventoUtc | date:'short' }}</p>
+              <p class="mb-1"><strong>Estado:</strong> {{ evento.estado || '-' }}</p>
+              <p class="mb-0 text-break"><strong>Cliente:</strong> {{ evento.clientePrincipalId || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="app-actions mt-3">
+            <a [routerLink]="['/fotos/evento', evento.id]" class="btn btn-sm btn-outline-dark rounded-pill">Ver fotos</a>
+            <a *ngIf="session.canWrite" [routerLink]="['/eventos/editar', evento.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
+            <button *ngIf="session.canWrite" type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteEvento(evento)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

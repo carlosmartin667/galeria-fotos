@@ -1,0 +1,34 @@
+<section>
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Dashboard</small>
+      <h2 class="h3 mb-0">Resumen del sistema</h2>
+    </div>
+    <a *ngIf="session.canWrite" routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
+  </div>
+
+  <app-error-alert [message]="error"></app-error-alert>
+  <app-loading *ngIf="loading" text="Cargando resumen..."></app-loading>
+
+  <div class="row g-4" *ngIf="!loading">
+    <div class="col-md-6 col-xl-3" *ngFor="let card of cards">
+      <a [routerLink]="card.link" class="dashboard-card">
+        <i [class]="card.icon"></i>
+        <span>{{ card.label }}</span>
+        <strong>{{ card.value }}</strong>
+      </a>
+    </div>
+  </div>
+
+  <div class="app-panel mt-4">
+    <div class="app-panel-body">
+      <h3 class="h5 mb-3">Accesos rapidos</h3>
+      <div class="app-actions">
+        <a routerLink="/clientes" class="btn btn-outline-primary rounded-pill">Clientes</a>
+        <a routerLink="/eventos" class="btn btn-outline-primary rounded-pill">Eventos</a>
+        <a routerLink="/fotos/evento" class="btn btn-outline-primary rounded-pill">Fotos por evento</a>
+        <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill">Pedidos</a>
+      </div>
+    </div>
+  </div>
+</section>

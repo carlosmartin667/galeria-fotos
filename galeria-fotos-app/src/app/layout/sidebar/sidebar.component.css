@@ -1,0 +1,50 @@
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  min-height: 100vh;
+  padding: 28px 0;
+  background: #111;
+  color: #fff;
+}
+
+.app-brand {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0 28px 28px;
+  font-size: 34px;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Playball', cursive;
+}
+
+.app-menu {
+  display: grid;
+  gap: 6px;
+  padding: 0 16px;
+}
+
+.app-menu a {
+  padding: 13px 18px;
+  color: rgba(255, 255, 255, .76);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.app-menu a:hover,
+.app-menu a.active {
+  color: #111;
+  background: var(--bs-primary);
+}
+
+@media (max-width: 991px) {
+  .app-sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+  }
+}

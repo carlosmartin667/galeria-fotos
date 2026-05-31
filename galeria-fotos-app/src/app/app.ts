@@ -4,13 +4,11 @@ import { Subscription, filter } from 'rxjs';
 
 import { TemplateScriptsService } from './core/template-scripts.service';
 import { BackToTopComponent } from './shared/back-to-top/back-to-top.component';
-import { FooterComponent } from './shared/footer/footer.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SpinnerComponent, NavbarComponent, FooterComponent, BackToTopComponent],
+  imports: [RouterOutlet, SpinnerComponent, BackToTopComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

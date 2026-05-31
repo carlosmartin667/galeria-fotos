@@ -1,0 +1,21 @@
+<aside class="app-sidebar">
+  <a routerLink="/dashboard" class="app-brand">
+    <span class="text-primary">Galeria</span><span>Fotos</span>
+  </a>
+
+  <div class="px-4 mb-4">
+    <app-guest-badge></app-guest-badge>
+  </div>
+
+  <nav class="app-menu">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
+    <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
+    <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
+    <a routerLink="/pedidos" routerLinkActive="active">Pedidos</a>
+    <a *ngIf="session.canWrite" routerLink="/pagos" routerLinkActive="active">Pagos</a>
+    <a *ngIf="session.canWrite" routerLink="/descargas" routerLinkActive="active">Descargas</a>
+  </nav>
+
+  <button type="button" class="btn btn-outline-light rounded-pill mx-4 mt-auto" (click)="logout()">Cerrar sesion</button>
+</aside>
