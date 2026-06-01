@@ -1,0 +1,147 @@
+.public-shell {
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.public-wide-container {
+  width: 100%;
+  max-width: none;
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.public-nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--app-line);
+  background: color-mix(in srgb, var(--app-surface) 94%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.public-navbar {
+  min-height: 82px;
+}
+
+.public-brand,
+.public-footer-brand {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  color: var(--app-heading);
+  font-family: 'Playball', cursive;
+  font-size: 2.15rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.public-navbar .nav-link {
+  padding-right: 12px;
+  padding-left: 12px;
+  color: var(--app-text);
+  font-weight: 700;
+}
+
+.public-navbar .nav-link:hover,
+.public-navbar .nav-link.active {
+  color: var(--app-primary);
+}
+
+.public-nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.public-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--app-line);
+  background: var(--app-soft);
+  color: var(--app-text);
+  font-weight: 700;
+}
+
+.public-theme-toggle:hover {
+  border-color: var(--app-primary);
+  background: var(--app-primary);
+  color: #111;
+}
+
+.public-footer {
+  padding: 46px 0;
+  background: #050709;
+  color: rgba(255, 255, 255, .72);
+}
+
+.public-footer-brand {
+  margin-bottom: 14px;
+  color: #fff;
+}
+
+.public-footer-links {
+  display: grid;
+  gap: 8px;
+}
+
+.public-footer-links a {
+  color: rgba(255, 255, 255, .74);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.public-footer-links a:hover,
+.public-footer-brand:hover {
+  color: var(--app-primary);
+}
+
+.public-copyright {
+  padding: 16px 0;
+  background: #111;
+  color: rgba(255, 255, 255, .72);
+  font-size: .92rem;
+}
+
+:host-context(.dark-theme) .public-nav-wrap {
+  background: color-mix(in srgb, var(--app-surface) 92%, transparent);
+}
+
+:host-context(.dark-theme) .public-footer {
+  background: #08090c;
+  border-top: 1px solid var(--app-line);
+}
+
+:host-context(.dark-theme) .public-copyright {
+  background: #07080a;
+  border-top: 1px solid rgba(216, 170, 88, .14);
+}
+
+@media (max-width: 991.98px) {
+  .public-nav-actions {
+    align-items: stretch;
+    flex-direction: column;
+    margin-top: 12px;
+  }
+
+  .public-nav-actions .btn {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .public-wide-container {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .public-wide-container {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}

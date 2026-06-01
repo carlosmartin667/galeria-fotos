@@ -1,0 +1,28 @@
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando servicio..."></app-loading>
+
+    <div *ngIf="!loading && servicio as item" class="public-detail-layout">
+      <div>
+        <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.nombre" class="public-detail-image">
+        <div *ngIf="!item.imagenUrl" class="public-detail-placeholder"><i class="fas fa-camera-retro"></i></div>
+      </div>
+      <div class="public-detail-content">
+        <small class="app-kicker">Servicio</small>
+        <h1 class="display-5">{{ item.nombre }}</h1>
+        <p class="lead">{{ item.descripcion || 'Servicio fotografico personalizado.' }}</p>
+        <div class="public-service-facts public-service-facts-large">
+          <span *ngIf="item.precioDesde !== null && item.precioDesde !== undefined">Desde {{ item.precioDesde | currency:'USD' }}</span>
+          <span *ngIf="item.duracionEstimada">{{ item.duracionEstimada }}</span>
+          <span *ngIf="item.cantidadFotosIncluidas !== null && item.cantidadFotosIncluidas !== undefined">{{ item.cantidadFotosIncluidas }} fotos incluidas</span>
+        </div>
+        <div class="app-actions mt-4">
+          <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+          <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">Consultar por WhatsApp</a>
+          <a *ngIf="!whatsAppUrl" routerLink="/contacto" class="btn btn-primary rounded-pill px-4">Contacto</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -93,6 +93,21 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Mostrar URLs firmadas solo como link temporal cuando el backend las devuelve.
 - Preservar CaterServ, modo claro/oscuro, roles actuales, pedidos, pagos y fotos privadas.
 
+## Fase 2A web publica comercial
+
+- La web publica usa un `PublicLayoutComponent` separado, sin sidebar y sin hero interno de panel.
+- `/` y `/home` son Home publica comercial; `/login` debe mantenerse intacto.
+- Home, Contacto, Portfolio, Servicios y FAQ publicos no requieren token.
+- Home y Contacto consumen `SitioPublicoService` con `GET /Sitio/home`, `GET /Sitio/contacto` y `GET /Sitio/perfil-fotografa`.
+- Portfolio publico consume `GET /Portfolio` y detalle `GET /Portfolio/{id}`.
+- Servicios publicos consumen `GET /Servicios` y detalle `GET /Servicios/{id}`.
+- FAQ publica consume `GET /Faq`.
+- Admin gestiona Portfolio, Servicios y FAQ con endpoints admin y CRUD desde services.
+- Rutas admin de Portfolio, Servicios y FAQ son solo `Admin`; `Usuario` e `Invitado` no ven esas opciones.
+- `whatsAppUrl` viene calculado por backend; usarlo como link y no integrar WhatsApp API real.
+- No guardar datos publicos en `localStorage` innecesariamente ni loguear respuestas completas.
+- Preservar CaterServ, modo claro/oscuro, responsive y menu por rol.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
@@ -107,6 +122,10 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
 - Descargas: `GET /Descargas/mis-descargas`, `GET /Descargas/{id}`, `POST /Descargas/link`, `POST /Descargas/{id}/regenerar`, `GET /Descargas/admin`.
+- Sitio publico: `GET /Sitio/home`, `GET /Sitio/contacto`, `GET /Sitio/perfil-fotografa`.
+- Portfolio: `GET /Portfolio`, `GET /Portfolio/{id}`, `GET /Portfolio/admin`, `POST /Portfolio`, `PUT /Portfolio/{id}`, `DELETE /Portfolio/{id}`.
+- Servicios: `GET /Servicios`, `GET /Servicios/{id}`, `GET /Servicios/admin`, `POST /Servicios`, `PUT /Servicios/{id}`, `DELETE /Servicios/{id}`.
+- FAQ: `GET /Faq`, `GET /Faq/{id}`, `GET /Faq/admin`, `POST /Faq`, `PUT /Faq/{id}`, `DELETE /Faq/{id}`.
 
 ## Listados paginados
 

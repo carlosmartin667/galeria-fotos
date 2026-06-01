@@ -41,6 +41,11 @@
         <div class="col-sm-6 col-lg-3">
           <h3 class="h6 text-white mb-3">Navegacion</h3>
           <div class="footer-links">
+            <a routerLink="/">Home</a>
+            <a routerLink="/portfolio">Portfolio</a>
+            <a routerLink="/servicios">Servicios</a>
+            <a routerLink="/faq">FAQ</a>
+            <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
             <a *ngIf="session.isAdmin" routerLink="/clientes">Clientes</a>
             <a routerLink="/eventos">Eventos</a>
@@ -57,6 +62,9 @@
             <a *ngIf="session.isAuthenticated" routerLink="/pagos">Pagos</a>
             <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/descargas">Gestion descargas</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/portfolio">Admin portfolio</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/servicios">Admin servicios</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/faq">Admin FAQ</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>

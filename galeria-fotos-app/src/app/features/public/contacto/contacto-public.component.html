@@ -1,0 +1,32 @@
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando contacto..."></app-loading>
+
+    <div *ngIf="!loading && contacto as item" class="public-detail-layout">
+      <div>
+        <img *ngIf="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl" [src]="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl || ''" [alt]="nombre" class="public-detail-image">
+        <div *ngIf="!item.perfil?.bannerUrl && !item.perfil?.fotoPerfilUrl" class="public-detail-placeholder"><i class="fas fa-address-card"></i></div>
+      </div>
+      <div class="public-detail-content">
+        <small class="app-kicker">Contacto</small>
+        <h1 class="display-5">{{ nombre }}</h1>
+        <p class="lead">{{ descripcion }}</p>
+
+        <div class="public-contact-list">
+          <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+          <a *ngIf="email" [href]="'mailto:' + email"><i class="fas fa-envelope"></i><span>{{ email }}</span></a>
+          <a *ngIf="item.instagram || item.perfil?.instagram" [href]="item.instagram || item.perfil?.instagram || ''" target="_blank" rel="noopener"><i class="fab fa-instagram"></i><span>Instagram</span></a>
+          <a *ngIf="item.facebook || item.perfil?.facebook" [href]="item.facebook || item.perfil?.facebook || ''" target="_blank" rel="noopener"><i class="fab fa-facebook"></i><span>Facebook</span></a>
+          <a *ngIf="item.tikTok || item.perfil?.tikTok" [href]="item.tikTok || item.perfil?.tikTok || ''" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i><span>TikTok</span></a>
+          <a *ngIf="item.sitioWeb || item.perfil?.sitioWeb" [href]="item.sitioWeb || item.perfil?.sitioWeb || ''" target="_blank" rel="noopener"><i class="fas fa-globe"></i><span>Sitio web</span></a>
+        </div>
+
+        <div *ngIf="direccion" class="alert alert-light border mt-4">
+          <strong>Direccion:</strong>
+          <span class="d-block mt-1">{{ direccion }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

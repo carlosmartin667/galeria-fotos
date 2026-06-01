@@ -20,6 +20,11 @@
 
   <nav class="app-menu">
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home publico</a>
+    <a routerLink="/portfolio" routerLinkActive="active">Portfolio</a>
+    <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
+    <a routerLink="/faq" routerLinkActive="active">FAQ</a>
+    <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
     <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
@@ -30,6 +35,9 @@
     <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>
     <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/descargas" routerLinkActive="active">Gestion descargas</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/portfolio" routerLinkActive="active">Admin portfolio</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/servicios" routerLinkActive="active">Admin servicios</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/faq" routerLinkActive="active">Admin FAQ</a>
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>

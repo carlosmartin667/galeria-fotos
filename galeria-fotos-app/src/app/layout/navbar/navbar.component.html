@@ -20,6 +20,22 @@
       <div class="collapse navbar-collapse" id="appNavbar">
         <div class="navbar-nav mx-auto">
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
+          <div class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle app-nav-dropdown"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Sitio
+            </button>
+            <div class="dropdown-menu app-admin-menu">
+              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="dropdown-item">Home</a>
+              <a routerLink="/portfolio" routerLinkActive="active" class="dropdown-item">Portfolio</a>
+              <a routerLink="/servicios" routerLinkActive="active" class="dropdown-item">Servicios</a>
+              <a routerLink="/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
+              <a routerLink="/contacto" routerLinkActive="active" class="dropdown-item">Contacto</a>
+            </div>
+          </div>
           <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
           <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
           <a *ngIf="session.isAdmin" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
@@ -43,6 +59,9 @@
               <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
               <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
               <a routerLink="/admin/descargas" routerLinkActive="active" class="dropdown-item">Gestion de descargas</a>
+              <a routerLink="/admin/portfolio" routerLinkActive="active" class="dropdown-item">Portfolio</a>
+              <a routerLink="/admin/servicios" routerLinkActive="active" class="dropdown-item">Servicios</a>
+              <a routerLink="/admin/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
               <a routerLink="/admin/fotos/bulk" routerLinkActive="active" class="dropdown-item">Carga masiva fotos</a>
               <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
               <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>

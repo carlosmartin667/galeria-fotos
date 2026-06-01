@@ -1,0 +1,23 @@
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando portfolio..."></app-loading>
+
+    <div *ngIf="!loading && item as data" class="public-detail-layout">
+      <div>
+        <img *ngIf="data.imagenUrl" [src]="data.imagenUrl" [alt]="data.titulo" class="public-detail-image">
+        <div *ngIf="!data.imagenUrl" class="public-detail-placeholder"><i class="fas fa-image"></i></div>
+      </div>
+      <div class="public-detail-content">
+        <small class="app-kicker">{{ data.categoria || 'Portfolio' }}</small>
+        <h1 class="display-5">{{ data.titulo }}</h1>
+        <p class="lead">{{ data.descripcion || 'Trabajo fotografico publicado.' }}</p>
+        <div class="app-actions">
+          <a routerLink="/portfolio" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+          <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">Consultar por WhatsApp</a>
+          <a *ngIf="!whatsAppUrl" routerLink="/contacto" class="btn btn-primary rounded-pill px-4">Contacto</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
