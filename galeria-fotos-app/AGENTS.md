@@ -56,9 +56,22 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Mantener la estetica CaterServ en ambos temas, incluyendo dorado, tipografia, layout, navbar, sidebar, cards, tablas, formularios y botones.
 - No eliminar assets ni estilos globales de CaterServ.
 
+## Integracion Pexels demo
+
+- La integracion Pexels en frontend solo consume el backend.
+- No poner API Key de Pexels en Angular.
+- No guardar API Key de Pexels en el frontend.
+- No llamar `api.pexels.com` ni ningun endpoint externo de Pexels desde Angular.
+- El endpoint permitido para importar fotos demo es `POST /Admin/demo/pexels/importar-fotos`.
+- La pantalla de importacion Pexels es solo para `Admin`.
+- `Usuario` e `Invitado` no pueden acceder ni ver opciones de importacion Pexels.
+- Usar `environment.apiUrl` y services de `src/app/core/services` para cualquier llamada.
+- Mantener la estetica CaterServ y el modo claro/oscuro funcionando.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
+- Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`.
 - Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`.

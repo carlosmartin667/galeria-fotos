@@ -14,6 +14,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/pexels/importar-fotos',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'eventos/editar/:id',
     renderMode: RenderMode.Server
   },

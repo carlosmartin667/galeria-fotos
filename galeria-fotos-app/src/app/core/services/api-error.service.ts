@@ -52,8 +52,44 @@ export class ApiErrorService {
       return '';
     }
 
-    const body = error.error as { title?: string; message?: string; errors?: Record<string, string[]> };
-    const validationErrors = body.errors ? Object.values(body.errors).flat().filter(Boolean).join(' ') : '';
-    return validationErrors || body.message || body.title || '';
+    const body = error.error as {
+      title?: string;
+      message?: string;
+      detail?: string;
+      error?: string;
+      errors?: Record<string, unknown>;
+    };
+    const validationErrors = body.errors
+      ? Object.entries(body.errors)
+        .flatMap(([field, value]) => this.normalizeErrorValue(field, value))
+        .filter(Boolean)
+        .join(' ')
+      : '';
+
+    return validationErrors || body.message || body.detail || body.error || body.title || this.stringifyBody(error.error);
+  }
+
+  private normalizeErrorValue(field: string, value: unknown): string[] {
+    if (Array.isArray(value)) {
+      return value.map((item) => `${field}: ${String(item)}`);
+    }
+
+    if (typeof value === 'string') {
+      return [`${field}: ${value}`];
+    }
+
+    if (value && typeof value === 'object') {
+      return [`${field}: ${JSON.stringify(value)}`];
+    }
+
+    return value == null ? [] : [`${field}: ${String(value)}`];
+  }
+
+  private stringifyBody(body: unknown): string {
+    try {
+      return JSON.stringify(body);
+    } catch {
+      return '';
+    }
   }
 }

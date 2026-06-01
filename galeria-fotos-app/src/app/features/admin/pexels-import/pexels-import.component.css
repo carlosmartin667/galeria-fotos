@@ -1,0 +1,54 @@
+.pexels-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.pexels-summary div {
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  box-shadow: var(--app-card-shadow);
+}
+
+.pexels-summary span {
+  display: block;
+  color: var(--app-muted);
+  font-weight: 700;
+}
+
+.pexels-summary strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--app-heading);
+  font-size: 1.5rem;
+}
+
+.pexels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.pexels-photo {
+  overflow: hidden;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+}
+
+.pexels-photo img,
+.pexels-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--app-soft);
+  object-fit: cover;
+}
+
+.pexels-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--app-muted);
+  font-size: 2rem;
+}

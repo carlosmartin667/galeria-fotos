@@ -32,6 +32,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/mi-perfil/mi-perfil-admin.component').then((m) => m.MiPerfilAdminComponent)
       },
       {
+        path: 'admin/pexels/importar-fotos',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
+      },
+      {
         path: 'clientes',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/clientes/clientes-list/clientes-list.component').then((m) => m.ClientesListComponent)

@@ -28,6 +28,7 @@
           <div class="app-actions mt-3">
             <a [routerLink]="['/eventos', evento.id]" class="btn btn-sm btn-primary rounded-pill">Ver detalle</a>
             <a [routerLink]="['/fotos/evento', evento.id]" class="btn btn-sm btn-outline-dark rounded-pill">Ver fotos</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" [queryParams]="{ eventoId: evento.id }" class="btn btn-sm btn-outline-primary rounded-pill">Importar fotos demo</a>
             <a *ngIf="session.isAdmin" [routerLink]="['/eventos/editar', evento.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
             <button *ngIf="session.isAdmin" type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteEvento(evento)">Eliminar</button>
           </div>

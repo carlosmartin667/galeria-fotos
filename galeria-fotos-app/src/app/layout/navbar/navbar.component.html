@@ -29,6 +29,7 @@
           <a *ngIf="session.isAuthenticated" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Descargas</a>
           <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
           <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil admin</a>
+          <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active" class="nav-item nav-link">Importar Pexels</a>
           <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
         </div>
 

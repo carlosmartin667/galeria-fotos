@@ -29,6 +29,7 @@
         <div class="col-lg-4">
           <div class="app-actions justify-content-lg-end">
             <a [routerLink]="['/fotos/evento', item.id]" class="btn btn-outline-dark rounded-pill px-4">Ver fotos</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" [queryParams]="{ eventoId: item.id }" class="btn btn-outline-primary rounded-pill px-4">Importar fotos demo</a>
             <button *ngIf="session.isAuthenticated" type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="favoriteLoading" (click)="toggleFavorite()">
               <span *ngIf="favoriteLoading" class="spinner-border spinner-border-sm me-2"></span>
               {{ isFavorite ? 'Quitar favorito' : 'Guardar favorito' }}

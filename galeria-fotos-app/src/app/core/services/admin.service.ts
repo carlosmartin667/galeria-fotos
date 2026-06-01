@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ActualizarAdminPerfilRequest, AdminPerfilPublico } from '../models/admin.models';
+import { ImportarFotosPexelsRequest, ImportarFotosPexelsResponse } from '../models/pexels.models';
 import { ApiHttpService } from './api-http.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,5 +19,9 @@ export class AdminService {
 
   updateMiPerfil(payload: ActualizarAdminPerfilRequest): Observable<AdminPerfilPublico> {
     return this.api.put<AdminPerfilPublico>('/Admin/mi-perfil', payload);
+  }
+
+  importarFotosPexels(payload: ImportarFotosPexelsRequest): Observable<ImportarFotosPexelsResponse> {
+    return this.api.post<ImportarFotosPexelsResponse>('/Admin/demo/pexels/importar-fotos', payload);
   }
 }
