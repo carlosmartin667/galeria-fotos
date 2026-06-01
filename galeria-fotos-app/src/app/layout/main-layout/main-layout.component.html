@@ -55,7 +55,8 @@
             <a *ngIf="session.isAuthenticated" routerLink="/pedidos">Pedidos</a>
             <a *ngIf="session.isAuthenticated" routerLink="/favoritos">Favoritos</a>
             <a *ngIf="session.isAuthenticated" routerLink="/pagos">Pagos</a>
-            <a *ngIf="session.isAuthenticated" routerLink="/descargas">Descargas</a>
+            <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/descargas">Gestion descargas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>

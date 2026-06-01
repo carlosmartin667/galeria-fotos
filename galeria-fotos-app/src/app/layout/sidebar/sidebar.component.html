@@ -28,7 +28,8 @@
     <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
     <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
     <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>
-    <a *ngIf="session.isAuthenticated" routerLink="/descargas" routerLinkActive="active">Descargas</a>
+    <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/descargas" routerLinkActive="active">Gestion descargas</a>
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>

@@ -1,48 +1,59 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { Descarga, RegenerarDescargaResponse } from '../../core/models/descarga.models';
-import { DescargasService } from '../../core/services/descargas.service';
-import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
-import { ErrorAlertComponent } from '../../shared/components/error-alert/error-alert.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { Descarga, RegenerarDescargaResponse } from '../../../core/models/descarga.models';
+import { DescargasService } from '../../../core/services/descargas.service';
+import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
-  selector: 'app-descargas',
+  selector: 'app-descarga-detail',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './descargas.component.html',
-  styleUrl: './descargas.component.css'
+  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './descarga-detail.component.html',
+  styleUrl: './descarga-detail.component.css'
 })
-export class DescargasComponent implements OnInit {
+export class DescargaDetailComponent implements OnInit {
   private readonly descargasService = inject(DescargasService);
+  private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  descargas: Descarga[] = [];
+  descarga: Descarga | null = null;
   loading = false;
-  regeneratingId = '';
+  regenerating = false;
   error = '';
   success = '';
 
   ngOnInit(): void {
-    this.load();
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (!id) {
+      this.error = 'Descarga no encontrada.';
+      return;
+    }
+
+    this.load(id);
   }
 
-  load(): void {
+  load(id = this.descarga?.id ?? ''): void {
+    if (!id) {
+      return;
+    }
+
     this.loading = true;
     this.error = '';
     this.success = '';
 
-    this.descargasService.getMisDescargas().pipe(
+    this.descargasService.getDescarga(id).pipe(
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
       })
     ).subscribe({
-      next: (descargas) => {
-        this.descargas = descargas;
+      next: (descarga) => {
+        this.descarga = descarga;
       },
       error: (error: unknown) => {
         this.error = this.message(error);
@@ -50,21 +61,26 @@ export class DescargasComponent implements OnInit {
     });
   }
 
-  regenerar(descarga: Descarga): void {
-    this.regeneratingId = descarga.id;
+  regenerar(): void {
+    if (!this.descarga) {
+      return;
+    }
+
+    const current = this.descarga;
+    this.regenerating = true;
     this.error = '';
     this.success = '';
 
-    this.descargasService.regenerarDescarga(descarga.id).subscribe({
+    this.descargasService.regenerarDescarga(current.id).subscribe({
       next: (response) => {
-        this.applyRegenerated(descarga.id, response);
+        this.descarga = this.mergeResponse(current, response);
         this.success = 'Link de descarga regenerado correctamente.';
-        this.regeneratingId = '';
+        this.regenerating = false;
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         this.error = this.message(error);
-        this.regeneratingId = '';
+        this.regenerating = false;
         this.cdr.markForCheck();
       }
     });
@@ -118,26 +134,16 @@ export class DescargasComponent implements OnInit {
     return badges;
   }
 
-  trackById(_: number, descarga: Descarga): string {
-    return descarga.id;
-  }
-
-  private applyRegenerated(id: string, response: RegenerarDescargaResponse): void {
-    this.descargas = this.descargas.map((descarga) => {
-      if (descarga.id !== id) {
-        return descarga;
-      }
-
-      return {
-        ...descarga,
-        url: response.url ?? descarga.url,
-        expiraEnUtc: response.expiraEnUtc ?? response.expiresAtUtc ?? descarga.expiraEnUtc,
-        maxDescargas: response.maxDescargas ?? descarga.maxDescargas,
-        descargasRealizadas: response.descargasRealizadas ?? descarga.descargasRealizadas,
-        ultimaDescargaUtc: response.ultimaDescargaUtc ?? descarga.ultimaDescargaUtc,
-        activa: true
-      };
-    });
+  private mergeResponse(descarga: Descarga, response: RegenerarDescargaResponse): Descarga {
+    return {
+      ...descarga,
+      url: response.url ?? descarga.url,
+      expiraEnUtc: response.expiraEnUtc ?? response.expiresAtUtc ?? descarga.expiraEnUtc,
+      maxDescargas: response.maxDescargas ?? descarga.maxDescargas,
+      descargasRealizadas: response.descargasRealizadas ?? descarga.descargasRealizadas,
+      ultimaDescargaUtc: response.ultimaDescargaUtc ?? descarga.ultimaDescargaUtc,
+      activa: true
+    };
   }
 
   private message(error: unknown): string {
@@ -160,10 +166,6 @@ export class DescargasComponent implements OnInit {
       return 'No tenes permisos para acceder a esta descarga.';
     }
 
-    if (normalized.includes('comprada') || normalized.includes('compra')) {
-      return 'La foto no pertenece a una compra habilitada para descarga.';
-    }
-
-    return message || 'No se pudieron cargar las descargas.';
+    return message || 'No se pudo cargar la descarga.';
   }
 }

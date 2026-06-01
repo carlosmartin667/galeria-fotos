@@ -14,6 +14,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/descargas',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/pexels/importar-fotos',
     renderMode: RenderMode.Server
   },
@@ -39,6 +43,14 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'pedidos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'descargas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'descargas/:id',
     renderMode: RenderMode.Server
   },
   {

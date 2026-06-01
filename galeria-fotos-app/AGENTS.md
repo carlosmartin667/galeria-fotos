@@ -80,6 +80,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No exponer `StorageKey` original en pantallas publicas o de cliente cuando no corresponda; limitarlo a flujos administrativos.
 - Preservar la estetica CaterServ, modo claro/oscuro, roles existentes y menu dinamico.
 
+## Fase 1B descargas
+
+- Las descargas usan limites de uso, vencimiento, estado activo/inactivo y regeneracion de link desde el backend.
+- `Usuario`/Cliente ve sus descargas en `/descargas`; `Admin` gestiona descargas en `/admin/descargas`.
+- `Invitado` no puede ver, generar ni regenerar descargas.
+- La regeneracion de link requiere usuario autenticado y consume `POST /Descargas/{id}/regenerar`.
+- La gestion admin consume `GET /Descargas/admin` y debe ser solo para `Admin`.
+- No exponer `StorageKey` original a usuarios no-admin ni en pantallas publicas.
+- No guardar URLs firmadas en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- No loguear URLs firmadas en consola.
+- Mostrar URLs firmadas solo como link temporal cuando el backend las devuelve.
+- Preservar CaterServ, modo claro/oscuro, roles actuales, pedidos, pagos y fotos privadas.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
@@ -93,7 +106,7 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Favoritos: `GET /Favoritos/eventos`, `POST/DELETE /Favoritos/eventos/{eventoId}`, `GET /Favoritos/fotos`, `POST/DELETE /Favoritos/fotos/{fotoId}`.
 - Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
-- Descargas: `POST /Descargas/link`.
+- Descargas: `GET /Descargas/mis-descargas`, `GET /Descargas/{id}`, `POST /Descargas/link`, `POST /Descargas/{id}/regenerar`, `GET /Descargas/admin`.
 
 ## Listados paginados
 

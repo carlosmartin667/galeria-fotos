@@ -3,6 +3,7 @@ export interface Pedido {
   eventoId: string;
   clienteId: string;
   fotoIds?: string[];
+  fotoPrivadaIds?: string[];
   estado?: string;
   total?: number;
   moneda?: string;

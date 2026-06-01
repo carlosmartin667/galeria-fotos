@@ -330,7 +330,8 @@ body {
 
 .comment-list,
 .favorite-list,
-.app-contact-list {
+.app-contact-list,
+.download-list {
   display: grid;
   gap: 12px;
 }
@@ -378,6 +379,88 @@ body {
   display: grid;
   place-items: center;
   color: #98a2b3;
+}
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.download-card,
+.download-inline-card,
+.download-detail-grid > div,
+.admin-section {
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  color: var(--app-text);
+  box-shadow: var(--app-card-shadow);
+}
+
+.download-card {
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.download-card-header,
+.download-detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.download-meta-grid,
+.download-detail-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.download-meta-grid {
+  grid-template-columns: minmax(110px, .7fr) minmax(0, 1fr);
+}
+
+.download-meta-grid span,
+.download-detail-grid span {
+  color: var(--app-muted);
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.download-meta-grid strong,
+.download-detail-grid strong {
+  color: var(--app-heading);
+  font-weight: 700;
+}
+
+.download-inline-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+}
+
+.download-result {
+  grid-column: 1 / -1;
+  padding-top: 12px;
+  border-top: 1px solid var(--app-line);
+}
+
+.download-detail-grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.download-detail-grid > div {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+}
+
+.download-table {
+  min-width: 980px;
 }
 
 .table {
@@ -538,6 +621,11 @@ body {
   .photo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .download-grid,
+  .download-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 992px) {
@@ -549,6 +637,10 @@ body {
 @media (min-width: 1280px) {
   .photo-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .download-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

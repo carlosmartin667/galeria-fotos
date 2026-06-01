@@ -3,20 +3,20 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { Descarga, RegenerarDescargaResponse } from '../../core/models/descarga.models';
-import { DescargasService } from '../../core/services/descargas.service';
-import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
-import { ErrorAlertComponent } from '../../shared/components/error-alert/error-alert.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { Descarga, RegenerarDescargaResponse } from '../../../core/models/descarga.models';
+import { DescargasService } from '../../../core/services/descargas.service';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
-  selector: 'app-descargas',
+  selector: 'app-admin-descargas',
   standalone: true,
   imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './descargas.component.html',
-  styleUrl: './descargas.component.css'
+  templateUrl: './admin-descargas.component.html',
+  styleUrl: './admin-descargas.component.css'
 })
-export class DescargasComponent implements OnInit {
+export class AdminDescargasComponent implements OnInit {
   private readonly descargasService = inject(DescargasService);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -35,7 +35,7 @@ export class DescargasComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.descargasService.getMisDescargas().pipe(
+    this.descargasService.getDescargasAdmin().pipe(
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
@@ -70,16 +70,14 @@ export class DescargasComponent implements OnInit {
     });
   }
 
-  tipo(descarga: Descarga): string {
-    if (descarga.fotoPrivadaId) {
-      return 'Foto privada';
-    }
-
-    if (descarga.fotoId) {
-      return 'Foto evento';
-    }
-
-    return 'Pedido';
+  owner(descarga: Descarga): string {
+    return descarga.clienteNombre
+      || descarga.clienteEmail
+      || descarga.usuarioNombre
+      || descarga.usuarioEmail
+      || descarga.clienteId
+      || descarga.usuarioId
+      || '-';
   }
 
   expira(descarga: Descarga): string | undefined {
@@ -97,25 +95,16 @@ export class DescargasComponent implements OnInit {
       && Number(descarga.descargasRealizadas ?? 0) >= Number(descarga.maxDescargas);
   }
 
-  statusBadges(descarga: Descarga): Array<{ label: string; className: string }> {
-    const badges = [
-      {
-        label: descarga.activa === false ? 'Inactiva' : 'Activa',
-        className: descarga.activa === false ? 'bg-secondary' : 'bg-success'
-      },
-      {
-        label: this.isExpired(descarga) ? 'Vencida' : 'Vigente',
-        className: this.isExpired(descarga) ? 'bg-danger' : 'bg-primary'
-      }
-    ];
-
-    if (descarga.maxDescargas === null || descarga.maxDescargas === undefined) {
-      badges.push({ label: 'Sin limite', className: 'bg-light text-dark border' });
-    } else if (this.limitReached(descarga)) {
-      badges.push({ label: 'Limite alcanzado', className: 'bg-warning text-dark' });
+  badgeClass(descarga: Descarga): string {
+    if (descarga.activa === false) {
+      return 'bg-secondary';
     }
 
-    return badges;
+    if (this.isExpired(descarga) || this.limitReached(descarga)) {
+      return 'bg-warning text-dark';
+    }
+
+    return 'bg-success';
   }
 
   trackById(_: number, descarga: Descarga): string {
@@ -144,8 +133,8 @@ export class DescargasComponent implements OnInit {
     const message = error instanceof Error ? error.message : '';
     const normalized = message.toLowerCase();
 
-    if (normalized.includes('pagado')) {
-      return 'El pedido todavia no esta pagado. Solo se pueden descargar fotos de pedidos pagados.';
+    if (normalized.includes('permiso') || normalized.includes('forbidden') || normalized.includes('403')) {
+      return 'No tenes permisos para gestionar descargas.';
     }
 
     if (normalized.includes('limite') || normalized.includes('limit') || normalized.includes('max')) {
@@ -156,14 +145,6 @@ export class DescargasComponent implements OnInit {
       return 'El link de descarga esta vencido. Regenera el link para continuar.';
     }
 
-    if (normalized.includes('permiso') || normalized.includes('forbidden') || normalized.includes('403')) {
-      return 'No tenes permisos para acceder a esta descarga.';
-    }
-
-    if (normalized.includes('comprada') || normalized.includes('compra')) {
-      return 'La foto no pertenece a una compra habilitada para descarga.';
-    }
-
-    return message || 'No se pudieron cargar las descargas.';
+    return message || 'No se pudieron cargar las descargas admin.';
   }
 }

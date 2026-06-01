@@ -42,6 +42,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/fotos-bulk/fotos-bulk.component').then((m) => m.FotosBulkComponent)
       },
       {
+        path: 'admin/descargas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/descargas/admin-descargas.component').then((m) => m.AdminDescargasComponent)
+      },
+      {
         path: 'admin/pexels/importar-fotos',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
@@ -135,6 +140,11 @@ export const routes: Routes = [
         path: 'descargas',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/descargas/descargas.component').then((m) => m.DescargasComponent)
+      },
+      {
+        path: 'descargas/:id',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/descargas/descarga-detail/descarga-detail.component').then((m) => m.DescargaDetailComponent)
       },
       {
         path: 'favoritos',

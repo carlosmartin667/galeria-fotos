@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
         { label: 'Clientes', value: '', link: '/clientes', icon: 'fas fa-users' },
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Gestion descargas', value: '', link: '/admin/descargas', icon: 'fas fa-download' },
         { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
       ];
     }
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
         { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
+        { label: 'Mis descargas', value: '', link: '/descargas', icon: 'fas fa-download' },
         { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
       ];
     }
@@ -97,6 +99,12 @@ export class DashboardComponent implements OnInit {
 
     if (this.session.isAuthenticated) {
       cards.push({ label: this.session.isAdmin ? 'Pedidos' : 'Mis pedidos', value: pedidos, link: '/pedidos', icon: 'fas fa-shopping-cart' });
+      cards.push({
+        label: this.session.isAdmin ? 'Gestion descargas' : 'Mis descargas',
+        value: 'Ver',
+        link: this.session.isAdmin ? '/admin/descargas' : '/descargas',
+        icon: 'fas fa-download'
+      });
       cards.push({ label: this.session.isAdmin ? 'Favoritos' : 'Mis favoritos', value: 'Ver', link: '/favoritos', icon: 'fas fa-heart' });
     }
 
