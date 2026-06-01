@@ -83,6 +83,25 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
 - Descargas: `POST /Descargas/link`.
 
+## Listados paginados
+
+- Para listados principales, preferir endpoints paginados cuando existan.
+- Endpoints paginados actuales: `GET /Eventos/paginado`, `GET /Fotos/evento/{eventoId}/paginado`, `GET /Pedidos/paginado`, `GET /Favoritos/eventos/paginado`, `GET /Favoritos/fotos/paginado`.
+- Usar query params backend solo para paginado: `Page`, `PageSize` y `All`.
+- Valores permitidos de `PageSize`: `5`, `10`, `20` y `40`.
+- La opcion visual `Todos` debe enviar `All=true`.
+- Cuando se selecciona un `PageSize`, enviar `All=false` y reiniciar a `Page=1`.
+- No inventar query params backend para busquedas o filtros si la API no los define.
+- Las busquedas y filtros de UI se aplican localmente sobre los items cargados en la pagina actual.
+
+## Layout responsive
+
+- En mobile menor a `992px`, ocultar completamente el sidebar y no reservar espacio para el.
+- El contenido principal debe ocupar todo el ancho disponible en mobile.
+- La navbar debe mantener opciones principales visibles y agrupar opciones admin/operativas en dropdown para evitar saturacion.
+- Truncar emails o nombres largos con ellipsis en navbar.
+- Mantener contenedores principales amplios en desktop, aproximadamente `1280px` a `1400px`, y padding compacto en mobile.
+
 ## Verificacion recomendada
 
 - Ejecutar `.\node_modules\.bin\ng.cmd build`.

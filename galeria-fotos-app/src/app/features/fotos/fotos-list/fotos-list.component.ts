@@ -1,19 +1,22 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Foto } from '../../../core/models/foto.models';
+import { PaginationQuery } from '../../../core/models/pagination.models';
 import { FotosService } from '../../../core/services/fotos.service';
 import { SessionService } from '../../../core/services/session.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { PaginationControlsComponent } from '../../../shared/components/pagination-controls/pagination-controls.component';
 
 @Component({
   selector: 'app-fotos-list',
   standalone: true,
-  imports: [CurrencyPipe, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [CurrencyPipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
   templateUrl: './fotos-list.component.html'
 })
 export class FotosListComponent implements OnInit {
@@ -25,6 +28,18 @@ export class FotosListComponent implements OnInit {
 
   eventoId = '';
   fotos: Foto[] = [];
+  searchTerm = '';
+  activaFilter = 'todas';
+  readonly activaOptions = [
+    { value: 'todas', label: 'Todas' },
+    { value: 'activas', label: 'Activas' },
+    { value: 'inactivas', label: 'Inactivas' }
+  ];
+  pagination: PaginationQuery = { page: 1, pageSize: 10, all: false };
+  totalItems = 0;
+  totalPages = 1;
+  hasPreviousPage = false;
+  hasNextPage = false;
   loading = false;
   error = '';
 
@@ -40,7 +55,10 @@ export class FotosListComponent implements OnInit {
     const eventoId = value.trim();
 
     if (eventoId) {
+      this.eventoId = eventoId;
+      this.pagination = { page: 1, pageSize: this.pagination.pageSize, all: this.pagination.all };
       void this.router.navigate(['/fotos/evento', eventoId]);
+      this.load();
       return;
     }
 
@@ -48,23 +66,60 @@ export class FotosListComponent implements OnInit {
   }
 
   load(): void {
+    if (!this.eventoId) {
+      this.fotos = [];
+      this.error = 'Ingresa un eventoId para consultar las fotos.';
+      return;
+    }
+
     this.loading = true;
     this.error = '';
 
-    this.fotosService.listByEvento(this.eventoId).pipe(
+    this.fotosService.getFotosPorEventoPaginado(this.eventoId, this.pagination).pipe(
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
       })
     ).subscribe({
-      next: (fotos) => {
-        this.fotos = fotos;
+      next: (response) => {
+        this.fotos = response.items;
+        this.pagination = {
+          page: response.page,
+          pageSize: response.pageSize || this.pagination.pageSize,
+          all: response.all
+        };
+        this.totalItems = response.totalItems;
+        this.totalPages = response.totalPages;
+        this.hasPreviousPage = response.hasPreviousPage;
+        this.hasNextPage = response.hasNextPage;
       },
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
       }
     });
+  }
+
+  get filteredFotos(): Foto[] {
+    const term = this.normalize(this.searchTerm);
+
+    return this.fotos.filter((foto) => {
+      const matchesSearch = !term || [
+        foto.nombreArchivo,
+        foto.contentType,
+        foto.precioUnitario,
+        foto.eventoId
+      ].some((value) => this.normalize(value).includes(term));
+      const matchesActiva = !this.session.isAdmin || this.activaFilter === 'todas'
+        || (this.activaFilter === 'activas' && foto.activa !== false)
+        || (this.activaFilter === 'inactivas' && foto.activa === false);
+      return matchesSearch && matchesActiva;
+    });
+  }
+
+  onPaginationChange(query: PaginationQuery): void {
+    this.pagination = query;
+    this.load();
   }
 
   deleteFoto(foto: Foto): void {
@@ -91,5 +146,9 @@ export class FotosListComponent implements OnInit {
 
   private message(error: unknown): string {
     return error instanceof Error ? error.message : 'No se pudieron cargar las fotos.';
+  }
+
+  private normalize(value: unknown): string {
+    return String(value ?? '').trim().toLowerCase();
   }
 }

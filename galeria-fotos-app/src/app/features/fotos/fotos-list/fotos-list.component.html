@@ -9,21 +9,31 @@
 
   <div class="app-panel-body">
     <div class="row g-3 align-items-end mb-4">
-      <div class="col-md-9">
+      <div class="col-lg-5">
         <label class="form-label" for="eventoIdSearch">Evento ID</label>
         <input id="eventoIdSearch" type="text" class="form-control" [value]="eventoId" placeholder="UUID del evento" #eventoInput>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-2">
         <button type="button" class="btn btn-primary rounded-pill w-100" (click)="searchByValue(eventoInput.value)">Buscar</button>
+      </div>
+      <div class="col-lg-3">
+        <label class="form-label" for="fotosSearch">Filtrar</label>
+        <input id="fotosSearch" type="search" class="form-control" [(ngModel)]="searchTerm" placeholder="Archivo, tipo o precio">
+      </div>
+      <div class="col-lg-2" *ngIf="session.isAdmin">
+        <label class="form-label" for="fotosActiva">Estado</label>
+        <select id="fotosActiva" class="form-select" [(ngModel)]="activaFilter">
+          <option *ngFor="let option of activaOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
       </div>
     </div>
 
     <app-error-alert [message]="error"></app-error-alert>
     <app-loading *ngIf="loading"></app-loading>
-    <app-empty-state *ngIf="!loading && fotos.length === 0" text="No hay fotos para mostrar."></app-empty-state>
+    <app-empty-state *ngIf="!loading && filteredFotos.length === 0" text="No hay fotos para mostrar."></app-empty-state>
 
-    <div *ngIf="!loading && fotos.length > 0" class="photo-grid">
-      <article *ngFor="let foto of fotos; trackBy: trackById" class="photo-card">
+    <div *ngIf="!loading && filteredFotos.length > 0" class="photo-grid">
+      <article *ngFor="let foto of filteredFotos; trackBy: trackById" class="photo-card">
         <img *ngIf="foto.previewUrl" [src]="foto.previewUrl" [alt]="foto.nombreArchivo">
         <div *ngIf="!foto.previewUrl" class="photo-placeholder"><i class="fas fa-image"></i></div>
         <div class="p-3">
@@ -40,5 +50,18 @@
         </div>
       </article>
     </div>
+
+    <app-pagination-controls
+      *ngIf="!loading && fotos.length > 0"
+      [page]="pagination.page"
+      [pageSize]="pagination.pageSize"
+      [all]="pagination.all"
+      [totalItems]="totalItems"
+      [totalPages]="totalPages"
+      [hasPreviousPage]="hasPreviousPage"
+      [hasNextPage]="hasNextPage"
+      [disabled]="loading"
+      (paginationChange)="onPaginationChange($event)">
+    </app-pagination-controls>
   </div>
 </div>

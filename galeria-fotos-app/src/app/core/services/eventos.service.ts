@@ -2,8 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import { ActualizarEventoRequest, CrearEventoRequest, Evento } from '../models/evento.models';
+import { PaginatedResponse, PaginationQuery } from '../models/pagination.models';
 import { ApiHttpService } from './api-http.service';
-import { extractItems } from './response-utils';
+import { extractItems, normalizePaginatedResponse } from './response-utils';
 
 @Injectable({ providedIn: 'root' })
 export class EventosService {
@@ -11,6 +12,12 @@ export class EventosService {
 
   list(): Observable<Evento[]> {
     return this.api.get<Evento[] | { items?: Evento[]; data?: Evento[] }>('/Eventos').pipe(map(extractItems));
+  }
+
+  getEventosPaginados(query: PaginationQuery): Observable<PaginatedResponse<Evento>> {
+    return this.api
+      .get<unknown>('/Eventos/paginado', this.paginationParams(query))
+      .pipe(map((response) => normalizePaginatedResponse<Evento>(response)));
   }
 
   get(id: string): Observable<Evento> {
@@ -27,5 +34,13 @@ export class EventosService {
 
   delete(id: string): Observable<void> {
     return this.api.delete<void>(`/Eventos/${id}`);
+  }
+
+  private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {
+    return {
+      Page: query.page,
+      PageSize: query.pageSize,
+      All: query.all
+    };
   }
 }

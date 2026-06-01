@@ -2,8 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import { FavoritoEventoResponse, FavoritoFotoResponse } from '../models/favorito.models';
+import { PaginatedResponse, PaginationQuery } from '../models/pagination.models';
 import { ApiHttpService } from './api-http.service';
-import { extractItems } from './response-utils';
+import { extractItems, normalizePaginatedResponse } from './response-utils';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritosService {
@@ -13,6 +14,12 @@ export class FavoritosService {
     return this.api
       .get<FavoritoEventoResponse[] | { items?: FavoritoEventoResponse[]; data?: FavoritoEventoResponse[] }>('/Favoritos/eventos')
       .pipe(map(extractItems));
+  }
+
+  getEventosFavoritosPaginados(query: PaginationQuery): Observable<PaginatedResponse<FavoritoEventoResponse>> {
+    return this.api
+      .get<unknown>('/Favoritos/eventos/paginado', this.paginationParams(query))
+      .pipe(map((response) => normalizePaginatedResponse<FavoritoEventoResponse>(response)));
   }
 
   addEvento(eventoId: string): Observable<void> {
@@ -29,11 +36,25 @@ export class FavoritosService {
       .pipe(map(extractItems));
   }
 
+  getFotosFavoritasPaginadas(query: PaginationQuery): Observable<PaginatedResponse<FavoritoFotoResponse>> {
+    return this.api
+      .get<unknown>('/Favoritos/fotos/paginado', this.paginationParams(query))
+      .pipe(map((response) => normalizePaginatedResponse<FavoritoFotoResponse>(response)));
+  }
+
   addFoto(fotoId: string): Observable<void> {
     return this.api.post<void>(`/Favoritos/fotos/${fotoId}`, {});
   }
 
   removeFoto(fotoId: string): Observable<void> {
     return this.api.delete<void>(`/Favoritos/fotos/${fotoId}`);
+  }
+
+  private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {
+    return {
+      Page: query.page,
+      PageSize: query.pageSize,
+      All: query.all
+    };
   }
 }

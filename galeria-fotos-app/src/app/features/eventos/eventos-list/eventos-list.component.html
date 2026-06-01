@@ -8,12 +8,25 @@
   </div>
 
   <div class="app-panel-body">
+    <div class="row g-3 align-items-end mb-4">
+      <div class="col-lg-8">
+        <label class="form-label" for="eventosSearch">Buscar</label>
+        <input id="eventosSearch" type="search" class="form-control" [(ngModel)]="searchTerm" placeholder="Nombre, descripcion, estado o cliente">
+      </div>
+      <div class="col-lg-4">
+        <label class="form-label" for="eventosEstado">Estado</label>
+        <select id="eventosEstado" class="form-select" [(ngModel)]="estadoFilter">
+          <option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
+    </div>
+
     <app-error-alert [message]="error"></app-error-alert>
     <app-loading *ngIf="loading"></app-loading>
-    <app-empty-state *ngIf="!loading && eventos.length === 0" text="No hay eventos para mostrar."></app-empty-state>
+    <app-empty-state *ngIf="!loading && filteredEventos.length === 0" text="No hay eventos para mostrar."></app-empty-state>
 
-    <div *ngIf="!loading && eventos.length > 0" class="row g-4">
-      <div class="col-lg-6" *ngFor="let evento of eventos; trackBy: trackById">
+    <div *ngIf="!loading && filteredEventos.length > 0" class="row g-4">
+      <div class="col-lg-6" *ngFor="let evento of filteredEventos; trackBy: trackById">
         <div class="event-card">
           <div class="d-flex justify-content-between gap-3">
             <div>
@@ -35,5 +48,18 @@
         </div>
       </div>
     </div>
+
+    <app-pagination-controls
+      *ngIf="!loading && eventos.length > 0"
+      [page]="pagination.page"
+      [pageSize]="pagination.pageSize"
+      [all]="pagination.all"
+      [totalItems]="totalItems"
+      [totalPages]="totalPages"
+      [hasPreviousPage]="hasPreviousPage"
+      [hasNextPage]="hasNextPage"
+      [disabled]="loading"
+      (paginationChange)="onPaginationChange($event)">
+    </app-pagination-controls>
   </div>
 </div>

@@ -1,9 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError, timeout } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { ApiErrorService } from './api-error.service';
+
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
 @Injectable({ providedIn: 'root' })
 export class ApiHttpService {
@@ -11,8 +13,8 @@ export class ApiHttpService {
   private readonly errors = inject(ApiErrorService);
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
 
-  get<T>(path: string): Observable<T> {
-    return this.http.get<unknown>(this.url(path)).pipe(
+  get<T>(path: string, params?: QueryParams): Observable<T> {
+    return this.http.get<unknown>(this.url(path), { params: this.params(params) }).pipe(
       timeout(15000),
       map((response) => this.unwrap<T>(response)),
       catchError((error) => this.handleError(error))
@@ -45,6 +47,22 @@ export class ApiHttpService {
 
   private url(path: string): string {
     return `${this.apiUrl}${path.startsWith('/') ? path : `/${path}`}`;
+  }
+
+  private params(params?: QueryParams): HttpParams {
+    let httpParams = new HttpParams();
+
+    if (!params) {
+      return httpParams;
+    }
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        httpParams = httpParams.set(key, String(value));
+      }
+    });
+
+    return httpParams;
   }
 
   private handleError(error: unknown): Observable<never> {

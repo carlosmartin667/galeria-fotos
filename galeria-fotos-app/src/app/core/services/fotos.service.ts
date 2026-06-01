@@ -8,8 +8,9 @@ import {
   GenerarStorageKeyRequest,
   GenerarStorageKeyResponse
 } from '../models/foto.models';
+import { PaginatedResponse, PaginationQuery } from '../models/pagination.models';
 import { ApiHttpService } from './api-http.service';
-import { extractItems } from './response-utils';
+import { extractItems, normalizePaginatedResponse } from './response-utils';
 
 @Injectable({ providedIn: 'root' })
 export class FotosService {
@@ -17,6 +18,12 @@ export class FotosService {
 
   listByEvento(eventoId: string): Observable<Foto[]> {
     return this.api.get<Foto[] | { items?: Foto[]; data?: Foto[] }>(`/Fotos/evento/${eventoId}`).pipe(map(extractItems));
+  }
+
+  getFotosPorEventoPaginado(eventoId: string, query: PaginationQuery): Observable<PaginatedResponse<Foto>> {
+    return this.api
+      .get<unknown>(`/Fotos/evento/${eventoId}/paginado`, this.paginationParams(query))
+      .pipe(map((response) => normalizePaginatedResponse<Foto>(response)));
   }
 
   get(id: string): Observable<Foto> {
@@ -37,5 +44,13 @@ export class FotosService {
 
   createMetadata(payload: CrearFotoMetadataRequest): Observable<Foto> {
     return this.api.post<Foto>('/Fotos/metadata', payload);
+  }
+
+  private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {
+    return {
+      Page: query.page,
+      PageSize: query.pageSize,
+      All: query.all
+    };
   }
 }

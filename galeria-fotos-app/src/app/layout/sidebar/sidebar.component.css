@@ -1,3 +1,8 @@
+.app-sidebar,
+:host {
+  display: block;
+}
+
 .app-sidebar {
   position: sticky;
   top: 92px;
@@ -77,10 +82,11 @@
 }
 
 @media (max-width: 991px) {
+  :host {
+    display: none;
+  }
+
   .app-sidebar {
-    position: relative;
-    top: auto;
-    width: 100%;
-    min-height: auto;
+    display: none;
   }
 }

@@ -1,0 +1,63 @@
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-soft);
+  color: var(--app-text);
+}
+
+.pagination-summary,
+.pagination-actions,
+.pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination-summary {
+  flex-wrap: wrap;
+  color: var(--app-muted);
+  font-weight: 600;
+}
+
+.pagination-summary strong {
+  color: var(--app-heading);
+}
+
+.pagination-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--app-primary);
+}
+
+.pagination-size {
+  margin: 0;
+  color: var(--app-text);
+  font-weight: 700;
+}
+
+.pagination-size .form-select {
+  width: auto;
+  min-width: 92px;
+}
+
+@media (max-width: 767.98px) {
+  .pagination-controls,
+  .pagination-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pagination-actions,
+  .pagination-size,
+  .pagination-size .form-select,
+  .pagination-actions .btn-group {
+    width: 100%;
+  }
+}

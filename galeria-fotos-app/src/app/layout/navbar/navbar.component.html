@@ -20,17 +20,32 @@
       <div class="collapse navbar-collapse" id="appNavbar">
         <div class="navbar-nav mx-auto">
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
-          <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active" class="nav-item nav-link">Clientes</a>
           <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
           <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
-          <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
-          <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
-          <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active" class="nav-item nav-link">Pagos</a>
-          <a *ngIf="session.isAuthenticated" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Descargas</a>
-          <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
-          <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil admin</a>
-          <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active" class="nav-item nav-link">Importar Pexels</a>
+          <a *ngIf="session.isAdmin" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
+          <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Mis pedidos</a>
+          <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
           <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
+          <a *ngIf="!session.isAuthenticated" routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
+
+          <div *ngIf="session.isAdmin" class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle app-nav-dropdown"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Administracion
+            </button>
+            <div class="dropdown-menu app-admin-menu">
+              <a routerLink="/clientes" routerLinkActive="active" class="dropdown-item">Clientes</a>
+              <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
+              <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
+              <a routerLink="/descargas" routerLinkActive="active" class="dropdown-item">Descargas</a>
+              <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
+              <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>
+              <a routerLink="/admin/pexels/importar-fotos" routerLinkActive="active" class="dropdown-item">Importar Pexels</a>
+            </div>
+          </div>
         </div>
 
         <div class="app-nav-user">

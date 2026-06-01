@@ -1,0 +1,27 @@
+<div class="pagination-controls">
+  <div class="pagination-summary">
+    <strong>{{ totalItems }}</strong>
+    <span>registros</span>
+    <span class="pagination-dot"></span>
+    <span>Pagina {{ page }} de {{ totalPages || 1 }}</span>
+  </div>
+
+  <div class="pagination-actions">
+    <label class="pagination-size">
+      <span>Mostrar</span>
+      <select class="form-select form-select-sm" [(ngModel)]="selectedSize" [disabled]="disabled">
+        <option value="all">Todos</option>
+        <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+      </select>
+    </label>
+
+    <div class="btn-group" role="group" aria-label="Paginacion">
+      <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="disabled || all || !hasPreviousPage" (click)="previous()">
+        Anterior
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="disabled || all || !hasNextPage" (click)="next()">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

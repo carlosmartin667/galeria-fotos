@@ -10,15 +10,20 @@
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
     <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loading"></app-loading>
 
-    <div *ngIf="!loading" class="row g-4">
+    <div class="row g-4">
       <section class="col-lg-6" id="eventos-favoritos">
         <h3 class="h5 mb-3">Eventos favoritos</h3>
-        <app-empty-state *ngIf="eventos.length === 0" text="No hay eventos favoritos."></app-empty-state>
+        <div class="mb-3">
+          <label class="form-label" for="favoritosEventosSearch">Buscar eventos</label>
+          <input id="favoritosEventosSearch" type="search" class="form-control" [(ngModel)]="eventosSearch" placeholder="Evento, ID o fecha">
+        </div>
+        <app-error-alert [message]="eventosError"></app-error-alert>
+        <app-loading *ngIf="eventosLoading"></app-loading>
+        <app-empty-state *ngIf="!eventosLoading && filteredEventos.length === 0" text="No hay eventos favoritos."></app-empty-state>
 
-        <div class="favorite-list">
-          <article *ngFor="let item of eventos; trackBy: trackEvento" class="favorite-item">
+        <div *ngIf="!eventosLoading && filteredEventos.length > 0" class="favorite-list">
+          <article *ngFor="let item of filteredEventos; trackBy: trackEvento" class="favorite-item">
             <div>
               <h4 class="h6 mb-1">{{ item.nombreEvento || item.eventoId }}</h4>
               <p class="app-meta mb-0">{{ item.fechaEventoUtc ? (item.fechaEventoUtc | date:'short') : 'Sin fecha' }}</p>
@@ -29,14 +34,33 @@
             </div>
           </article>
         </div>
+
+        <app-pagination-controls
+          *ngIf="!eventosLoading && eventos.length > 0"
+          [page]="eventosPagination.page"
+          [pageSize]="eventosPagination.pageSize"
+          [all]="eventosPagination.all"
+          [totalItems]="eventosTotalItems"
+          [totalPages]="eventosTotalPages"
+          [hasPreviousPage]="eventosHasPreviousPage"
+          [hasNextPage]="eventosHasNextPage"
+          [disabled]="eventosLoading"
+          (paginationChange)="onEventosPaginationChange($event)">
+        </app-pagination-controls>
       </section>
 
       <section class="col-lg-6" id="fotos-favoritas">
         <h3 class="h5 mb-3">Fotos favoritas</h3>
-        <app-empty-state *ngIf="fotos.length === 0" text="No hay fotos favoritas."></app-empty-state>
+        <div class="mb-3">
+          <label class="form-label" for="favoritosFotosSearch">Buscar fotos</label>
+          <input id="favoritosFotosSearch" type="search" class="form-control" [(ngModel)]="fotosSearch" placeholder="Archivo, foto ID o evento ID">
+        </div>
+        <app-error-alert [message]="fotosError"></app-error-alert>
+        <app-loading *ngIf="fotosLoading"></app-loading>
+        <app-empty-state *ngIf="!fotosLoading && filteredFotos.length === 0" text="No hay fotos favoritas."></app-empty-state>
 
-        <div class="favorite-list">
-          <article *ngFor="let item of fotos; trackBy: trackFoto" class="favorite-item">
+        <div *ngIf="!fotosLoading && filteredFotos.length > 0" class="favorite-list">
+          <article *ngFor="let item of filteredFotos; trackBy: trackFoto" class="favorite-item">
             <img *ngIf="item.previewUrl" [src]="item.previewUrl" [alt]="item.nombreArchivo || item.fotoId" class="favorite-thumb">
             <div *ngIf="!item.previewUrl" class="favorite-thumb favorite-thumb-empty"><i class="fas fa-image"></i></div>
             <div class="flex-grow-1">
@@ -49,6 +73,19 @@
             </div>
           </article>
         </div>
+
+        <app-pagination-controls
+          *ngIf="!fotosLoading && fotos.length > 0"
+          [page]="fotosPagination.page"
+          [pageSize]="fotosPagination.pageSize"
+          [all]="fotosPagination.all"
+          [totalItems]="fotosTotalItems"
+          [totalPages]="fotosTotalPages"
+          [hasPreviousPage]="fotosHasPreviousPage"
+          [hasNextPage]="fotosHasNextPage"
+          [disabled]="fotosLoading"
+          (paginationChange)="onFotosPaginationChange($event)">
+        </app-pagination-controls>
       </section>
     </div>
   </div>

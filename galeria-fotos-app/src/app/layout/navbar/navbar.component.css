@@ -17,14 +17,27 @@
   line-height: 1;
 }
 
+.app-nav .container {
+  max-width: 1400px;
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.navbar .navbar-nav {
+  align-items: center;
+  gap: 2px;
+}
+
 .app-nav-user {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 .app-nav-name {
-  max-width: 220px;
+  max-width: 180px;
   color: var(--app-muted);
   font-size: .92rem;
   overflow: hidden;
@@ -37,6 +50,32 @@
   border-radius: 999px;
 }
 
+.app-nav-dropdown {
+  border: 0;
+  background: transparent;
+}
+
+.app-admin-menu {
+  min-width: 220px;
+  padding: 8px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow);
+}
+
+.app-admin-menu .dropdown-item {
+  border-radius: 8px;
+  color: var(--app-text);
+  font-weight: 600;
+}
+
+.app-admin-menu .dropdown-item:hover,
+.app-admin-menu .dropdown-item.active {
+  background: rgba(212, 167, 98, .16);
+  color: var(--app-heading);
+}
+
 :host-context(.dark-theme) .navbar-brand h1,
 :host-context(.dark-theme) .navbar-brand .text-dark {
   color: var(--app-heading) !important;
@@ -44,6 +83,21 @@
 
 :host-context(.dark-theme) .navbar .navbar-nav .nav-link {
   color: var(--app-text);
+}
+
+:host-context(.dark-theme) .app-admin-menu {
+  background: var(--app-card);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .34);
+}
+
+:host-context(.dark-theme) .app-admin-menu .dropdown-item {
+  color: var(--app-text);
+}
+
+:host-context(.dark-theme) .app-admin-menu .dropdown-item:hover,
+:host-context(.dark-theme) .app-admin-menu .dropdown-item.active {
+  background: rgba(216, 170, 88, .18);
+  color: #f2cf91;
 }
 
 .navbar .navbar-nav .nav-link.active {
@@ -82,6 +136,22 @@
 }
 
 @media (max-width: 991.98px) {
+  .navbar .navbar-nav {
+    align-items: stretch;
+    gap: 4px;
+    padding-top: 16px;
+  }
+
+  .app-nav-dropdown {
+    width: 100%;
+    text-align: left;
+  }
+
+  .app-admin-menu {
+    width: 100%;
+    box-shadow: none;
+  }
+
   .app-nav-user {
     align-items: stretch;
     flex-direction: column;
@@ -94,5 +164,16 @@
 
   .app-nav-name {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .app-nav .container {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .navbar-brand h1 {
+    font-size: 1.75rem;
   }
 }
