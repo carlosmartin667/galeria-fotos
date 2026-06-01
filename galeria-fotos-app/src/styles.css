@@ -705,6 +705,114 @@ body {
   font-size: 1.2rem;
 }
 
+.public-form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.public-availability {
+  padding: 20px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  box-shadow: var(--app-card-shadow);
+}
+
+.public-availability-compact {
+  position: sticky;
+  top: 18px;
+}
+
+.public-section-head-tight {
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.public-availability-list {
+  display: grid;
+  gap: 12px;
+}
+
+.public-availability-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+}
+
+.public-availability-item i {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--app-kicker-bg);
+  color: var(--app-primary);
+}
+
+.public-availability-item strong,
+.public-availability-item span {
+  display: block;
+}
+
+.public-availability-item strong {
+  color: var(--app-heading);
+}
+
+.public-availability-item div > span {
+  color: var(--app-muted);
+  font-size: .9rem;
+}
+
+.admin-inline-form {
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-soft);
+}
+
+.admin-wide-table {
+  min-width: 1180px;
+}
+
+.admin-status-select {
+  width: auto;
+  min-width: 160px;
+}
+
+.admin-detail-summary {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-detail-summary > div {
+  padding: 16px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  box-shadow: var(--app-card-shadow);
+}
+
+.admin-detail-summary span {
+  display: block;
+  color: var(--app-muted);
+  font-size: .88rem;
+  font-weight: 800;
+}
+
+.admin-detail-summary strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--app-heading);
+}
+
 .table {
   --bs-table-bg: transparent;
   --bs-table-color: var(--app-text);
@@ -868,6 +976,15 @@ body {
     width: 100%;
   }
 
+  .public-availability-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .public-availability-item .badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
   .public-hero {
     min-height: 620px;
     padding: 64px 0;
@@ -888,6 +1005,10 @@ body {
   .public-gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .admin-detail-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 992px) {
@@ -901,6 +1022,14 @@ body {
   }
 
   .public-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .public-form-layout {
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, .55fr);
+  }
+
+  .admin-detail-summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

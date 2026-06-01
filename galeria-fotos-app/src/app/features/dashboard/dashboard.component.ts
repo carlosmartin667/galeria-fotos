@@ -47,6 +47,8 @@ export class DashboardComponent implements OnInit {
         { label: 'Clientes', value: '', link: '/clientes', icon: 'fas fa-users' },
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Presupuestos', value: '', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' },
+        { label: 'Agenda', value: '', link: '/admin/agenda', icon: 'fas fa-calendar-check' },
         { label: 'Gestion descargas', value: '', link: '/admin/descargas', icon: 'fas fa-download' },
         { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
       ];
@@ -56,6 +58,7 @@ export class DashboardComponent implements OnInit {
       return [
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Solicitar presupuesto', value: '', link: '/presupuesto', icon: 'fas fa-file-signature' },
         { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
         { label: 'Mis descargas', value: '', link: '/descargas', icon: 'fas fa-download' },
         { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
@@ -65,6 +68,7 @@ export class DashboardComponent implements OnInit {
     return [
       { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
       { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+      { label: 'Solicitar presupuesto', value: '', link: '/presupuesto', icon: 'fas fa-file-signature' },
       { label: 'Perfil publico', value: '', link: '/admin/perfil-publico', icon: 'fas fa-address-card' },
       { label: 'Iniciar sesion', value: '', link: '/login', icon: 'fas fa-sign-in-alt' }
     ];
@@ -110,6 +114,10 @@ export class DashboardComponent implements OnInit {
 
     if (this.session.isAdmin) {
       cards.unshift({ label: 'Clientes', value: clientes, link: '/clientes', icon: 'fas fa-users' });
+      cards.push({ label: 'Presupuestos', value: 'Admin', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' });
+      cards.push({ label: 'Agenda', value: 'Admin', link: '/admin/agenda', icon: 'fas fa-calendar-check' });
+    } else {
+      cards.push({ label: 'Solicitar presupuesto', value: 'Publico', link: '/presupuesto', icon: 'fas fa-file-signature' });
     }
 
     return cards;

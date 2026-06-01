@@ -108,6 +108,20 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No guardar datos publicos en `localStorage` innecesariamente ni loguear respuestas completas.
 - Preservar CaterServ, modo claro/oscuro, responsive y menu por rol.
 
+## Fase 2B presupuestos y agenda
+
+- La ruta publica `/presupuesto` permite crear solicitudes de presupuesto sin login usando `POST /Presupuestos/solicitudes`.
+- Las solicitudes publicas no se guardan en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- La UI publica puede mostrar disponibilidad con `GET /Agenda/disponibilidad`, pero nunca debe exponer clientes, ubicaciones privadas ni descripciones internas.
+- La disponibilidad publica debe mostrarse como lista simple de fechas ocupadas o badges; no crear integraciones externas de calendario todavia.
+- Admin gestiona solicitudes en `/admin/presupuestos` y `/admin/presupuestos/:id` usando endpoints de `Presupuestos`.
+- Admin gestiona agenda en `/admin/agenda` usando endpoints de `Agenda`.
+- Las rutas admin de presupuestos y agenda son solo `Admin`; `Usuario` e `Invitado` no ven esas opciones.
+- No integrar envio de emails todavia.
+- No integrar Google Calendar todavia.
+- No integrar WhatsApp API real; usar solo links `wa.me` o `whatsAppUrl` provistos por backend.
+- Mantener CaterServ, modo claro/oscuro, responsive, roles existentes y menu dinamico.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
@@ -126,6 +140,8 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Portfolio: `GET /Portfolio`, `GET /Portfolio/{id}`, `GET /Portfolio/admin`, `POST /Portfolio`, `PUT /Portfolio/{id}`, `DELETE /Portfolio/{id}`.
 - Servicios: `GET /Servicios`, `GET /Servicios/{id}`, `GET /Servicios/admin`, `POST /Servicios`, `PUT /Servicios/{id}`, `DELETE /Servicios/{id}`.
 - FAQ: `GET /Faq`, `GET /Faq/{id}`, `GET /Faq/admin`, `POST /Faq`, `PUT /Faq/{id}`, `DELETE /Faq/{id}`.
+- Presupuestos: `POST /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}/estado`, `DELETE /Presupuestos/solicitudes/{id}`.
+- Agenda: `GET /Agenda`, `GET /Agenda/{id}`, `POST /Agenda`, `PUT /Agenda/{id}`, `DELETE /Agenda/{id}`, `GET /Agenda/disponibilidad`.
 
 ## Listados paginados
 

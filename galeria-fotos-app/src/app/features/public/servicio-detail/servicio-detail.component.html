@@ -19,6 +19,7 @@
         </div>
         <div class="app-actions mt-4">
           <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+          <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
           <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">Consultar por WhatsApp</a>
           <a *ngIf="!whatsAppUrl" routerLink="/contacto" class="btn btn-primary rounded-pill px-4">Contacto</a>
         </div>

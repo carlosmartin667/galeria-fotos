@@ -44,6 +44,7 @@
             <a routerLink="/">Home</a>
             <a routerLink="/portfolio">Portfolio</a>
             <a routerLink="/servicios">Servicios</a>
+            <a routerLink="/presupuesto">Solicitar presupuesto</a>
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
@@ -65,6 +66,8 @@
             <a *ngIf="session.isAdmin" routerLink="/admin/portfolio">Admin portfolio</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/servicios">Admin servicios</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/faq">Admin FAQ</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos">Presupuestos</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/agenda">Agenda</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>

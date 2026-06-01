@@ -1,16 +1,18 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { SitioContacto } from '../../../core/models/sitio-publico.models';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { AgendaDisponibilidadPublicaComponent } from '../disponibilidad/agenda-disponibilidad-publica.component';
 
 @Component({
   selector: 'app-contacto-public',
   standalone: true,
-  imports: [NgIf, ErrorAlertComponent, LoadingComponent],
+  imports: [NgIf, RouterLink, ErrorAlertComponent, LoadingComponent, AgendaDisponibilidadPublicaComponent],
   templateUrl: './contacto-public.component.html',
   styleUrl: './contacto-public.component.css'
 })

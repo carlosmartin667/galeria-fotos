@@ -8,6 +8,7 @@
       <p class="public-hero-copy">{{ perfil?.textoBienvenida || 'Explora servicios, portfolio y eventos disponibles para clientes.' }}</p>
       <div class="app-actions">
         <a *ngIf="perfil?.whatsAppUrl" [href]="perfil?.whatsAppUrl || ''" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">WhatsApp</a>
+        <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
         <a routerLink="/servicios" class="btn btn-outline-light rounded-pill px-4">Ver servicios</a>
         <a routerLink="/portfolio" class="btn btn-outline-light rounded-pill px-4">Ver portfolio</a>
       </div>
@@ -37,6 +38,7 @@
               <span *ngIf="servicio.precioDesde !== null && servicio.precioDesde !== undefined">Desde {{ servicio.precioDesde | currency:'USD' }}</span>
               <span *ngIf="servicio.duracionEstimada"> - {{ servicio.duracionEstimada }}</span>
             </p>
+            <a routerLink="/presupuesto" class="btn btn-sm btn-outline-primary rounded-pill mt-3">Pedir presupuesto</a>
           </div>
         </article>
       </div>

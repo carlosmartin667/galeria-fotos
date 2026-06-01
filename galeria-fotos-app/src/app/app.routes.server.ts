@@ -34,6 +34,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'presupuesto',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'clientes/editar/:id',
     renderMode: RenderMode.Server
   },
@@ -59,6 +63,18 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'admin/faq',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/presupuestos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/presupuestos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/agenda',
     renderMode: RenderMode.Server
   },
   {

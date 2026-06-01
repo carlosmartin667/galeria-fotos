@@ -48,6 +48,10 @@ export const routes: Routes = [
       {
         path: 'contacto',
         loadComponent: () => import('./features/public/contacto/contacto-public.component').then((m) => m.ContactoPublicComponent)
+      },
+      {
+        path: 'presupuesto',
+        loadComponent: () => import('./features/public/presupuesto-solicitud/presupuesto-solicitud.component').then((m) => m.PresupuestoSolicitudComponent)
       }
     ]
   },
@@ -98,6 +102,21 @@ export const routes: Routes = [
         path: 'admin/faq',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/faq/faq-admin.component').then((m) => m.FaqAdminComponent)
+      },
+      {
+        path: 'admin/presupuestos',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/presupuestos/presupuestos-admin.component').then((m) => m.PresupuestosAdminComponent)
+      },
+      {
+        path: 'admin/presupuestos/:id',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/presupuestos/presupuesto-detail-admin.component').then((m) => m.PresupuestoDetailAdminComponent)
+      },
+      {
+        path: 'admin/agenda',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/agenda/agenda-admin.component').then((m) => m.AgendaAdminComponent)
       },
       {
         path: 'admin/pexels/importar-fotos',

@@ -22,11 +22,20 @@
           <a *ngIf="item.sitioWeb || item.perfil?.sitioWeb" [href]="item.sitioWeb || item.perfil?.sitioWeb || ''" target="_blank" rel="noopener"><i class="fas fa-globe"></i><span>Sitio web</span></a>
         </div>
 
+        <div class="app-actions mt-4">
+          <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
+          <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Ver servicios</a>
+        </div>
+
         <div *ngIf="direccion" class="alert alert-light border mt-4">
           <strong>Direccion:</strong>
           <span class="d-block mt-1">{{ direccion }}</span>
         </div>
       </div>
+    </div>
+
+    <div class="mt-5">
+      <app-agenda-disponibilidad-publica></app-agenda-disponibilidad-publica>
     </div>
   </div>
 </section>

@@ -25,8 +25,8 @@
             <span *ngIf="servicio.cantidadFotosIncluidas !== null && servicio.cantidadFotosIncluidas !== undefined">{{ servicio.cantidadFotosIncluidas }} fotos</span>
           </div>
           <div class="app-actions mt-3">
-            <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill">Consultar</a>
-            <a *ngIf="!whatsAppUrl" routerLink="/contacto" class="btn btn-sm btn-primary rounded-pill">Consultar</a>
+            <a routerLink="/presupuesto" class="btn btn-sm btn-primary rounded-pill">Solicitar presupuesto</a>
+            <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary rounded-pill">WhatsApp</a>
             <a *ngIf="servicio.id" [routerLink]="['/servicios', servicio.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a>
           </div>
         </div>
