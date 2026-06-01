@@ -1,0 +1,42 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Clientes</small>
+      <h2 class="h3 mb-0">{{ isEdit ? 'Editar cliente' : 'Crear cliente' }}</h2>
+    </div>
+    <a routerLink="/clientes" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading"></app-loading>
+
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+      <div class="col-md-6">
+        <label class="form-label" for="clienteNombre">Nombre</label>
+        <input id="clienteNombre" type="text" class="form-control" formControlName="nombre">
+        <small *ngIf="showError('nombre')" class="text-danger">El nombre es requerido.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="clienteEmail">Email</label>
+        <input id="clienteEmail" type="email" class="form-control" formControlName="email">
+        <small *ngIf="showError('email')" class="text-danger">Ingresa un email valido.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="clienteTelefono">Telefono</label>
+        <input id="clienteTelefono" type="text" class="form-control" formControlName="telefono">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="clienteDocumento">Documento</label>
+        <input id="clienteDocumento" type="text" class="form-control" formControlName="documento">
+      </div>
+      <div class="col-12 app-actions">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          Guardar
+        </button>
+        <a routerLink="/clientes" class="btn btn-outline-dark rounded-pill px-4">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>

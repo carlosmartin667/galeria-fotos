@@ -1,0 +1,38 @@
+<aside class="app-sidebar">
+  <a routerLink="/dashboard" class="app-brand">
+    <span class="text-primary">Galeria</span><span>Fotos</span>
+  </a>
+
+  <div class="px-4 mb-4">
+    <app-guest-badge></app-guest-badge>
+  </div>
+
+  <div class="px-4 mb-3">
+    <button
+      type="button"
+      class="app-sidebar-theme"
+      (click)="themeService.toggleTheme()"
+      [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+      <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+    </button>
+  </div>
+
+  <nav class="app-menu">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>
+    <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
+    <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
+    <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
+    <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
+    <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>
+    <a *ngIf="session.isAuthenticated" routerLink="/descargas" routerLinkActive="active">Descargas</a>
+    <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
+    <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
+    <a *ngIf="!session.isAuthenticated" routerLink="/login" routerLinkActive="active">Iniciar sesion</a>
+  </nav>
+
+  <button *ngIf="session.isAuthenticated" type="button" class="btn btn-outline-light rounded-pill mx-4 mt-auto" (click)="logout()">Cerrar sesion</button>
+</aside>

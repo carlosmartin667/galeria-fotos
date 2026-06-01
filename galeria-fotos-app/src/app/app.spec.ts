@@ -17,11 +17,11 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the CaterServ brand', async () => {
+  it('should render the routed application shell', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.navbar-brand h1')?.textContent).toContain('CaterServ');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

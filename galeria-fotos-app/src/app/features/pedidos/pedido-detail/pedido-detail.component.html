@@ -1,0 +1,29 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Pedidos</small>
+      <h2 class="h3 mb-0">Detalle</h2>
+    </div>
+    <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading"></app-loading>
+
+    <div *ngIf="pedido as item" class="row g-3">
+      <div class="col-md-6"><strong>ID:</strong> <span class="text-break">{{ item.id }}</span></div>
+      <div class="col-md-6"><strong>Estado:</strong> {{ item.estado || '-' }}</div>
+      <div class="col-md-6"><strong>Evento:</strong> <span class="text-break">{{ item.eventoId }}</span></div>
+      <div class="col-md-6"><strong>Cliente:</strong> <span class="text-break">{{ item.clienteId }}</span></div>
+      <div class="col-md-6"><strong>Total:</strong> {{ item.total ?? 0 | currency:(item.moneda || 'USD') }}</div>
+      <div class="col-md-6"><strong>Fecha:</strong> {{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</div>
+      <div class="col-12">
+        <strong>Fotos:</strong>
+        <ul class="mt-2">
+          <li *ngFor="let fotoId of (item.fotoIds ?? [])">{{ fotoId }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

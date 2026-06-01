@@ -1,0 +1,7 @@
+<div *ngIf="open && imageUrl" class="image-lightbox-backdrop" role="dialog" aria-modal="true" [attr.aria-label]="title || 'Vista ampliada'" (click)="close()">
+  <div class="image-lightbox-panel animated fadeIn" (click)="stop($event)">
+    <button type="button" class="image-lightbox-close" aria-label="Cerrar imagen" (click)="close()">X</button>
+    <img [src]="imageUrl" [alt]="title || 'Imagen ampliada'">
+    <p *ngIf="title" class="image-lightbox-title">{{ title }}</p>
+  </div>
+</div>

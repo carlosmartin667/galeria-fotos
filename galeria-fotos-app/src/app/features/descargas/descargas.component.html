@@ -1,0 +1,34 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Descargas</small>
+      <h2 class="h3 mb-0">Generar link privado</h2>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+      <div class="col-md-6">
+        <label class="form-label" for="descargaPedido">Pedido ID</label>
+        <input id="descargaPedido" type="text" class="form-control" formControlName="pedidoId">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="descargaFoto">Foto ID</label>
+        <input id="descargaFoto" type="text" class="form-control" formControlName="fotoId">
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          Generar link
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="link" class="alert alert-success mt-4">
+      <p *ngIf="link.url" class="mb-2"><strong>Link:</strong> <a [href]="link.url" target="_blank" rel="noopener">{{ link.url }}</a></p>
+      <p *ngIf="link.expiresAtUtc" class="mb-0"><strong>Expira:</strong> {{ link.expiresAtUtc }}</p>
+    </div>
+  </div>
+</div>

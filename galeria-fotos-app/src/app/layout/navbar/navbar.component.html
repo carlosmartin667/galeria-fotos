@@ -1,0 +1,69 @@
+<!-- Navbar Start -->
+<div class="container-fluid nav-bar app-nav px-0">
+  <div class="container">
+    <nav class="navbar navbar-light navbar-expand-lg py-3">
+      <a routerLink="/dashboard" class="navbar-brand">
+        <h1 class="text-primary mb-0">Galeria<span class="text-dark">Fotos</span></h1>
+      </a>
+
+      <button
+        class="navbar-toggler py-2 px-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#appNavbar"
+        aria-controls="appNavbar"
+        aria-expanded="false"
+        aria-label="Abrir menu">
+        <span class="fa fa-bars text-primary"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="appNavbar">
+        <div class="navbar-nav mx-auto">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
+          <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
+          <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
+          <a *ngIf="session.isAdmin" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
+          <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Mis pedidos</a>
+          <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
+          <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
+          <a *ngIf="!session.isAuthenticated" routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
+
+          <div *ngIf="session.isAdmin" class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle app-nav-dropdown"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Administracion
+            </button>
+            <div class="dropdown-menu app-admin-menu">
+              <a routerLink="/clientes" routerLinkActive="active" class="dropdown-item">Clientes</a>
+              <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
+              <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
+              <a routerLink="/descargas" routerLinkActive="active" class="dropdown-item">Descargas</a>
+              <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
+              <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>
+              <a routerLink="/admin/pexels/importar-fotos" routerLinkActive="active" class="dropdown-item">Importar Pexels</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-nav-user">
+          <app-guest-badge></app-guest-badge>
+          <button
+            type="button"
+            class="btn app-theme-toggle rounded-pill"
+            (click)="themeService.toggleTheme()"
+            [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+            <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+            <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+          </button>
+          <span class="app-nav-name">{{ session.email || session.nombre || 'Invitado' }}</span>
+          <button *ngIf="session.isAuthenticated" type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
+          <a *ngIf="!session.isAuthenticated" routerLink="/login" class="btn btn-primary rounded-pill py-2 px-4">Iniciar sesion</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+<!-- Navbar End -->

@@ -1,0 +1,10 @@
+.favorite-item {
+  animation: appFadeIn .34s ease both;
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+
+.favorite-item:hover {
+  border-color: rgba(212, 167, 98, .56);
+  box-shadow: 0 14px 30px rgba(31, 41, 51, .1);
+  transform: translateY(-2px);
+}

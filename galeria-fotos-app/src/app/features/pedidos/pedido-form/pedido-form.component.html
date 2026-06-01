@@ -1,0 +1,37 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Pedidos</small>
+      <h2 class="h3 mb-0">Nuevo pedido</h2>
+    </div>
+    <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+      <div class="col-md-6">
+        <label class="form-label" for="pedidoEvento">Evento ID</label>
+        <input id="pedidoEvento" type="text" class="form-control" formControlName="eventoId">
+        <small *ngIf="showError('eventoId')" class="text-danger">El eventoId es requerido.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="pedidoCliente">Cliente ID</label>
+        <input id="pedidoCliente" type="text" class="form-control" formControlName="clienteId">
+        <small *ngIf="showError('clienteId')" class="text-danger">El clienteId es requerido.</small>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="pedidoFotos">Foto IDs</label>
+        <textarea id="pedidoFotos" rows="6" class="form-control" formControlName="fotoIds" placeholder="Un UUID por linea, coma o punto y coma"></textarea>
+      </div>
+      <div class="col-12 app-actions">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          Guardar
+        </button>
+        <a routerLink="/pedidos" class="btn btn-outline-dark rounded-pill px-4">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
