@@ -10,14 +10,16 @@ import { FotosService } from '../../../core/services/fotos.service';
 import { SessionService } from '../../../core/services/session.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
+import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PaginationControlsComponent } from '../../../shared/components/pagination-controls/pagination-controls.component';
 
 @Component({
   selector: 'app-fotos-list',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
-  templateUrl: './fotos-list.component.html'
+  imports: [CurrencyPipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent, PaginationControlsComponent],
+  templateUrl: './fotos-list.component.html',
+  styleUrl: './fotos-list.component.css'
 })
 export class FotosListComponent implements OnInit {
   private readonly fotosService = inject(FotosService);
@@ -40,6 +42,9 @@ export class FotosListComponent implements OnInit {
   totalPages = 1;
   hasPreviousPage = false;
   hasNextPage = false;
+  lightboxImageUrl = '';
+  lightboxTitle = '';
+  lightboxOpen = false;
   loading = false;
   error = '';
 
@@ -120,6 +125,20 @@ export class FotosListComponent implements OnInit {
   onPaginationChange(query: PaginationQuery): void {
     this.pagination = query;
     this.load();
+  }
+
+  openLightbox(foto: Foto): void {
+    if (!foto.previewUrl) {
+      return;
+    }
+
+    this.lightboxImageUrl = foto.previewUrl;
+    this.lightboxTitle = foto.nombreArchivo;
+    this.lightboxOpen = true;
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen = false;
   }
 
   deleteFoto(foto: Foto): void {

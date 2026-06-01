@@ -93,6 +93,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Cuando se selecciona un `PageSize`, enviar `All=false` y reiniciar a `Page=1`.
 - No inventar query params backend para busquedas o filtros si la API no los define.
 - Las busquedas y filtros de UI se aplican localmente sobre los items cargados en la pagina actual.
+- El paginado visual debe usar controles avanzados: `<<`, `<`, numeros, `>` y `>>`.
+- Mostrar como maximo 5 botones numericos visibles y marcar la pagina actual con el dorado CaterServ.
+- Deshabilitar botones de paginado cuando no corresponda avanzar o retroceder.
+- Si `All=true`, mantener el selector visible y deshabilitar u ocultar la navegacion de paginas.
+
+## Galerias e imagenes
+
+- Las grillas de fotos deben tener hover con overlay suave, icono de lupa, zoom leve, bordes redondeados y transiciones compatibles con modo claro/oscuro.
+- Las fotos clickeables deben abrir un modal/lightbox reusable con imagen grande, fondo oscuro y cierre por boton, Escape o click fuera cuando sea posible.
+- Las cards de eventos deben mostrar la primera foto disponible del evento.
+- Para obtener portada de eventos desde el frontend, usar `GET /Fotos/evento/{eventoId}/paginado` mediante `FotosService` con `Page=1`, `PageSize=5` y `All=false`.
+- Cachear la portada por `eventoId` en el componente para evitar llamadas repetidas o loops.
+- Si un evento no tiene foto, mostrar placeholder visual sin romper acciones ni permisos.
 
 ## Layout responsive
 
@@ -101,6 +114,8 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - La navbar debe mantener opciones principales visibles y agrupar opciones admin/operativas en dropdown para evitar saturacion.
 - Truncar emails o nombres largos con ellipsis en navbar.
 - Mantener contenedores principales amplios en desktop, aproximadamente `1280px` a `1400px`, y padding compacto en mobile.
+- Las pantallas principales deben usar `container-fluid` o un layout equivalente amplio con max-width aproximado de `1440px`.
+- Preservar la estetica CaterServ, incluyendo animaciones suaves, sombras, hover, dorado, modo claro/oscuro y responsive.
 
 ## Verificacion recomendada
 

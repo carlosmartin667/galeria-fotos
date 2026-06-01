@@ -3,7 +3,7 @@
 
   <!-- Hero Start -->
   <section class="app-hero">
-    <div class="container">
+    <div class="container-fluid app-wide-container">
       <div class="app-hero-content animated bounceInDown">
         <small class="app-kicker">Panel fotografico</small>
         <h1 class="display-5 mb-2">Hola, {{ displayName() }}</h1>
@@ -17,7 +17,7 @@
   <!-- Hero End -->
 
   <main class="app-main">
-    <div class="container">
+    <div class="container-fluid app-wide-container">
       <div class="app-content-grid">
         <app-sidebar></app-sidebar>
         <div class="app-content">
@@ -29,7 +29,7 @@
 
   <!-- Footer Start -->
   <footer class="app-footer">
-    <div class="container">
+    <div class="container-fluid app-wide-container">
       <div class="row g-4 align-items-start">
         <div class="col-lg-5">
           <a routerLink="/dashboard" class="footer-brand">
@@ -66,7 +66,7 @@
 
   <!-- Copyright Start -->
   <div class="app-copyright">
-    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div class="container-fluid app-wide-container d-flex flex-wrap align-items-center justify-content-between gap-2">
       <span>&copy; {{ year }} GaleriaFotos</span>
       <span>{{ session.displayRole }}</span>
     </div>

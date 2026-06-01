@@ -25,17 +25,28 @@
     <app-loading *ngIf="loading"></app-loading>
     <app-empty-state *ngIf="!loading && filteredEventos.length === 0" text="No hay eventos para mostrar."></app-empty-state>
 
-    <div *ngIf="!loading && filteredEventos.length > 0" class="row g-4">
-      <div class="col-lg-6" *ngFor="let evento of filteredEventos; trackBy: trackById">
-        <div class="event-card">
-          <div class="d-flex justify-content-between gap-3">
-            <div>
-              <h3 class="h5 mb-2">{{ evento.nombre }}</h3>
-              <p class="text-muted mb-2">{{ evento.descripcion || 'Sin descripcion' }}</p>
-              <p class="mb-1"><strong>Fecha:</strong> {{ evento.fechaEventoUtc | date:'short' }}</p>
-              <p class="mb-1"><strong>Estado:</strong> {{ evento.estado || '-' }}</p>
-              <p class="mb-0 text-break"><strong>Cliente:</strong> {{ evento.clientePrincipalId || '-' }}</p>
-            </div>
+    <div *ngIf="!loading && filteredEventos.length > 0" class="events-grid">
+      <article class="event-card event-showcase animated fadeIn" *ngFor="let evento of filteredEventos; trackBy: trackById">
+        <div class="event-image-wrap">
+          <img *ngIf="eventPreviewUrls[evento.id]" [src]="eventPreviewUrls[evento.id] || ''" [alt]="evento.nombre">
+          <div *ngIf="hasCachedPreview(evento.id) && !eventPreviewUrls[evento.id]" class="event-placeholder">
+            <i class="fas fa-camera-retro"></i>
+          </div>
+          <div *ngIf="!hasCachedPreview(evento.id)" class="event-placeholder event-placeholder-loading">
+            <span class="spinner-border spinner-border-sm"></span>
+          </div>
+          <div class="event-image-overlay">
+            <a [routerLink]="['/eventos', evento.id]" class="btn btn-sm btn-primary rounded-pill">Ver detalle</a>
+          </div>
+        </div>
+
+        <div class="event-card-body">
+          <h3 class="h5 mb-2">{{ evento.nombre }}</h3>
+          <p class="text-muted mb-3">{{ evento.descripcion || 'Sin descripcion' }}</p>
+          <div class="event-meta-grid">
+            <p class="mb-0"><strong>Fecha:</strong> {{ evento.fechaEventoUtc | date:'short' }}</p>
+            <p class="mb-0"><strong>Estado:</strong> {{ evento.estado || '-' }}</p>
+            <p class="mb-0 text-break"><strong>Cliente:</strong> {{ evento.clientePrincipalId || '-' }}</p>
           </div>
 
           <div class="app-actions mt-3">
@@ -46,7 +57,7 @@
             <button *ngIf="session.isAdmin" type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteEvento(evento)">Eliminar</button>
           </div>
         </div>
-      </div>
+      </article>
     </div>
 
     <app-pagination-controls

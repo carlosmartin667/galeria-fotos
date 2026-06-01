@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  min-width: 0;
   gap: 16px;
   margin-top: 22px;
   padding: 14px 16px;
@@ -9,6 +11,7 @@
   border-radius: 8px;
   background: var(--app-soft);
   color: var(--app-text);
+  animation: appFadeIn .28s ease both;
 }
 
 .pagination-summary,
@@ -17,6 +20,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.pagination-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .pagination-summary {
@@ -47,6 +56,46 @@
   min-width: 92px;
 }
 
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.pagination-btn {
+  display: inline-grid;
+  min-width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(212, 167, 98, .42);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--app-text);
+  font-weight: 800;
+  line-height: 1;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .2s ease;
+}
+
+.pagination-btn:hover:not(:disabled),
+.pagination-btn.active {
+  border-color: var(--app-primary);
+  background: var(--app-primary);
+  color: #111;
+  box-shadow: 0 10px 22px rgba(212, 167, 98, .24);
+  transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.pagination-number {
+  min-width: 38px;
+}
+
 @media (max-width: 767.98px) {
   .pagination-controls,
   .pagination-actions {
@@ -57,7 +106,24 @@
   .pagination-actions,
   .pagination-size,
   .pagination-size .form-select,
-  .pagination-actions .btn-group {
+  .pagination-pages {
     width: 100%;
+  }
+
+  .pagination-pages {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@keyframes appFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

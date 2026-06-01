@@ -10,14 +10,16 @@ import { FavoritosService } from '../../../core/services/favoritos.service';
 import { SessionService } from '../../../core/services/session.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
+import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PaginationControlsComponent } from '../../../shared/components/pagination-controls/pagination-controls.component';
 
 @Component({
   selector: 'app-favoritos-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
-  templateUrl: './favoritos-list.component.html'
+  imports: [DatePipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent, PaginationControlsComponent],
+  templateUrl: './favoritos-list.component.html',
+  styleUrl: './favoritos-list.component.css'
 })
 export class FavoritosListComponent implements OnInit {
   private readonly favoritosService = inject(FavoritosService);
@@ -40,6 +42,9 @@ export class FavoritosListComponent implements OnInit {
   fotosHasNextPage = false;
   eventosLoading = false;
   fotosLoading = false;
+  lightboxImageUrl = '';
+  lightboxTitle = '';
+  lightboxOpen = false;
   error = '';
   eventosError = '';
   fotosError = '';
@@ -167,6 +172,20 @@ export class FavoritosListComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  openLightbox(item: FavoritoFotoResponse): void {
+    if (!item.previewUrl) {
+      return;
+    }
+
+    this.lightboxImageUrl = item.previewUrl;
+    this.lightboxTitle = item.nombreArchivo || item.fotoId;
+    this.lightboxOpen = true;
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen = false;
   }
 
   trackEvento(_: number, item: FavoritoEventoResponse): string {

@@ -12,12 +12,13 @@ import { FotosService } from '../../../core/services/fotos.service';
 import { SessionService } from '../../../core/services/session.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
+import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-foto-detail',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [CurrencyPipe, DatePipe, NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent],
   templateUrl: './foto-detail.component.html'
 })
 export class FotoDetailComponent implements OnInit {
@@ -37,6 +38,7 @@ export class FotoDetailComponent implements OnInit {
   loading = false;
   savingComment = false;
   favoriteLoading = false;
+  lightboxOpen = false;
   error = '';
   success = '';
 
@@ -171,6 +173,16 @@ export class FotoDetailComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  openLightbox(): void {
+    if (this.foto?.previewUrl) {
+      this.lightboxOpen = true;
+    }
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen = false;
   }
 
   canManageComment(comment: ComentarioResponse): boolean {

@@ -1,0 +1,11 @@
+.photo-card {
+  animation: appBounceInUp .42s ease both;
+  overflow: hidden;
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+
+.photo-card:hover {
+  border-color: rgba(212, 167, 98, .62);
+  box-shadow: 0 16px 34px rgba(31, 41, 51, .12);
+  transform: translateY(-3px);
+}

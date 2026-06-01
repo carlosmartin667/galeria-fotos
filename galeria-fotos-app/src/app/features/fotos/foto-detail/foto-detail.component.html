@@ -18,7 +18,10 @@
     <ng-container *ngIf="!loading && foto as item">
       <div class="row g-4">
         <div class="col-lg-6">
-          <img *ngIf="item.previewUrl" [src]="item.previewUrl" [alt]="item.nombreArchivo" class="photo-detail-img">
+          <button *ngIf="item.previewUrl" type="button" class="photo-detail-trigger" (click)="openLightbox()" [attr.aria-label]="'Ampliar ' + item.nombreArchivo">
+            <img [src]="item.previewUrl" [alt]="item.nombreArchivo" class="photo-detail-img">
+            <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
+          </button>
           <div *ngIf="!item.previewUrl" class="photo-detail-placeholder"><i class="fas fa-image"></i></div>
         </div>
         <div class="col-lg-6">
@@ -83,3 +86,10 @@
     </ng-container>
   </div>
 </div>
+
+<app-image-lightbox
+  [open]="lightboxOpen"
+  [imageUrl]="foto?.previewUrl || ''"
+  [title]="foto?.nombreArchivo || ''"
+  (closed)="closeLightbox()">
+</app-image-lightbox>
