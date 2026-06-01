@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -12,7 +12,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-evento-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  imports: [NgFor, NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './evento-form.component.html'
 })
 export class EventoFormComponent implements OnInit {
@@ -27,12 +27,17 @@ export class EventoFormComponent implements OnInit {
   saving = false;
   submitted = false;
   error = '';
+  readonly estadoOptions = ['Borrador', 'Publicado', 'Finalizado', 'Archivado'];
+  readonly visibilidadOptions = ['Publico', 'Privado', 'Oculto'];
 
   readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(180)]],
     descripcion: ['', Validators.maxLength(1000)],
     fechaEventoUtc: ['', Validators.required],
     estado: ['Borrador', [Validators.required, Validators.maxLength(64)]],
+    visibilidad: ['Publico', Validators.maxLength(64)],
+    fechaLimiteCompraUtc: [''],
+    activo: [true],
     clientePrincipalId: ['']
   });
 
@@ -60,6 +65,9 @@ export class EventoFormComponent implements OnInit {
           descripcion: evento.descripcion ?? '',
           fechaEventoUtc: this.toLocalInput(evento.fechaEventoUtc),
           estado: evento.estado ?? 'Borrador',
+          visibilidad: evento.visibilidad ?? 'Publico',
+          fechaLimiteCompraUtc: evento.fechaLimiteCompraUtc ? this.toLocalInput(evento.fechaLimiteCompraUtc) : '',
+          activo: evento.activo !== false,
           clientePrincipalId: evento.clientePrincipalId ?? ''
         });
       },
@@ -83,10 +91,13 @@ export class EventoFormComponent implements OnInit {
       nombre: raw.nombre.trim(),
       descripcion: raw.descripcion.trim() || undefined,
       fechaEventoUtc: new Date(raw.fechaEventoUtc).toISOString(),
+      estado: raw.estado.trim() || undefined,
+      visibilidad: raw.visibilidad.trim() || undefined,
+      fechaLimiteCompraUtc: raw.fechaLimiteCompraUtc ? new Date(raw.fechaLimiteCompraUtc).toISOString() : undefined,
       clientePrincipalId: raw.clientePrincipalId.trim() || undefined
     };
     const request = this.id
-      ? this.eventosService.update(this.id, { ...basePayload, estado: raw.estado.trim() } satisfies ActualizarEventoRequest)
+      ? this.eventosService.update(this.id, { ...basePayload, estado: raw.estado.trim(), activo: raw.activo } satisfies ActualizarEventoRequest)
       : this.eventosService.create(basePayload);
 
     this.saving = true;

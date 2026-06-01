@@ -3,8 +3,12 @@ import { Observable, map } from 'rxjs';
 
 import {
   ActualizarFotoRequest,
+  CrearFotoMetadataBulkRequest,
+  CrearFotoMetadataBulkResponse,
   CrearFotoMetadataRequest,
   Foto,
+  GenerarStorageKeysBulkRequest,
+  GenerarStorageKeysBulkResponse,
   GenerarStorageKeyRequest,
   GenerarStorageKeyResponse
 } from '../models/foto.models';
@@ -44,6 +48,14 @@ export class FotosService {
 
   createMetadata(payload: CrearFotoMetadataRequest): Observable<Foto> {
     return this.api.post<Foto>('/Fotos/metadata', payload);
+  }
+
+  generarStorageKeysBulk(payload: GenerarStorageKeysBulkRequest): Observable<GenerarStorageKeysBulkResponse> {
+    return this.api.post<GenerarStorageKeysBulkResponse>('/Fotos/storage-keys/bulk', payload);
+  }
+
+  crearMetadataBulk(payload: CrearFotoMetadataBulkRequest): Observable<CrearFotoMetadataBulkResponse> {
+    return this.api.post<CrearFotoMetadataBulkResponse>('/Fotos/metadata/bulk', payload);
   }
 
   private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {

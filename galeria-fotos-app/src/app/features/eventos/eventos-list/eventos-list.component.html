@@ -42,10 +42,15 @@
 
         <div class="event-card-body">
           <h3 class="h5 mb-2">{{ evento.nombre }}</h3>
+          <div class="app-badge-row mb-2">
+            <span class="badge" [ngClass]="badgeClass(evento.estado)">{{ evento.estado || 'Sin estado' }}</span>
+            <span class="badge" [ngClass]="badgeClass(evento.visibilidad, 'visibilidad')">{{ evento.visibilidad || 'Sin visibilidad' }}</span>
+            <span class="badge" [ngClass]="badgeClass(evento.activo === false ? 'false' : 'true', 'activo')">{{ evento.activo === false ? 'Inactivo' : 'Activo' }}</span>
+          </div>
           <p class="text-muted mb-3">{{ evento.descripcion || 'Sin descripcion' }}</p>
           <div class="event-meta-grid">
             <p class="mb-0"><strong>Fecha:</strong> {{ evento.fechaEventoUtc | date:'short' }}</p>
-            <p class="mb-0"><strong>Estado:</strong> {{ evento.estado || '-' }}</p>
+            <p class="mb-0"><strong>Limite compra:</strong> {{ evento.fechaLimiteCompraUtc ? (evento.fechaLimiteCompraUtc | date:'short') : '-' }}</p>
             <p class="mb-0 text-break"><strong>Cliente:</strong> {{ evento.clientePrincipalId || '-' }}</p>
           </div>
 

@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -17,7 +17,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-evento-detail',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, NgClass, NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './evento-detail.component.html'
 })
 export class EventoDetailComponent implements OnInit {
@@ -177,6 +177,32 @@ export class EventoDetailComponent implements OnInit {
 
   canManageComment(comment: ComentarioResponse): boolean {
     return this.session.isAdmin || Boolean(this.session.userId && comment.usuarioId === this.session.userId);
+  }
+
+  badgeClass(value: string | undefined, kind: 'estado' | 'visibilidad' | 'activo' = 'estado'): string {
+    const normalized = String(value ?? '').trim().toLowerCase();
+
+    if (kind === 'activo') {
+      return normalized === 'true' ? 'bg-success' : 'bg-secondary';
+    }
+
+    if (['publicado', 'publico'].includes(normalized)) {
+      return 'bg-success';
+    }
+
+    if (['borrador', 'privado'].includes(normalized)) {
+      return 'bg-warning text-dark';
+    }
+
+    if (normalized === 'finalizado') {
+      return 'bg-primary';
+    }
+
+    if (['archivado', 'oculto'].includes(normalized)) {
+      return 'bg-secondary';
+    }
+
+    return 'bg-light text-dark border';
   }
 
   trackByComment(_: number, comment: ComentarioResponse): string {

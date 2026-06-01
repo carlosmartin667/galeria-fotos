@@ -20,9 +20,11 @@
 
   <nav class="app-menu">
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
     <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/fotos/bulk" routerLinkActive="active">Carga masiva fotos</a>
     <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
     <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
     <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>

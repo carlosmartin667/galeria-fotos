@@ -1,11 +1,13 @@
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 
+import { Evento } from '../../../core/models/evento.models';
 import { Foto } from '../../../core/models/foto.models';
 import { PaginationQuery } from '../../../core/models/pagination.models';
+import { EventosService } from '../../../core/services/eventos.service';
 import { FotosService } from '../../../core/services/fotos.service';
 import { SessionService } from '../../../core/services/session.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -17,18 +19,20 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 @Component({
   selector: 'app-fotos-list',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent, PaginationControlsComponent],
+  imports: [CurrencyPipe, FormsModule, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent, PaginationControlsComponent],
   templateUrl: './fotos-list.component.html',
   styleUrl: './fotos-list.component.css'
 })
 export class FotosListComponent implements OnInit {
   private readonly fotosService = inject(FotosService);
+  private readonly eventosService = inject(EventosService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
   eventoId = '';
+  evento: Evento | null = null;
   fotos: Foto[] = [];
   searchTerm = '';
   activaFilter = 'todas';
@@ -45,8 +49,10 @@ export class FotosListComponent implements OnInit {
   lightboxImageUrl = '';
   lightboxTitle = '';
   lightboxOpen = false;
+  coverLoadingId = '';
   loading = false;
   error = '';
+  success = '';
 
   ngOnInit(): void {
     this.eventoId = this.route.snapshot.paramMap.get('eventoId') ?? '';
@@ -79,14 +85,19 @@ export class FotosListComponent implements OnInit {
 
     this.loading = true;
     this.error = '';
+    this.success = '';
 
-    this.fotosService.getFotosPorEventoPaginado(this.eventoId, this.pagination).pipe(
+    forkJoin({
+      fotos: this.fotosService.getFotosPorEventoPaginado(this.eventoId, this.pagination),
+      evento: this.eventosService.get(this.eventoId).pipe(catchError(() => of(null)))
+    }).pipe(
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
       })
     ).subscribe({
-      next: (response) => {
+      next: ({ fotos: response, evento }) => {
+        this.evento = evento;
         this.fotos = response.items;
         this.pagination = {
           page: response.page,
@@ -139,6 +150,38 @@ export class FotosListComponent implements OnInit {
 
   closeLightbox(): void {
     this.lightboxOpen = false;
+  }
+
+  isPortada(foto: Foto): boolean {
+    return Boolean(this.evento?.portadaFotoId && this.evento.portadaFotoId === foto.id);
+  }
+
+  asignarPortada(foto: Foto): void {
+    if (!this.session.isAdmin || !this.eventoId) {
+      this.error = 'No tenes permisos para realizar esta accion.';
+      return;
+    }
+
+    this.coverLoadingId = foto.id;
+    this.error = '';
+    this.success = '';
+
+    this.eventosService.asignarPortada(this.eventoId, foto.id).subscribe({
+      next: () => {
+        this.coverLoadingId = '';
+        this.success = 'Portada del evento actualizada.';
+        this.load();
+      },
+      error: (error: unknown) => {
+        this.error = this.message(error);
+        this.coverLoadingId = '';
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  fotoBadgeClass(active: boolean): string {
+    return active ? 'bg-success' : 'bg-warning text-dark';
   }
 
   deleteFoto(foto: Foto): void {

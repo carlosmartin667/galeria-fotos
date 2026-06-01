@@ -68,15 +68,27 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Usar `environment.apiUrl` y services de `src/app/core/services` para cualquier llamada.
 - Mantener la estetica CaterServ y el modo claro/oscuro funcionando.
 
+## Fase 1A admin, eventos y fotos
+
+- El dashboard administrativo vive en `/admin/dashboard`, es solo `Admin` y consume `GET /Admin/dashboard`.
+- Los eventos pueden exponer `estado`, `visibilidad`, `fechaLimiteCompraUtc`, `activo` y `portadaFotoId`; mostrarlos con badges claros en listados y detalles.
+- La portada de evento solo puede asignarla `Admin` usando `PUT /Eventos/{eventoId}/portada/{fotoId}` desde `EventosService`.
+- En fotos por evento, el boton `Usar como portada` debe mostrarse solo a `Admin` y debe marcar visualmente la portada actual.
+- La carga masiva de fotos vive en `/admin/fotos/bulk`, es solo `Admin` y no sube binarios ni toca R2 desde Angular.
+- La carga masiva usa services y backend: `POST /Fotos/storage-keys/bulk` para generar keys y `POST /Fotos/metadata/bulk` para crear metadata.
+- Las fotos pueden exponer `tieneMarcaAgua`, `procesada` y `fechaActualizacionUtc`; mostrarlas con badges sin romper lightbox, hover ni paginado.
+- No exponer `StorageKey` original en pantallas publicas o de cliente cuando no corresponda; limitarlo a flujos administrativos.
+- Preservar la estetica CaterServ, modo claro/oscuro, roles existentes y menu dinamico.
+
 ## Endpoints principales
 
-- Admin: `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
+- Admin: `GET /Admin/dashboard`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`.
-- Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`.
+- Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.
-- Fotos: `GET /Fotos/evento/{eventoId}`, `GET/PUT/DELETE /Fotos/{id}`, `POST /Fotos/storage-key`, `POST /Fotos/metadata`.
+- Fotos: `GET /Fotos/evento/{eventoId}`, `GET/PUT/DELETE /Fotos/{id}`, `POST /Fotos/storage-key`, `POST /Fotos/storage-keys/bulk`, `POST /Fotos/metadata`, `POST /Fotos/metadata/bulk`.
 - Comentarios de fotos: `GET/POST /Fotos/{fotoId}/comentarios`, `PUT/DELETE /Fotos/comentarios/{comentarioId}`.
 - Favoritos: `GET /Favoritos/eventos`, `POST/DELETE /Favoritos/eventos/{eventoId}`, `GET /Favoritos/fotos`, `POST/DELETE /Favoritos/fotos/{fotoId}`.
 - Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`.

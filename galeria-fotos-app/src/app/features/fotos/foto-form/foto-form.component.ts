@@ -21,6 +21,8 @@ type FotoFormValue = {
   height: number;
   precioUnitario: number;
   activa: boolean;
+  tieneMarcaAgua: boolean;
+  procesada: boolean;
 };
 
 @Component({
@@ -54,7 +56,9 @@ export class FotoFormComponent implements OnInit {
     width: [0],
     height: [0],
     precioUnitario: [0, Validators.required],
-    activa: [true]
+    activa: [true],
+    tieneMarcaAgua: [false],
+    procesada: [false]
   });
 
   get isEdit(): boolean {
@@ -96,7 +100,9 @@ export class FotoFormComponent implements OnInit {
           width: foto.width ?? 0,
           height: foto.height ?? 0,
           precioUnitario: foto.precioUnitario ?? 0,
-          activa: foto.activa !== false
+          activa: foto.activa !== false,
+          tieneMarcaAgua: foto.tieneMarcaAgua === true,
+          procesada: foto.procesada === true
         });
       },
       error: (error: unknown) => {
@@ -172,7 +178,9 @@ export class FotoFormComponent implements OnInit {
       sizeInBytes: Number(raw.sizeInBytes),
       width: raw.width ? Number(raw.width) : undefined,
       height: raw.height ? Number(raw.height) : undefined,
-      precioUnitario: Number(raw.precioUnitario)
+      precioUnitario: Number(raw.precioUnitario),
+      tieneMarcaAgua: raw.tieneMarcaAgua,
+      procesada: raw.procesada
     };
   }
 
@@ -182,7 +190,9 @@ export class FotoFormComponent implements OnInit {
       previewUrl: raw.previewUrl.trim() || undefined,
       marcaAguaStorageKey: raw.marcaAguaStorageKey.trim() || undefined,
       precioUnitario: Number(raw.precioUnitario),
-      activa: raw.activa
+      activa: raw.activa,
+      tieneMarcaAgua: raw.tieneMarcaAgua,
+      procesada: raw.procesada
     };
   }
 

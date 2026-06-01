@@ -27,9 +27,19 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/perfil-publico/perfil-publico.component').then((m) => m.PerfilPublicoComponent)
       },
       {
+        path: 'admin/dashboard',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/dashboard/admin-dashboard.component').then((m) => m.AdminDashboardComponent)
+      },
+      {
         path: 'admin/mi-perfil',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/mi-perfil/mi-perfil-admin.component').then((m) => m.MiPerfilAdminComponent)
+      },
+      {
+        path: 'admin/fotos/bulk',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/fotos-bulk/fotos-bulk.component').then((m) => m.FotosBulkComponent)
       },
       {
         path: 'admin/pexels/importar-fotos',

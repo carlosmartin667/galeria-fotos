@@ -164,6 +164,18 @@ body {
   gap: 8px;
 }
 
+.app-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-badge-row .badge {
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
 .app-meta {
   color: var(--app-muted);
   font-size: .92rem;
