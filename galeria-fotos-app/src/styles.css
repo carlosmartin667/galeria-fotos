@@ -813,6 +813,76 @@ body {
   color: var(--app-heading);
 }
 
+.historial-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.historial-section,
+.notas-internas-item {
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  color: var(--app-text);
+  box-shadow: var(--app-card-shadow);
+}
+
+.historial-list,
+.notas-internas-list {
+  display: grid;
+  gap: 12px;
+}
+
+.historial-item {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+}
+
+.historial-item > strong,
+.notas-internas-item strong {
+  color: var(--app-heading);
+}
+
+.historial-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.historial-entry-grid > div {
+  min-width: 0;
+}
+
+.historial-entry-grid span {
+  display: block;
+  color: var(--app-muted);
+  font-size: .82rem;
+  font-weight: 800;
+}
+
+.historial-entry-grid p {
+  margin: 2px 0 0;
+  color: var(--app-text);
+  overflow-wrap: anywhere;
+}
+
+.notas-internas-item {
+  display: grid;
+  gap: 10px;
+}
+
+.sesion-state-control {
+  display: grid;
+  min-width: 280px;
+  gap: 8px;
+}
+
 .table {
   --bs-table-bg: transparent;
   --bs-table-color: var(--app-text);
@@ -1007,6 +1077,10 @@ body {
   }
 
   .admin-detail-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .historial-entry-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

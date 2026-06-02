@@ -42,6 +42,7 @@
             <td *ngIf="session.isAdmin" class="text-end">
               <div class="app-actions justify-content-end">
                 <a [routerLink]="['/clientes/editar', cliente.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
+                <a [routerLink]="['/clientes', cliente.id, 'historial']" class="btn btn-sm btn-outline-primary rounded-pill">Historial</a>
                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteCliente(cliente)">Eliminar</button>
               </div>
             </td>

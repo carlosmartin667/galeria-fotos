@@ -50,6 +50,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/operaciones',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/descargas',
     renderMode: RenderMode.Server
   },
@@ -78,7 +82,19 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/sesiones-privadas',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/pexels/importar-fotos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'clientes/:id/historial',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'mi-historial',
     renderMode: RenderMode.Server
   },
   {

@@ -1,0 +1,92 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">{{ isMiHistorial ? 'Cliente' : 'Admin' }}</small>
+      <h2 class="h3 mb-0">{{ isMiHistorial ? 'Mi historial' : 'Historial del cliente' }}</h2>
+    </div>
+    <a [routerLink]="session.isAdmin ? '/clientes' : '/dashboard'" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando historial..."></app-loading>
+
+    <ng-container *ngIf="!loading && historial as item">
+      <div class="admin-detail-summary mb-4">
+        <div>
+          <span>Cliente</span>
+          <strong>{{ item.cliente?.nombre || session.nombre || '-' }}</strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <strong class="text-break">{{ item.cliente?.email || session.email || '-' }}</strong>
+        </div>
+        <div>
+          <span>Total pedidos</span>
+          <strong>{{ totalNumber(['totalPedidos']) }}</strong>
+        </div>
+        <div>
+          <span>Total gastado</span>
+          <strong>{{ totalNumber(['totalGastado']) | currency:'USD' }}</strong>
+        </div>
+        <div>
+          <span>Total descargas</span>
+          <strong>{{ totalNumber(['totalDescargas']) }}</strong>
+        </div>
+        <div>
+          <span>Sesiones privadas</span>
+          <strong>{{ totalNumber(['totalSesionesPrivadas']) }}</strong>
+        </div>
+        <div>
+          <span>Eventos</span>
+          <strong>{{ totalNumber(['totalEventos']) }}</strong>
+        </div>
+        <div>
+          <span>Solicitudes</span>
+          <strong>{{ totalNumber(['totalSolicitudes']) }}</strong>
+        </div>
+        <div>
+          <span>Ultima compra</span>
+          <strong>{{ totalText(['ultimaCompraUtc']) }}</strong>
+        </div>
+        <div>
+          <span>Ultima actividad</span>
+          <strong>{{ totalText(['ultimaActividadUtc']) }}</strong>
+        </div>
+      </div>
+
+      <div class="historial-tabs mb-4">
+        <button
+          *ngFor="let tab of tabs; trackBy: trackByKey"
+          type="button"
+          class="btn rounded-pill"
+          [class.btn-primary]="activeTab === tab.key"
+          [class.btn-outline-primary]="activeTab !== tab.key"
+          (click)="activeTab = tab.key">
+          {{ tab.label }}
+          <span class="badge bg-light text-dark ms-1">{{ sectionItems(tab.key).length }}</span>
+        </button>
+      </div>
+
+      <ng-container *ngFor="let tab of tabs; trackBy: trackByKey">
+        <section *ngIf="activeTab === tab.key" class="historial-section">
+          <h3 class="h5 mb-3">{{ tab.label }}</h3>
+          <app-empty-state *ngIf="sectionItems(tab.key).length === 0" text="No hay registros en esta seccion."></app-empty-state>
+          <div class="historial-list" *ngIf="sectionItems(tab.key).length > 0">
+            <article class="historial-item" *ngFor="let row of sectionItems(tab.key); trackBy: trackByIndex">
+              <strong>{{ itemTitle(row) }}</strong>
+              <div class="historial-entry-grid">
+                <div *ngFor="let entry of safeEntries(row)">
+                  <span>{{ entry.key }}</span>
+                  <p>{{ entry.value }}</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </ng-container>
+
+      <app-notas-internas *ngIf="session.isAdmin && clienteId()" entidadTipo="Cliente" [entidadId]="clienteId()"></app-notas-internas>
+    </ng-container>
+  </div>
+</div>

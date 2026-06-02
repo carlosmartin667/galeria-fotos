@@ -95,6 +95,8 @@
           <button type="button" class="btn btn-outline-danger rounded-pill px-4" (click)="desactivar()">Cerrar / Desactivar</button>
         </div>
       </form>
+
+      <app-notas-internas *ngIf="item.id" entidadTipo="SolicitudPresupuesto" [entidadId]="item.id"></app-notas-internas>
     </ng-container>
   </div>
 </div>

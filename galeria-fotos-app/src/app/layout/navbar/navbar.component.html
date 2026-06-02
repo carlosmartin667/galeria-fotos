@@ -43,6 +43,7 @@
           <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Mis pedidos</a>
           <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Mis descargas</a>
           <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
+          <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active" class="nav-item nav-link">Mi historial</a>
           <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
           <a *ngIf="!session.isAuthenticated" routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
 
@@ -56,6 +57,7 @@
             </button>
             <div class="dropdown-menu app-admin-menu">
               <a routerLink="/admin/dashboard" routerLinkActive="active" class="dropdown-item">Dashboard admin</a>
+              <a routerLink="/admin/operaciones" routerLinkActive="active" class="dropdown-item">Operaciones</a>
               <a routerLink="/clientes" routerLinkActive="active" class="dropdown-item">Clientes</a>
               <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
               <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
@@ -65,6 +67,7 @@
               <a routerLink="/admin/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
               <a routerLink="/admin/presupuestos" routerLinkActive="active" class="dropdown-item">Presupuestos</a>
               <a routerLink="/admin/agenda" routerLinkActive="active" class="dropdown-item">Agenda</a>
+              <a routerLink="/admin/sesiones-privadas" routerLinkActive="active" class="dropdown-item">Sesiones privadas</a>
               <a routerLink="/admin/fotos/bulk" routerLinkActive="active" class="dropdown-item">Carga masiva fotos</a>
               <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
               <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>

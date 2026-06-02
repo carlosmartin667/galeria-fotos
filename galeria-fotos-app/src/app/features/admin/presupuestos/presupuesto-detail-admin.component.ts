@@ -8,11 +8,12 @@ import { SolicitudPresupuesto } from '../../../core/models/presupuesto.models';
 import { PresupuestosService } from '../../../core/services/presupuestos.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { NotasInternasComponent } from '../../../shared/components/notas-internas/notas-internas.component';
 
 @Component({
   selector: 'app-presupuesto-detail-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ReactiveFormsModule, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ReactiveFormsModule, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
   templateUrl: './presupuesto-detail-admin.component.html',
   styleUrl: './presupuesto-detail-admin.component.css'
 })

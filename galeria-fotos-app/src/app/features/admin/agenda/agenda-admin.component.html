@@ -166,5 +166,7 @@
         </tbody>
       </table>
     </div>
+
+    <app-notas-internas *ngIf="selectedItem?.id" entidadTipo="Agenda" [entidadId]="selectedItem?.id || ''"></app-notas-internas>
   </div>
 </div>

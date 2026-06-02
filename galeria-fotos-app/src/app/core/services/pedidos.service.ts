@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { CrearPedidoRequest, Pedido } from '../models/pedido.models';
+import { CambiarEstadoPedidoRequest, CrearPedidoRequest, Pedido, PedidoEstadoHistorial } from '../models/pedido.models';
 import { PaginatedResponse, PaginationQuery } from '../models/pagination.models';
 import { ApiHttpService } from './api-http.service';
 import { extractItems, normalizePaginatedResponse } from './response-utils';
@@ -24,8 +24,16 @@ export class PedidosService {
     return this.api.get<Pedido>(`/Pedidos/${id}`);
   }
 
+  getHistorialEstados(id: string): Observable<PedidoEstadoHistorial[]> {
+    return this.api.get<PedidoEstadoHistorial[] | { items?: PedidoEstadoHistorial[]; data?: PedidoEstadoHistorial[] }>(`/Pedidos/${id}/historial-estados`).pipe(map(extractItems));
+  }
+
   create(payload: CrearPedidoRequest): Observable<Pedido> {
     return this.api.post<Pedido>('/Pedidos', payload);
+  }
+
+  cambiarEstadoPedido(id: string, request: CambiarEstadoPedidoRequest): Observable<Pedido> {
+    return this.api.put<Pedido>(`/Pedidos/${id}/estado`, request);
   }
 
   private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {

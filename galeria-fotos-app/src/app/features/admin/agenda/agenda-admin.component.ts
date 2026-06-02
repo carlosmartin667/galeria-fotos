@@ -8,13 +8,14 @@ import { AgendaService } from '../../../core/services/agenda.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { NotasInternasComponent } from '../../../shared/components/notas-internas/notas-internas.component';
 
 type AgendaControl = 'titulo' | 'tipo' | 'fechaInicio' | 'fechaFin' | 'estado';
 
 @Component({
   selector: 'app-agenda-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
   templateUrl: './agenda-admin.component.html',
   styleUrl: './agenda-admin.component.css'
 })
@@ -27,6 +28,7 @@ export class AgendaAdminComponent implements OnInit {
   readonly estados = ['Programado', 'Confirmado', 'Cancelado', 'Finalizado'];
   items: AgendaItem[] = [];
   editingId = '';
+  selectedItem: AgendaItem | null = null;
   loading = false;
   saving = false;
   submitted = false;
@@ -89,6 +91,7 @@ export class AgendaAdminComponent implements OnInit {
 
   edit(item: AgendaItem): void {
     this.editingId = item.id ?? '';
+    this.selectedItem = item;
     this.submitted = false;
     this.error = '';
     this.success = '';
@@ -110,6 +113,7 @@ export class AgendaAdminComponent implements OnInit {
 
   cancel(): void {
     this.editingId = '';
+    this.selectedItem = null;
     this.submitted = false;
     this.form.reset({
       titulo: '',

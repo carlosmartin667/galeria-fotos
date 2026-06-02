@@ -122,18 +122,32 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No integrar WhatsApp API real; usar solo links `wa.me` o `whatsAppUrl` provistos por backend.
 - Mantener CaterServ, modo claro/oscuro, responsive, roles existentes y menu dinamico.
 
+## Fase 3 gestion operativa
+
+- El panel operativo vive en `/admin/operaciones`, es solo `Admin` y consume `GET /Admin/operaciones/resumen` y `GET /Admin/operaciones/pendientes`.
+- El historial completo de clientes vive en `/clientes/{id}/historial` para `Admin`; `Usuario` debe usar `/mi-historial` y solo ver su propio historial.
+- Los historiales de cliente no deben exponer `StorageKey`, URLs firmadas, tokens ni secretos.
+- El detalle de pedido muestra historial de estados con `GET /Pedidos/{id}/historial-estados`.
+- Solo `Admin` puede cambiar estado de pedido usando `PUT /Pedidos/{id}/estado`.
+- Las notas internas son solo `Admin`, usan endpoints `NotasInternas` y nunca deben mostrarse a `Usuario` o `Invitado`.
+- No guardar notas internas ni historiales en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- No loguear respuestas completas con datos privados.
+- La gestion admin de sesiones privadas vive en `/admin/sesiones-privadas` y solo `Admin` puede cambiar estado usando `PUT /SesionesPrivadas/{id}/estado`.
+- No exponer `StorageKey` ni URLs firmadas desde sesiones privadas, descargas, historiales o notas internas.
+- Preservar CaterServ, modo claro/oscuro, roles actuales, menu dinamico y vistas publicas existentes.
+
 ## Endpoints principales
 
-- Admin: `GET /Admin/dashboard`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
+- Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
-- Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`.
+- Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
 - Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.
 - Fotos: `GET /Fotos/evento/{eventoId}`, `GET/PUT/DELETE /Fotos/{id}`, `POST /Fotos/storage-key`, `POST /Fotos/storage-keys/bulk`, `POST /Fotos/metadata`, `POST /Fotos/metadata/bulk`.
 - Comentarios de fotos: `GET/POST /Fotos/{fotoId}/comentarios`, `PUT/DELETE /Fotos/comentarios/{comentarioId}`.
 - Favoritos: `GET /Favoritos/eventos`, `POST/DELETE /Favoritos/eventos/{eventoId}`, `GET /Favoritos/fotos`, `POST/DELETE /Favoritos/fotos/{fotoId}`.
-- Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`.
+- Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`, `PUT /Pedidos/{id}/estado`, `GET /Pedidos/{id}/historial-estados`.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
 - Descargas: `GET /Descargas/mis-descargas`, `GET /Descargas/{id}`, `POST /Descargas/link`, `POST /Descargas/{id}/regenerar`, `GET /Descargas/admin`.
 - Sitio publico: `GET /Sitio/home`, `GET /Sitio/contacto`, `GET /Sitio/perfil-fotografa`.
@@ -142,6 +156,8 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - FAQ: `GET /Faq`, `GET /Faq/{id}`, `GET /Faq/admin`, `POST /Faq`, `PUT /Faq/{id}`, `DELETE /Faq/{id}`.
 - Presupuestos: `POST /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}/estado`, `DELETE /Presupuestos/solicitudes/{id}`.
 - Agenda: `GET /Agenda`, `GET /Agenda/{id}`, `POST /Agenda`, `PUT /Agenda/{id}`, `DELETE /Agenda/{id}`, `GET /Agenda/disponibilidad`.
+- Notas internas: `GET /NotasInternas/{entidadTipo}/{entidadId}`, `POST /NotasInternas/{entidadTipo}/{entidadId}`, `PUT /NotasInternas/{id}`, `DELETE /NotasInternas/{id}`.
+- Sesiones privadas: `GET /SesionesPrivadas`, `GET /SesionesPrivadas/{id}`, `PUT /SesionesPrivadas/{id}/estado`.
 
 ## Listados paginados
 

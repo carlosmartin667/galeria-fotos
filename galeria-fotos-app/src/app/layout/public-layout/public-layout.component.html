@@ -30,6 +30,7 @@
             <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-link">Favoritos</a>
             <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-link">Pedidos</a>
             <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active" class="nav-link">Mis descargas</a>
+            <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active" class="nav-link">Mi historial</a>
             <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-link">Mi perfil</a>
           </div>
 
@@ -81,7 +82,9 @@
             <a routerLink="/fotos/evento">Fotos</a>
             <a *ngIf="session.isAuthenticated" routerLink="/pedidos">Pedidos</a>
             <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
+            <a *ngIf="session.isUser" routerLink="/mi-historial">Mi historial</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/dashboard">Dashboard admin</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/operaciones">Operaciones</a>
             <a *ngIf="!session.isAuthenticated" routerLink="/login">Login</a>
           </div>
         </div>

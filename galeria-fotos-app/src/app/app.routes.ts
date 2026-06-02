@@ -74,6 +74,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/dashboard/admin-dashboard.component').then((m) => m.AdminDashboardComponent)
       },
       {
+        path: 'admin/operaciones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/operaciones/operaciones-admin.component').then((m) => m.OperacionesAdminComponent)
+      },
+      {
         path: 'admin/mi-perfil',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/mi-perfil/mi-perfil-admin.component').then((m) => m.MiPerfilAdminComponent)
@@ -119,6 +124,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/agenda/agenda-admin.component').then((m) => m.AgendaAdminComponent)
       },
       {
+        path: 'admin/sesiones-privadas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/sesiones-privadas/sesiones-privadas-admin.component').then((m) => m.SesionesPrivadasAdminComponent)
+      },
+      {
         path: 'admin/pexels/importar-fotos',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
@@ -142,6 +152,16 @@ export const routes: Routes = [
         path: 'clientes/editar/:id',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent)
+      },
+      {
+        path: 'clientes/:id/historial',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
+      },
+      {
+        path: 'mi-historial',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
       },
       {
         path: 'eventos',

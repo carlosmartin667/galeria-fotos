@@ -49,6 +49,7 @@
             <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
             <a *ngIf="session.isAdmin" routerLink="/clientes">Clientes</a>
+            <a *ngIf="session.isUser" routerLink="/mi-historial">Mi historial</a>
             <a routerLink="/eventos">Eventos</a>
             <a routerLink="/fotos/evento">Fotos</a>
             <a routerLink="/admin/perfil-publico">Perfil publico</a>
@@ -63,11 +64,13 @@
             <a *ngIf="session.isAuthenticated" routerLink="/pagos">Pagos</a>
             <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/descargas">Gestion descargas</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/operaciones">Operaciones</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/portfolio">Admin portfolio</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/servicios">Admin servicios</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/faq">Admin FAQ</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos">Presupuestos</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/agenda">Agenda</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>
