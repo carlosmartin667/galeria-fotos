@@ -19,10 +19,18 @@
       <div class="row g-4">
         <div class="col-lg-8">
           <h3 class="h2 mb-3">{{ item.nombre }}</h3>
+          <div class="app-badge-row mb-3">
+            <span class="badge" [ngClass]="badgeClass(item.estado)">{{ item.estado || 'Sin estado' }}</span>
+            <span class="badge" [ngClass]="badgeClass(item.visibilidad, 'visibilidad')">{{ item.visibilidad || 'Sin visibilidad' }}</span>
+            <span class="badge" [ngClass]="badgeClass(item.activo === false ? 'false' : 'true', 'activo')">{{ item.activo === false ? 'Inactivo' : 'Activo' }}</span>
+          </div>
           <p class="lead">{{ item.descripcion || 'Sin descripcion' }}</p>
           <div class="row g-3">
             <div class="col-md-6"><strong>Fecha:</strong> {{ item.fechaEventoUtc | date:'short' }}</div>
             <div class="col-md-6"><strong>Estado:</strong> {{ item.estado || '-' }}</div>
+            <div class="col-md-6"><strong>Visibilidad:</strong> {{ item.visibilidad || '-' }}</div>
+            <div class="col-md-6"><strong>Limite compra:</strong> {{ item.fechaLimiteCompraUtc ? (item.fechaLimiteCompraUtc | date:'short') : '-' }}</div>
+            <div class="col-md-6"><strong>Portada foto:</strong> {{ item.portadaFotoId || '-' }}</div>
             <div class="col-12 text-break"><strong>Cliente principal:</strong> {{ item.clientePrincipalId || '-' }}</div>
           </div>
         </div>

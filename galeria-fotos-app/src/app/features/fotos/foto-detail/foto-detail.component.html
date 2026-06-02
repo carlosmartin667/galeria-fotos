@@ -26,11 +26,21 @@
         </div>
         <div class="col-lg-6">
           <h3 class="h2 mb-3 text-break">{{ item.nombreArchivo }}</h3>
+          <div class="app-badge-row mb-3">
+            <span class="badge" [ngClass]="fotoBadgeClass(item.procesada === true)">{{ item.procesada ? 'Procesada' : 'Pendiente' }}</span>
+            <span class="badge" [ngClass]="fotoBadgeClass(item.tieneMarcaAgua === true)">{{ item.tieneMarcaAgua ? 'Con marca de agua' : 'Sin marca de agua' }}</span>
+            <span *ngIf="isPortada()" class="badge bg-primary">Portada</span>
+          </div>
           <p><strong>Evento:</strong> <span class="text-break">{{ item.eventoId }}</span></p>
           <p><strong>Tipo:</strong> {{ item.contentType || '-' }}</p>
           <p><strong>Precio:</strong> {{ item.precioUnitario ?? 0 | currency }}</p>
           <p><strong>Activa:</strong> {{ item.activa === false ? 'No' : 'Si' }}</p>
+          <p><strong>Actualizada:</strong> {{ item.fechaActualizacionUtc ? (item.fechaActualizacionUtc | date:'short') : '-' }}</p>
           <div class="app-actions">
+            <button *ngIf="session.isAdmin" type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="coverLoading || isPortada()" (click)="asignarPortada()">
+              <span *ngIf="coverLoading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isPortada() ? 'Portada actual' : 'Usar como portada' }}
+            </button>
             <button *ngIf="session.isAuthenticated" type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="favoriteLoading" (click)="toggleFavorite()">
               <span *ngIf="favoriteLoading" class="spinner-border spinner-border-sm me-2"></span>
               {{ isFavorite ? 'Quitar favorito' : 'Guardar favorito' }}

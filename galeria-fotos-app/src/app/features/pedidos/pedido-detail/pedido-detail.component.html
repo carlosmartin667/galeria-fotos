@@ -9,20 +9,125 @@
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
+    <app-error-alert [message]="downloadError"></app-error-alert>
+    <app-error-alert [message]="estadoError"></app-error-alert>
+    <div *ngIf="estadoSuccess" class="alert alert-success">{{ estadoSuccess }}</div>
     <app-loading *ngIf="loading"></app-loading>
 
     <div *ngIf="pedido as item" class="row g-3">
       <div class="col-md-6"><strong>ID:</strong> <span class="text-break">{{ item.id }}</span></div>
-      <div class="col-md-6"><strong>Estado:</strong> {{ item.estado || '-' }}</div>
+      <div class="col-md-6"><strong>Estado:</strong> <span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || '-' }}</span></div>
       <div class="col-md-6"><strong>Evento:</strong> <span class="text-break">{{ item.eventoId }}</span></div>
       <div class="col-md-6"><strong>Cliente:</strong> <span class="text-break">{{ item.clienteId }}</span></div>
       <div class="col-md-6"><strong>Total:</strong> {{ item.total ?? 0 | currency:(item.moneda || 'USD') }}</div>
       <div class="col-md-6"><strong>Fecha:</strong> {{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</div>
+
+      <div class="col-12" *ngIf="session.isAdmin">
+        <div class="admin-inline-form mt-2">
+          <small class="app-kicker">Admin</small>
+          <h3 class="h5 mb-3">Cambiar estado del pedido</h3>
+          <form [formGroup]="estadoForm" (ngSubmit)="cambiarEstado()" class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label" for="pedidoEstado">Estado</label>
+              <select id="pedidoEstado" class="form-select" formControlName="estado">
+                <option *ngFor="let estado of estadosPedido" [value]="estado">{{ estado }}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="pedidoEstadoComentario">Comentario</label>
+              <input id="pedidoEstadoComentario" type="text" class="form-control" formControlName="comentario" placeholder="Comentario opcional">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="savingEstado">
+                <span *ngIf="savingEstado" class="spinner-border spinner-border-sm me-2"></span>
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="historial-section mt-2">
+          <h3 class="h5 mb-3">Historial de estados</h3>
+          <p *ngIf="historialEstados.length === 0" class="app-meta mb-0">No hay cambios de estado registrados.</p>
+          <div class="historial-list" *ngIf="historialEstados.length > 0">
+            <article class="historial-item" *ngFor="let estado of historialEstados; trackBy: trackByEstado">
+              <div class="app-badge-row mb-2">
+                <span class="badge bg-light text-dark border">{{ estado.estadoAnterior || 'Inicio' }}</span>
+                <span class="badge" [ngClass]="estadoClass(estado.estadoNuevo)">{{ estado.estadoNuevo || '-' }}</span>
+              </div>
+              <p *ngIf="estado.comentario" class="mb-1">{{ estado.comentario }}</p>
+              <p class="app-meta mb-0">
+                {{ estado.usuarioNombre || estado.usuarioEmail || 'Sistema' }} -
+                {{ (estado.fechaCambioUtc || estado.fechaCreacionUtc) ? ((estado.fechaCambioUtc || estado.fechaCreacionUtc) | date:'short') : '-' }}
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+
       <div class="col-12">
         <strong>Fotos:</strong>
-        <ul class="mt-2">
-          <li *ngFor="let fotoId of (item.fotoIds ?? [])">{{ fotoId }}</li>
-        </ul>
+        <div class="download-list mt-2" *ngIf="(item.fotoIds ?? []).length > 0; else sinFotos">
+          <article class="download-inline-card" *ngFor="let fotoId of (item.fotoIds ?? [])">
+            <div>
+              <span class="app-meta">Foto evento</span>
+              <p class="mb-0 text-break">{{ fotoId }}</p>
+            </div>
+            <div class="app-actions">
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="generatingItemId === 'foto:' + fotoId" (click)="generarLinkFoto(fotoId)">
+                <span *ngIf="generatingItemId === 'foto:' + fotoId" class="spinner-border spinner-border-sm me-2"></span>
+                Generar link
+              </button>
+            </div>
+            <div *ngIf="linksByItem['foto:' + fotoId] as link" class="download-result">
+              <div class="app-badge-row mb-2">
+                <span class="badge bg-primary">Link generado</span>
+                <span class="badge bg-light text-dark border">{{ link.maxDescargas === null || link.maxDescargas === undefined ? 'Sin limite' : 'Max ' + link.maxDescargas }}</span>
+              </div>
+              <p class="mb-1"><strong>Expira:</strong> {{ expira(link) ? (expira(link) | date:'short') : '-' }}</p>
+              <p class="mb-1"><strong>Descargas realizadas:</strong> {{ link.descargasRealizadas ?? 0 }}</p>
+              <a *ngIf="link.url" [href]="link.url" target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill mt-2">Abrir link</a>
+              <a *ngIf="linkId(link)" [routerLink]="['/descargas', linkId(link)]" class="btn btn-sm btn-outline-dark rounded-pill mt-2 ms-2">Ver descarga</a>
+            </div>
+          </article>
+        </div>
+        <ng-template #sinFotos>
+          <p class="app-meta mt-2 mb-0">Este pedido no tiene fotos de evento informadas.</p>
+        </ng-template>
+      </div>
+
+      <div class="col-12" *ngIf="(item.fotoPrivadaIds ?? []).length > 0">
+        <strong>Fotos privadas:</strong>
+        <div class="download-list mt-2">
+          <article class="download-inline-card" *ngFor="let fotoPrivadaId of (item.fotoPrivadaIds ?? [])">
+            <div>
+              <span class="app-meta">Foto privada</span>
+              <p class="mb-0 text-break">{{ fotoPrivadaId }}</p>
+            </div>
+            <div class="app-actions">
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="generatingItemId === 'fotoPrivada:' + fotoPrivadaId" (click)="generarLinkFotoPrivada(fotoPrivadaId)">
+                <span *ngIf="generatingItemId === 'fotoPrivada:' + fotoPrivadaId" class="spinner-border spinner-border-sm me-2"></span>
+                Generar link
+              </button>
+            </div>
+            <div *ngIf="linksByItem['fotoPrivada:' + fotoPrivadaId] as link" class="download-result">
+              <div class="app-badge-row mb-2">
+                <span class="badge bg-primary">Link generado</span>
+                <span class="badge bg-light text-dark border">{{ link.maxDescargas === null || link.maxDescargas === undefined ? 'Sin limite' : 'Max ' + link.maxDescargas }}</span>
+              </div>
+              <p class="mb-1"><strong>Expira:</strong> {{ expira(link) ? (expira(link) | date:'short') : '-' }}</p>
+              <p class="mb-1"><strong>Descargas realizadas:</strong> {{ link.descargasRealizadas ?? 0 }}</p>
+              <a *ngIf="link.url" [href]="link.url" target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill mt-2">Abrir link</a>
+              <a *ngIf="linkId(link)" [routerLink]="['/descargas', linkId(link)]" class="btn btn-sm btn-outline-dark rounded-pill mt-2 ms-2">Ver descarga</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <app-notas-internas *ngIf="session.isAdmin" entidadTipo="Pedido" [entidadId]="item.id"></app-notas-internas>
       </div>
     </div>
   </div>

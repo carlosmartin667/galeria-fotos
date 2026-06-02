@@ -68,20 +68,96 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Usar `environment.apiUrl` y services de `src/app/core/services` para cualquier llamada.
 - Mantener la estetica CaterServ y el modo claro/oscuro funcionando.
 
+## Fase 1A admin, eventos y fotos
+
+- El dashboard administrativo vive en `/admin/dashboard`, es solo `Admin` y consume `GET /Admin/dashboard`.
+- Los eventos pueden exponer `estado`, `visibilidad`, `fechaLimiteCompraUtc`, `activo` y `portadaFotoId`; mostrarlos con badges claros en listados y detalles.
+- La portada de evento solo puede asignarla `Admin` usando `PUT /Eventos/{eventoId}/portada/{fotoId}` desde `EventosService`.
+- En fotos por evento, el boton `Usar como portada` debe mostrarse solo a `Admin` y debe marcar visualmente la portada actual.
+- La carga masiva de fotos vive en `/admin/fotos/bulk`, es solo `Admin` y no sube binarios ni toca R2 desde Angular.
+- La carga masiva usa services y backend: `POST /Fotos/storage-keys/bulk` para generar keys y `POST /Fotos/metadata/bulk` para crear metadata.
+- Las fotos pueden exponer `tieneMarcaAgua`, `procesada` y `fechaActualizacionUtc`; mostrarlas con badges sin romper lightbox, hover ni paginado.
+- No exponer `StorageKey` original en pantallas publicas o de cliente cuando no corresponda; limitarlo a flujos administrativos.
+- Preservar la estetica CaterServ, modo claro/oscuro, roles existentes y menu dinamico.
+
+## Fase 1B descargas
+
+- Las descargas usan limites de uso, vencimiento, estado activo/inactivo y regeneracion de link desde el backend.
+- `Usuario`/Cliente ve sus descargas en `/descargas`; `Admin` gestiona descargas en `/admin/descargas`.
+- `Invitado` no puede ver, generar ni regenerar descargas.
+- La regeneracion de link requiere usuario autenticado y consume `POST /Descargas/{id}/regenerar`.
+- La gestion admin consume `GET /Descargas/admin` y debe ser solo para `Admin`.
+- No exponer `StorageKey` original a usuarios no-admin ni en pantallas publicas.
+- No guardar URLs firmadas en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- No loguear URLs firmadas en consola.
+- Mostrar URLs firmadas solo como link temporal cuando el backend las devuelve.
+- Preservar CaterServ, modo claro/oscuro, roles actuales, pedidos, pagos y fotos privadas.
+
+## Fase 2A web publica comercial
+
+- La web publica usa un `PublicLayoutComponent` separado, sin sidebar y sin hero interno de panel.
+- `/` y `/home` son Home publica comercial; `/login` debe mantenerse intacto.
+- Home, Contacto, Portfolio, Servicios y FAQ publicos no requieren token.
+- Home y Contacto consumen `SitioPublicoService` con `GET /Sitio/home`, `GET /Sitio/contacto` y `GET /Sitio/perfil-fotografa`.
+- Portfolio publico consume `GET /Portfolio` y detalle `GET /Portfolio/{id}`.
+- Servicios publicos consumen `GET /Servicios` y detalle `GET /Servicios/{id}`.
+- FAQ publica consume `GET /Faq`.
+- Admin gestiona Portfolio, Servicios y FAQ con endpoints admin y CRUD desde services.
+- Rutas admin de Portfolio, Servicios y FAQ son solo `Admin`; `Usuario` e `Invitado` no ven esas opciones.
+- `whatsAppUrl` viene calculado por backend; usarlo como link y no integrar WhatsApp API real.
+- No guardar datos publicos en `localStorage` innecesariamente ni loguear respuestas completas.
+- Preservar CaterServ, modo claro/oscuro, responsive y menu por rol.
+
+## Fase 2B presupuestos y agenda
+
+- La ruta publica `/presupuesto` permite crear solicitudes de presupuesto sin login usando `POST /Presupuestos/solicitudes`.
+- Las solicitudes publicas no se guardan en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- La UI publica puede mostrar disponibilidad con `GET /Agenda/disponibilidad`, pero nunca debe exponer clientes, ubicaciones privadas ni descripciones internas.
+- La disponibilidad publica debe mostrarse como lista simple de fechas ocupadas o badges; no crear integraciones externas de calendario todavia.
+- Admin gestiona solicitudes en `/admin/presupuestos` y `/admin/presupuestos/:id` usando endpoints de `Presupuestos`.
+- Admin gestiona agenda en `/admin/agenda` usando endpoints de `Agenda`.
+- Las rutas admin de presupuestos y agenda son solo `Admin`; `Usuario` e `Invitado` no ven esas opciones.
+- No integrar envio de emails todavia.
+- No integrar Google Calendar todavia.
+- No integrar WhatsApp API real; usar solo links `wa.me` o `whatsAppUrl` provistos por backend.
+- Mantener CaterServ, modo claro/oscuro, responsive, roles existentes y menu dinamico.
+
+## Fase 3 gestion operativa
+
+- El panel operativo vive en `/admin/operaciones`, es solo `Admin` y consume `GET /Admin/operaciones/resumen` y `GET /Admin/operaciones/pendientes`.
+- El historial completo de clientes vive en `/clientes/{id}/historial` para `Admin`; `Usuario` debe usar `/mi-historial` y solo ver su propio historial.
+- Los historiales de cliente no deben exponer `StorageKey`, URLs firmadas, tokens ni secretos.
+- El detalle de pedido muestra historial de estados con `GET /Pedidos/{id}/historial-estados`.
+- Solo `Admin` puede cambiar estado de pedido usando `PUT /Pedidos/{id}/estado`.
+- Las notas internas son solo `Admin`, usan endpoints `NotasInternas` y nunca deben mostrarse a `Usuario` o `Invitado`.
+- No guardar notas internas ni historiales en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- No loguear respuestas completas con datos privados.
+- La gestion admin de sesiones privadas vive en `/admin/sesiones-privadas` y solo `Admin` puede cambiar estado usando `PUT /SesionesPrivadas/{id}/estado`.
+- No exponer `StorageKey` ni URLs firmadas desde sesiones privadas, descargas, historiales o notas internas.
+- Preservar CaterServ, modo claro/oscuro, roles actuales, menu dinamico y vistas publicas existentes.
+
 ## Endpoints principales
 
-- Admin: `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
+- Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
-- Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`.
-- Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`.
+- Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
+- Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.
-- Fotos: `GET /Fotos/evento/{eventoId}`, `GET/PUT/DELETE /Fotos/{id}`, `POST /Fotos/storage-key`, `POST /Fotos/metadata`.
+- Fotos: `GET /Fotos/evento/{eventoId}`, `GET/PUT/DELETE /Fotos/{id}`, `POST /Fotos/storage-key`, `POST /Fotos/storage-keys/bulk`, `POST /Fotos/metadata`, `POST /Fotos/metadata/bulk`.
 - Comentarios de fotos: `GET/POST /Fotos/{fotoId}/comentarios`, `PUT/DELETE /Fotos/comentarios/{comentarioId}`.
 - Favoritos: `GET /Favoritos/eventos`, `POST/DELETE /Favoritos/eventos/{eventoId}`, `GET /Favoritos/fotos`, `POST/DELETE /Favoritos/fotos/{fotoId}`.
-- Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`.
+- Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`, `PUT /Pedidos/{id}/estado`, `GET /Pedidos/{id}/historial-estados`.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
-- Descargas: `POST /Descargas/link`.
+- Descargas: `GET /Descargas/mis-descargas`, `GET /Descargas/{id}`, `POST /Descargas/link`, `POST /Descargas/{id}/regenerar`, `GET /Descargas/admin`.
+- Sitio publico: `GET /Sitio/home`, `GET /Sitio/contacto`, `GET /Sitio/perfil-fotografa`.
+- Portfolio: `GET /Portfolio`, `GET /Portfolio/{id}`, `GET /Portfolio/admin`, `POST /Portfolio`, `PUT /Portfolio/{id}`, `DELETE /Portfolio/{id}`.
+- Servicios: `GET /Servicios`, `GET /Servicios/{id}`, `GET /Servicios/admin`, `POST /Servicios`, `PUT /Servicios/{id}`, `DELETE /Servicios/{id}`.
+- FAQ: `GET /Faq`, `GET /Faq/{id}`, `GET /Faq/admin`, `POST /Faq`, `PUT /Faq/{id}`, `DELETE /Faq/{id}`.
+- Presupuestos: `POST /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes`, `GET /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}`, `PUT /Presupuestos/solicitudes/{id}/estado`, `DELETE /Presupuestos/solicitudes/{id}`.
+- Agenda: `GET /Agenda`, `GET /Agenda/{id}`, `POST /Agenda`, `PUT /Agenda/{id}`, `DELETE /Agenda/{id}`, `GET /Agenda/disponibilidad`.
+- Notas internas: `GET /NotasInternas/{entidadTipo}/{entidadId}`, `POST /NotasInternas/{entidadTipo}/{entidadId}`, `PUT /NotasInternas/{id}`, `DELETE /NotasInternas/{id}`.
+- Sesiones privadas: `GET /SesionesPrivadas`, `GET /SesionesPrivadas/{id}`, `PUT /SesionesPrivadas/{id}/estado`.
 
 ## Listados paginados
 

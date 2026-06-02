@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,7 +17,7 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 @Component({
   selector: 'app-eventos-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
+  imports: [DatePipe, FormsModule, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
   templateUrl: './eventos-list.component.html',
   styleUrl: './eventos-list.component.css'
 })
@@ -32,7 +32,7 @@ export class EventosListComponent implements OnInit {
   private readonly eventPreviewLoading = new Set<string>();
   searchTerm = '';
   estadoFilter = 'Todos';
-  readonly estadoOptions = ['Todos', 'Publicado', 'Borrador', 'Activo'];
+  readonly estadoOptions = ['Todos', 'Publicado', 'Borrador', 'Finalizado', 'Archivado', 'Activo'];
   pagination: PaginationQuery = { page: 1, pageSize: 10, all: false };
   totalItems = 0;
   totalPages = 1;
@@ -122,6 +122,32 @@ export class EventosListComponent implements OnInit {
     return eventoId in this.eventPreviewUrls;
   }
 
+  badgeClass(value: string | undefined, kind: 'estado' | 'visibilidad' | 'activo' = 'estado'): string {
+    const normalized = this.normalize(value);
+
+    if (kind === 'activo') {
+      return normalized === 'true' ? 'bg-success' : 'bg-secondary';
+    }
+
+    if (['publicado', 'publico'].includes(normalized)) {
+      return 'bg-success';
+    }
+
+    if (['borrador', 'privado'].includes(normalized)) {
+      return 'bg-warning text-dark';
+    }
+
+    if (['finalizado'].includes(normalized)) {
+      return 'bg-primary';
+    }
+
+    if (['archivado', 'oculto'].includes(normalized)) {
+      return 'bg-secondary';
+    }
+
+    return 'bg-light text-dark border';
+  }
+
   private message(error: unknown): string {
     return error instanceof Error ? error.message : 'No se pudieron cargar los eventos.';
   }
@@ -136,19 +162,47 @@ export class EventosListComponent implements OnInit {
         return;
       }
 
+      const portadaUrl = this.portadaUrl(evento);
+      if (portadaUrl) {
+        this.eventPreviewUrls[evento.id] = portadaUrl;
+        return;
+      }
+
       this.eventPreviewLoading.add(evento.id);
+
+      if (evento.portadaFotoId) {
+        this.fotosService.get(evento.portadaFotoId).subscribe({
+          next: (foto) => {
+            this.eventPreviewUrls[evento.id] = foto.previewUrl ?? null;
+            this.finishEventPreview(evento.id);
+          },
+          error: () => {
+            this.eventPreviewUrls[evento.id] = null;
+            this.finishEventPreview(evento.id);
+          }
+        });
+        return;
+      }
+
       this.fotosService.getFotosPorEventoPaginado(evento.id, { page: 1, pageSize: 5, all: false }).subscribe({
         next: (response) => {
           this.eventPreviewUrls[evento.id] = response.items.find((foto) => Boolean(foto.previewUrl))?.previewUrl ?? null;
-          this.eventPreviewLoading.delete(evento.id);
-          this.cdr.markForCheck();
+          this.finishEventPreview(evento.id);
         },
         error: () => {
           this.eventPreviewUrls[evento.id] = null;
-          this.eventPreviewLoading.delete(evento.id);
-          this.cdr.markForCheck();
+          this.finishEventPreview(evento.id);
         }
       });
     });
+  }
+
+  private portadaUrl(evento: Evento): string {
+    return evento.portadaPreviewUrl ?? evento.portadaFotoPreviewUrl ?? evento.portadaUrl ?? '';
+  }
+
+  private finishEventPreview(eventoId: string): void {
+    this.eventPreviewLoading.delete(eventoId);
+    this.cdr.markForCheck();
   }
 }

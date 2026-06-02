@@ -1,0 +1,123 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="h3 mb-0">Carga masiva fotos</h2>
+    </div>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="loadEventos()">Actualizar eventos</button>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    <app-loading *ngIf="loadingEventos" text="Cargando eventos..."></app-loading>
+
+    <form [formGroup]="form" class="row g-3" novalidate>
+      <div class="col-lg-6">
+        <label class="form-label" for="bulkEvento">Evento</label>
+        <select id="bulkEvento" class="form-select" formControlName="eventoId">
+          <option value="">Seleccionar evento</option>
+          <option *ngFor="let evento of eventos" [value]="evento.id">{{ evento.nombre }} - {{ evento.fechaEventoUtc | date:'shortDate' }}</option>
+        </select>
+      </div>
+
+      <div class="col-lg-3">
+        <label class="form-label" for="bulkContentType">Content type</label>
+        <input id="bulkContentType" type="text" class="form-control" formControlName="contentType">
+      </div>
+
+      <div class="col-lg-3">
+        <label class="form-label" for="bulkPrecio">Precio unitario</label>
+        <input id="bulkPrecio" type="number" min="0" step="0.01" class="form-control" formControlName="precioUnitario">
+      </div>
+
+      <div class="col-12">
+        <label class="form-label" for="bulkNombres">Nombres de archivo</label>
+        <textarea id="bulkNombres" rows="6" class="form-control" formControlName="nombresArchivo" placeholder="foto-001.jpg&#10;foto-002.jpg&#10;foto-003.jpg"></textarea>
+        <small class="text-muted">Un archivo por linea. Tambien acepta coma o punto y coma.</small>
+      </div>
+
+      <div class="col-lg-4">
+        <label class="form-label" for="bulkSize">Size bytes</label>
+        <input id="bulkSize" type="number" min="0" class="form-control" formControlName="sizeInBytes">
+      </div>
+
+      <div class="col-lg-8">
+        <label class="form-label" for="bulkPreviewBase">Preview URL base opcional</label>
+        <input id="bulkPreviewBase" type="url" class="form-control" formControlName="previewBaseUrl" placeholder="https://cdn.midominio.com/evento">
+      </div>
+
+      <div class="col-12">
+        <div class="app-actions">
+          <label class="form-check">
+            <input type="checkbox" class="form-check-input" formControlName="tieneMarcaAgua">
+            <span class="form-check-label">Tiene marca de agua</span>
+          </label>
+          <label class="form-check">
+            <input type="checkbox" class="form-check-input" formControlName="procesada">
+            <span class="form-check-label">Procesada</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-12 app-actions">
+        <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="generating" (click)="generarStorageKeys()">
+          <span *ngIf="generating" class="spinner-border spinner-border-sm me-2"></span>
+          Generar storage keys bulk
+        </button>
+        <button type="button" class="btn btn-primary rounded-pill px-4" [disabled]="creating || generatedItems.length === 0" (click)="crearMetadataBulk()">
+          <span *ngIf="creating" class="spinner-border spinner-border-sm me-2"></span>
+          Crear metadata bulk
+        </button>
+      </div>
+    </form>
+
+    <div class="bulk-summary-grid mt-4" *ngIf="storageResponse || metadataResponse">
+      <article class="bulk-summary-card">
+        <span>Generadas</span>
+        <strong>{{ generatedItems.length }}</strong>
+      </article>
+      <article class="bulk-summary-card">
+        <span>Creadas</span>
+        <strong>{{ responseValue(metadataResponse, 'creadas') }}</strong>
+      </article>
+      <article class="bulk-summary-card">
+        <span>Omitidas</span>
+        <strong>{{ responseValue(metadataResponse, 'omitidas') }}</strong>
+      </article>
+      <article class="bulk-summary-card">
+        <span>Errores</span>
+        <strong>{{ errores(metadataResponse).length || errores(storageResponse).length }}</strong>
+      </article>
+    </div>
+
+    <div class="table-responsive mt-4" *ngIf="generatedItems.length > 0">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Archivo</th>
+            <th>Storage key generada</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of generatedItems">
+            <td class="text-break">{{ fileNameOf(item) || '-' }}</td>
+            <td class="text-break">{{ storageKeyOf(item) || '-' }}</td>
+            <td>
+              <span class="badge bg-success" *ngIf="storageKeyOf(item)">OK</span>
+              <span class="badge bg-warning text-dark" *ngIf="!storageKeyOf(item)">Sin key</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-danger mt-4" *ngIf="errores(metadataResponse).length || errores(storageResponse).length">
+      <strong>Errores:</strong>
+      <ul class="mb-0">
+        <li *ngFor="let item of errores(metadataResponse).length ? errores(metadataResponse) : errores(storageResponse)">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

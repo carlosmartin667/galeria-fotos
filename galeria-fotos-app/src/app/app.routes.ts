@@ -2,9 +2,9 @@ import { Routes } from '@angular/router';
 
 import { authChildGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent)
@@ -12,6 +12,48 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent)
+  },
+  {
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/public/home/public-home.component').then((m) => m.PublicHomeComponent)
+      },
+      {
+        path: 'home',
+        loadComponent: () => import('./features/public/home/public-home.component').then((m) => m.PublicHomeComponent)
+      },
+      {
+        path: 'portfolio',
+        loadComponent: () => import('./features/public/portfolio-list/portfolio-list.component').then((m) => m.PortfolioListComponent)
+      },
+      {
+        path: 'portfolio/:id',
+        loadComponent: () => import('./features/public/portfolio-detail/portfolio-detail.component').then((m) => m.PortfolioDetailComponent)
+      },
+      {
+        path: 'servicios',
+        loadComponent: () => import('./features/public/servicios-list/servicios-list.component').then((m) => m.ServiciosListComponent)
+      },
+      {
+        path: 'servicios/:id',
+        loadComponent: () => import('./features/public/servicio-detail/servicio-detail.component').then((m) => m.ServicioDetailComponent)
+      },
+      {
+        path: 'faq',
+        loadComponent: () => import('./features/public/faq/faq-public.component').then((m) => m.FaqPublicComponent)
+      },
+      {
+        path: 'contacto',
+        loadComponent: () => import('./features/public/contacto/contacto-public.component').then((m) => m.ContactoPublicComponent)
+      },
+      {
+        path: 'presupuesto',
+        loadComponent: () => import('./features/public/presupuesto-solicitud/presupuesto-solicitud.component').then((m) => m.PresupuestoSolicitudComponent)
+      }
+    ]
   },
   {
     path: '',
@@ -27,9 +69,64 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/perfil-publico/perfil-publico.component').then((m) => m.PerfilPublicoComponent)
       },
       {
+        path: 'admin/dashboard',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/dashboard/admin-dashboard.component').then((m) => m.AdminDashboardComponent)
+      },
+      {
+        path: 'admin/operaciones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/operaciones/operaciones-admin.component').then((m) => m.OperacionesAdminComponent)
+      },
+      {
         path: 'admin/mi-perfil',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/mi-perfil/mi-perfil-admin.component').then((m) => m.MiPerfilAdminComponent)
+      },
+      {
+        path: 'admin/fotos/bulk',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/fotos-bulk/fotos-bulk.component').then((m) => m.FotosBulkComponent)
+      },
+      {
+        path: 'admin/descargas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/descargas/admin-descargas.component').then((m) => m.AdminDescargasComponent)
+      },
+      {
+        path: 'admin/portfolio',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/portfolio/portfolio-admin.component').then((m) => m.PortfolioAdminComponent)
+      },
+      {
+        path: 'admin/servicios',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/servicios/servicios-admin.component').then((m) => m.ServiciosAdminComponent)
+      },
+      {
+        path: 'admin/faq',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/faq/faq-admin.component').then((m) => m.FaqAdminComponent)
+      },
+      {
+        path: 'admin/presupuestos',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/presupuestos/presupuestos-admin.component').then((m) => m.PresupuestosAdminComponent)
+      },
+      {
+        path: 'admin/presupuestos/:id',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/presupuestos/presupuesto-detail-admin.component').then((m) => m.PresupuestoDetailAdminComponent)
+      },
+      {
+        path: 'admin/agenda',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/agenda/agenda-admin.component').then((m) => m.AgendaAdminComponent)
+      },
+      {
+        path: 'admin/sesiones-privadas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/sesiones-privadas/sesiones-privadas-admin.component').then((m) => m.SesionesPrivadasAdminComponent)
       },
       {
         path: 'admin/pexels/importar-fotos',
@@ -55,6 +152,16 @@ export const routes: Routes = [
         path: 'clientes/editar/:id',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent)
+      },
+      {
+        path: 'clientes/:id/historial',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
+      },
+      {
+        path: 'mi-historial',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
       },
       {
         path: 'eventos',
@@ -125,6 +232,11 @@ export const routes: Routes = [
         path: 'descargas',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/descargas/descargas.component').then((m) => m.DescargasComponent)
+      },
+      {
+        path: 'descargas/:id',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/descargas/descarga-detail/descarga-detail.component').then((m) => m.DescargaDetailComponent)
       },
       {
         path: 'favoritos',

@@ -24,12 +24,36 @@
       </div>
       <div class="col-md-6" *ngIf="isEdit">
         <label class="form-label" for="eventoEstado">Estado</label>
-        <input id="eventoEstado" type="text" class="form-control" formControlName="estado">
+        <select id="eventoEstado" class="form-select" formControlName="estado">
+          <option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</option>
+        </select>
         <small *ngIf="showError('estado')" class="text-danger">El estado es requerido.</small>
+      </div>
+      <div class="col-md-6" *ngIf="!isEdit">
+        <label class="form-label" for="eventoEstadoNuevo">Estado</label>
+        <select id="eventoEstadoNuevo" class="form-select" formControlName="estado">
+          <option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="eventoVisibilidad">Visibilidad</label>
+        <select id="eventoVisibilidad" class="form-select" formControlName="visibilidad">
+          <option *ngFor="let visibilidad of visibilidadOptions" [value]="visibilidad">{{ visibilidad }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="eventoFechaLimite">Fecha limite de compra</label>
+        <input id="eventoFechaLimite" type="datetime-local" class="form-control" formControlName="fechaLimiteCompraUtc">
       </div>
       <div class="col-md-6">
         <label class="form-label" for="eventoCliente">Cliente principal ID</label>
         <input id="eventoCliente" type="text" class="form-control" formControlName="clientePrincipalId">
+      </div>
+      <div class="col-md-6" *ngIf="isEdit">
+        <div class="form-check mt-md-4 pt-md-2">
+          <input id="eventoActivo" type="checkbox" class="form-check-input" formControlName="activo">
+          <label for="eventoActivo" class="form-check-label">Activo</label>
+        </div>
       </div>
       <div class="col-12">
         <label class="form-label" for="eventoDescripcion">Descripcion</label>

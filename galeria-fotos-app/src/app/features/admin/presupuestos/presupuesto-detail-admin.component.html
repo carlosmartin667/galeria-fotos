@@ -1,0 +1,102 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="h3 mb-0">Detalle de presupuesto</h2>
+    </div>
+    <a routerLink="/admin/presupuestos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    <app-loading *ngIf="loading" text="Cargando solicitud..."></app-loading>
+
+    <ng-container *ngIf="!loading && solicitud as item">
+      <div class="admin-detail-summary mb-4">
+        <div>
+          <span>Nombre</span>
+          <strong>{{ item.nombre }}</strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <strong class="text-break">{{ item.email }}</strong>
+        </div>
+        <div>
+          <span>Estado</span>
+          <strong><span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Nuevo' }}</span></strong>
+        </div>
+        <div>
+          <span>Activa</span>
+          <strong><span class="badge" [ngClass]="item.activa === false ? 'bg-secondary' : 'bg-success'">{{ item.activa === false ? 'Inactiva' : 'Activa' }}</span></strong>
+        </div>
+        <div>
+          <span>Fecha tentativa</span>
+          <strong>{{ item.fechaTentativaUtc ? (item.fechaTentativaUtc | date:'mediumDate') : '-' }}</strong>
+        </div>
+        <div>
+          <span>Creacion</span>
+          <strong>{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</strong>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresNombre">Nombre</label>
+          <input id="detailPresNombre" type="text" class="form-control" formControlName="nombre">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresEmail">Email</label>
+          <input id="detailPresEmail" type="email" class="form-control" formControlName="email">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresWhatsapp">WhatsApp</label>
+          <input id="detailPresWhatsapp" type="tel" class="form-control" formControlName="whatsApp">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresTipo">Tipo evento</label>
+          <input id="detailPresTipo" type="text" class="form-control" formControlName="tipoEvento">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresFecha">Fecha tentativa</label>
+          <input id="detailPresFecha" type="date" class="form-control" formControlName="fechaTentativa">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="detailPresInvitados">Invitados</label>
+          <input id="detailPresInvitados" type="number" min="1" class="form-control" formControlName="cantidadInvitados">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="detailPresLugar">Lugar</label>
+          <input id="detailPresLugar" type="text" class="form-control" formControlName="lugar">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label" for="detailPresEstado">Estado</label>
+          <select id="detailPresEstado" class="form-select" formControlName="estado">
+            <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+          </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <label class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" formControlName="activa">
+            <span class="form-check-label">Activa</span>
+          </label>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="detailPresMensaje">Mensaje</label>
+          <textarea id="detailPresMensaje" rows="5" class="form-control" formControlName="mensaje"></textarea>
+        </div>
+        <div class="col-12 app-actions">
+          <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+            Guardar cambios
+          </button>
+          <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="cambiarEstado()">Cambiar estado</button>
+          <a *ngIf="whatsAppLink(item.whatsApp)" [href]="whatsAppLink(item.whatsApp)" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4">Contactar WhatsApp</a>
+          <button type="button" class="btn btn-outline-danger rounded-pill px-4" (click)="desactivar()">Cerrar / Desactivar</button>
+        </div>
+      </form>
+
+      <app-notas-internas *ngIf="item.id" entidadTipo="SolicitudPresupuesto" [entidadId]="item.id"></app-notas-internas>
+    </ng-container>
+  </div>
+</div>

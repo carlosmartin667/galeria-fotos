@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ActualizarAdminPerfilRequest, AdminPerfilPublico } from '../models/admin.models';
+import { ActualizarAdminPerfilRequest, AdminDashboard, AdminPerfilPublico } from '../models/admin.models';
 import { ImportarFotosPexelsRequest, ImportarFotosPexelsResponse } from '../models/pexels.models';
 import { ApiHttpService } from './api-http.service';
 
@@ -11,6 +11,10 @@ export class AdminService {
 
   getPerfilPublico(): Observable<AdminPerfilPublico> {
     return this.api.get<AdminPerfilPublico>('/Admin/perfil-publico');
+  }
+
+  getDashboard(): Observable<AdminDashboard> {
+    return this.api.get<AdminDashboard>('/Admin/dashboard');
   }
 
   getMiPerfil(): Observable<AdminPerfilPublico> {

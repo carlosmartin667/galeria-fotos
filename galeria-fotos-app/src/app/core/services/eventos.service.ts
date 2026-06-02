@@ -36,6 +36,10 @@ export class EventosService {
     return this.api.delete<void>(`/Eventos/${id}`);
   }
 
+  asignarPortada(eventoId: string, fotoId: string): Observable<Evento> {
+    return this.api.put<Evento>(`/Eventos/${eventoId}/portada/${fotoId}`, {});
+  }
+
   private paginationParams(query: PaginationQuery): Record<string, string | number | boolean> {
     return {
       Page: query.page,

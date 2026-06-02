@@ -1,0 +1,50 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="h3 mb-0">Panel operativo</h2>
+    </div>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando operaciones..."></app-loading>
+
+    <ng-container *ngIf="!loading">
+      <div class="admin-metrics-grid mb-4">
+        <a *ngFor="let metric of metrics; trackBy: trackByTitle" [routerLink]="metric.link" class="dashboard-card admin-dashboard-card">
+          <i [class]="metric.icon"></i>
+          <span>{{ metric.label }}</span>
+          <strong>{{ metric.value }}</strong>
+        </a>
+      </div>
+
+      <div class="app-panel mb-4">
+        <div class="app-panel-body">
+          <h3 class="h5 mb-3">Accesos rapidos</h3>
+          <div class="app-actions">
+            <a routerLink="/admin/presupuestos" class="btn btn-outline-primary rounded-pill px-4">Ver presupuestos</a>
+            <a routerLink="/admin/agenda" class="btn btn-outline-primary rounded-pill px-4">Ver agenda</a>
+            <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill px-4">Ver pedidos</a>
+            <a routerLink="/clientes" class="btn btn-outline-primary rounded-pill px-4">Ver clientes</a>
+            <a routerLink="/admin/descargas" class="btn btn-outline-primary rounded-pill px-4">Ver descargas</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <section class="col-xl-6" *ngFor="let section of sections; trackBy: trackByTitle">
+          <div class="admin-section h-100">
+            <h3 class="h5 mb-3">{{ section.title }}</h3>
+            <app-empty-state *ngIf="section.items.length === 0" [text]="section.empty"></app-empty-state>
+            <article class="admin-section-item" *ngFor="let item of section.items; trackBy: trackByItem">
+              <strong>{{ itemTitle(item) }}</strong>
+              <span>{{ itemMeta(item) || 'Sin detalle' }}</span>
+            </article>
+          </div>
+        </section>
+      </div>
+    </ng-container>
+  </div>
+</div>
