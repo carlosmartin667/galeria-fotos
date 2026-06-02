@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+.notification-list {
+  display: grid;
+  gap: 12px;
+}
+
+.notification-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  box-shadow: var(--app-card-shadow);
+}
+
+.notification-card.unread {
+  border-color: rgba(212, 167, 98, .6);
+  background: linear-gradient(135deg, rgba(212, 167, 98, .12), var(--app-surface));
+}
+
+.notification-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notification-card h3 {
+  color: var(--app-heading);
+}
+
+.notification-card p {
+  color: var(--app-text);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767.98px) {
+  .notification-card-head {
+    flex-direction: column;
+  }
+
+  .notification-card-head .btn {
+    width: 100%;
+  }
+}

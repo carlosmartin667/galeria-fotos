@@ -50,6 +50,7 @@
             <a routerLink="/dashboard">Dashboard</a>
             <a *ngIf="session.isAdmin" routerLink="/clientes">Clientes</a>
             <a *ngIf="session.isUser" routerLink="/mi-historial">Mi historial</a>
+            <a *ngIf="session.isUser" routerLink="/notificaciones">Notificaciones</a>
             <a routerLink="/eventos">Eventos</a>
             <a routerLink="/fotos/evento">Fotos</a>
             <a routerLink="/admin/perfil-publico">Perfil publico</a>
@@ -71,6 +72,8 @@
             <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos">Presupuestos</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/agenda">Agenda</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones">Notificaciones</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas">Plantillas de notificacion</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>

@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
         { label: 'Presupuestos', value: '', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' },
         { label: 'Agenda', value: '', link: '/admin/agenda', icon: 'fas fa-calendar-check' },
         { label: 'Sesiones privadas', value: '', link: '/admin/sesiones-privadas', icon: 'fas fa-camera-retro' },
+        { label: 'Notificaciones', value: '', link: '/admin/notificaciones', icon: 'fas fa-bell' },
         { label: 'Gestion descargas', value: '', link: '/admin/descargas', icon: 'fas fa-download' },
         { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
       ];
@@ -64,6 +65,7 @@ export class DashboardComponent implements OnInit {
         { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
         { label: 'Mis descargas', value: '', link: '/descargas', icon: 'fas fa-download' },
         { label: 'Mi historial', value: '', link: '/mi-historial', icon: 'fas fa-history' },
+        { label: 'Notificaciones', value: '', link: '/notificaciones', icon: 'fas fa-bell' },
         { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
       ];
     }
@@ -120,6 +122,7 @@ export class DashboardComponent implements OnInit {
       cards.push({ label: 'Operaciones', value: 'Admin', link: '/admin/operaciones', icon: 'fas fa-tasks' });
       cards.push({ label: 'Presupuestos', value: 'Admin', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' });
       cards.push({ label: 'Agenda', value: 'Admin', link: '/admin/agenda', icon: 'fas fa-calendar-check' });
+      cards.push({ label: 'Notificaciones', value: 'Admin', link: '/admin/notificaciones', icon: 'fas fa-bell' });
     } else {
       cards.push({ label: 'Solicitar presupuesto', value: 'Publico', link: '/presupuesto', icon: 'fas fa-file-signature' });
     }

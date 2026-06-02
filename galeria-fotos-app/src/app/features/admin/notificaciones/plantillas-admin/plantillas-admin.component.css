@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.notification-template-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.notification-template-help {
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  box-shadow: var(--app-card-shadow);
+}
+
+.notification-variable-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.notification-variable-list code {
+  display: inline-flex;
+  padding: 6px 10px;
+  border: 1px solid rgba(212, 167, 98, .42);
+  border-radius: 999px;
+  background: var(--app-kicker-bg);
+  color: var(--app-kicker-text);
+  font-weight: 800;
+}
+
+.notification-template-preview {
+  min-height: 180px;
+  max-height: 360px;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-soft);
+  color: var(--app-text);
+  white-space: pre-wrap;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  .notification-template-layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+  }
+}

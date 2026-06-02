@@ -86,6 +86,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/notificaciones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/notificaciones/plantillas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/notificaciones/:id',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/pexels/importar-fotos',
     renderMode: RenderMode.Server
   },
@@ -127,6 +139,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'descargas/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'notificaciones',
     renderMode: RenderMode.Server
   },
   {

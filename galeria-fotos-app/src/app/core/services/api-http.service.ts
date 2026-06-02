@@ -37,6 +37,14 @@ export class ApiHttpService {
     );
   }
 
+  patch<T>(path: string, body: unknown = {}): Observable<T> {
+    return this.http.patch<unknown>(this.url(path), body).pipe(
+      timeout(15000),
+      map((response) => this.unwrap<T>(response)),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
   delete<T>(path: string): Observable<T> {
     return this.http.delete<unknown>(this.url(path)).pipe(
       timeout(15000),

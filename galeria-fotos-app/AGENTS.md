@@ -136,6 +136,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No exponer `StorageKey` ni URLs firmadas desde sesiones privadas, descargas, historiales o notas internas.
 - Preservar CaterServ, modo claro/oscuro, roles actuales, menu dinamico y vistas publicas existentes.
 
+## Fase 4 notificaciones
+
+- La campana de notificaciones debe mostrarse solo a usuarios autenticados `Usuario` o `Admin`; `Invitado` no ve notificaciones.
+- Las notificaciones propias viven en `/notificaciones` y consumen endpoints `Notificaciones` desde `NotificacionesService`.
+- La gestion admin de notificaciones vive en `/admin/notificaciones` y es solo `Admin`.
+- El detalle admin vive en `/admin/notificaciones/{id}` y debe ocultar o redactar tokens, secretos, URLs firmadas y datos sensibles si aparecieran.
+- Las plantillas de notificacion viven en `/admin/notificaciones/plantillas`, solo `Admin`; declarar esta ruta antes de `/admin/notificaciones/:id`.
+- No guardar notificaciones, plantillas ni estados de lectura en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- No loguear respuestas completas ni payloads con datos privados.
+- No exponer `StorageKey`, tokens, secretos ni URLs firmadas en pantallas de usuario o admin.
+- No renderizar `cuerpoHtml` de plantillas como HTML activo inseguro; editarlo en textarea y mostrar previews como texto seguro.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales y menu dinamico.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
@@ -158,6 +171,8 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Agenda: `GET /Agenda`, `GET /Agenda/{id}`, `POST /Agenda`, `PUT /Agenda/{id}`, `DELETE /Agenda/{id}`, `GET /Agenda/disponibilidad`.
 - Notas internas: `GET /NotasInternas/{entidadTipo}/{entidadId}`, `POST /NotasInternas/{entidadTipo}/{entidadId}`, `PUT /NotasInternas/{id}`, `DELETE /NotasInternas/{id}`.
 - Sesiones privadas: `GET /SesionesPrivadas`, `GET /SesionesPrivadas/{id}`, `PUT /SesionesPrivadas/{id}/estado`.
+- Notificaciones: `GET /Notificaciones/mis-notificaciones`, `PATCH /Notificaciones/{id}/leer`, `PATCH /Notificaciones/marcar-todas-leidas`, `GET /Notificaciones/admin`, `GET /Notificaciones/admin/{id}`, `POST /Notificaciones/admin/{id}/reenviar`, `PATCH /Notificaciones/admin/{id}/cancelar`.
+- Plantillas de notificacion: `GET /Notificaciones/plantillas`, `POST /Notificaciones/plantillas`, `PUT /Notificaciones/plantillas/{id}`, `PATCH /Notificaciones/plantillas/{id}/activar`, `PATCH /Notificaciones/plantillas/{id}/desactivar`.
 
 ## Listados paginados
 

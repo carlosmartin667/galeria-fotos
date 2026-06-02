@@ -43,11 +43,14 @@
     <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos" routerLinkActive="active">Presupuestos</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/agenda" routerLinkActive="active">Agenda</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas" routerLinkActive="active">Sesiones privadas</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones" routerLinkActive="active">Notificaciones</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas" routerLinkActive="active">Plantillas notif.</a>
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
     <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
     <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active">Mi historial</a>
+    <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active">Notificaciones</a>
     <a *ngIf="!session.isAuthenticated" routerLink="/login" routerLinkActive="active">Iniciar sesion</a>
   </nav>
 

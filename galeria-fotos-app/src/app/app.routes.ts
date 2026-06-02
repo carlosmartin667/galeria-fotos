@@ -129,6 +129,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/sesiones-privadas/sesiones-privadas-admin.component').then((m) => m.SesionesPrivadasAdminComponent)
       },
       {
+        path: 'admin/notificaciones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/notificaciones-admin/notificaciones-admin.component').then((m) => m.NotificacionesAdminComponent)
+      },
+      {
+        path: 'admin/notificaciones/plantillas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/plantillas-admin/plantillas-admin.component').then((m) => m.PlantillasAdminComponent)
+      },
+      {
+        path: 'admin/notificaciones/:id',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/notificacion-detail-admin/notificacion-detail-admin.component').then((m) => m.NotificacionDetailAdminComponent)
+      },
+      {
         path: 'admin/pexels/importar-fotos',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
@@ -237,6 +252,11 @@ export const routes: Routes = [
         path: 'descargas/:id',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/descargas/descarga-detail/descarga-detail.component').then((m) => m.DescargaDetailComponent)
+      },
+      {
+        path: 'notificaciones',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/notificaciones/mis-notificaciones/mis-notificaciones.component').then((m) => m.MisNotificacionesComponent)
       },
       {
         path: 'favoritos',

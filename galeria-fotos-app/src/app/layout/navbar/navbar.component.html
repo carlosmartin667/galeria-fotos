@@ -44,6 +44,7 @@
           <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Mis descargas</a>
           <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
           <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active" class="nav-item nav-link">Mi historial</a>
+          <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active" class="nav-item nav-link">Notificaciones</a>
           <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
           <a *ngIf="!session.isAuthenticated" routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
 
@@ -68,6 +69,8 @@
               <a routerLink="/admin/presupuestos" routerLinkActive="active" class="dropdown-item">Presupuestos</a>
               <a routerLink="/admin/agenda" routerLinkActive="active" class="dropdown-item">Agenda</a>
               <a routerLink="/admin/sesiones-privadas" routerLinkActive="active" class="dropdown-item">Sesiones privadas</a>
+              <a routerLink="/admin/notificaciones" routerLinkActive="active" class="dropdown-item">Notificaciones</a>
+              <a routerLink="/admin/notificaciones/plantillas" routerLinkActive="active" class="dropdown-item">Plantillas de notificacion</a>
               <a routerLink="/admin/fotos/bulk" routerLinkActive="active" class="dropdown-item">Carga masiva fotos</a>
               <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
               <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>
@@ -78,6 +81,7 @@
 
         <div class="app-nav-user">
           <app-guest-badge></app-guest-badge>
+          <app-notification-bell></app-notification-bell>
           <button
             type="button"
             class="btn app-theme-toggle rounded-pill"
