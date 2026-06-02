@@ -26,6 +26,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'promociones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'promociones/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'testimonios',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'faq',
     renderMode: RenderMode.Server
   },
@@ -102,6 +114,30 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/ventas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/cupones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/promociones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/testimonios',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/carritos-abandonados',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/reportes/ventas',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'clientes/:id/historial',
     renderMode: RenderMode.Server
   },
@@ -131,6 +167,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'pedidos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'carrito',
     renderMode: RenderMode.Server
   },
   {

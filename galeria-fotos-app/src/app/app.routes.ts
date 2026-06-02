@@ -42,6 +42,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/public/servicio-detail/servicio-detail.component').then((m) => m.ServicioDetailComponent)
       },
       {
+        path: 'promociones',
+        loadComponent: () => import('./features/public/promociones-list/promociones-list.component').then((m) => m.PromocionesListComponent)
+      },
+      {
+        path: 'promociones/:id',
+        loadComponent: () => import('./features/public/promocion-detail/promocion-detail.component').then((m) => m.PromocionDetailComponent)
+      },
+      {
+        path: 'testimonios',
+        loadComponent: () => import('./features/public/testimonios-public/testimonios-public.component').then((m) => m.TestimoniosPublicComponent)
+      },
+      {
         path: 'faq',
         loadComponent: () => import('./features/public/faq/faq-public.component').then((m) => m.FaqPublicComponent)
       },
@@ -149,6 +161,36 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
       },
       {
+        path: 'admin/ventas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/ventas/ventas-admin.component').then((m) => m.VentasAdminComponent)
+      },
+      {
+        path: 'admin/cupones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/cupones/cupones-admin.component').then((m) => m.CuponesAdminComponent)
+      },
+      {
+        path: 'admin/promociones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/promociones/promociones-admin.component').then((m) => m.PromocionesAdminComponent)
+      },
+      {
+        path: 'admin/testimonios',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/testimonios/testimonios-admin.component').then((m) => m.TestimoniosAdminComponent)
+      },
+      {
+        path: 'admin/carritos-abandonados',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/carritos-abandonados/carritos-abandonados-admin.component').then((m) => m.CarritosAbandonadosAdminComponent)
+      },
+      {
+        path: 'admin/reportes/ventas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/reportes-ventas/reportes-ventas-admin.component').then((m) => m.ReportesVentasAdminComponent)
+      },
+      {
         path: 'clientes',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/clientes/clientes-list/clientes-list.component').then((m) => m.ClientesListComponent)
@@ -242,6 +284,11 @@ export const routes: Routes = [
         path: 'pagos',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/pagos/pagos.component').then((m) => m.PagosComponent)
+      },
+      {
+        path: 'carrito',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/carrito/carrito.component').then((m) => m.CarritoComponent)
       },
       {
         path: 'descargas',

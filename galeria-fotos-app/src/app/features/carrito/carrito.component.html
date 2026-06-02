@@ -1,0 +1,90 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Ventas</small>
+      <h2 class="h3 mb-0">Carrito</h2>
+    </div>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-error-alert [message]="couponError"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">
+      <p class="mb-2">{{ success }}</p>
+      <a *ngIf="pedidoId" [routerLink]="['/pedidos', pedidoId]" class="btn btn-sm btn-primary rounded-pill">Ver pedido</a>
+    </div>
+
+    <app-loading *ngIf="loading" text="Cargando carrito..."></app-loading>
+
+    <ng-container *ngIf="!loading">
+      <app-empty-state *ngIf="items.length === 0" text="Tu carrito esta vacio."></app-empty-state>
+
+      <div class="cart-layout" *ngIf="carrito as cart">
+        <section class="cart-items" *ngIf="items.length > 0">
+          <article class="cart-item" *ngFor="let item of items; trackBy: trackById">
+            <img *ngIf="item.previewUrl" [src]="item.previewUrl" [alt]="item.nombre || 'Item del carrito'">
+            <div *ngIf="!item.previewUrl" class="cart-item-placeholder"><i class="fas fa-shopping-bag"></i></div>
+            <div>
+              <div class="app-badge-row mb-2">
+                <span class="badge bg-primary">{{ item.tipo || item.tipoItem || 'Item' }}</span>
+                <span *ngIf="item.eventoNombre" class="badge bg-light text-dark border">{{ item.eventoNombre }}</span>
+              </div>
+              <h3 class="h5 mb-1">{{ item.nombre || item.descripcion || item.id }}</h3>
+              <p class="app-meta mb-0 text-break">{{ item.descripcion || item.eventoId || '-' }}</p>
+            </div>
+            <div class="cart-item-price">
+              <span>{{ item.cantidad ?? 1 }} x {{ item.precioUnitario ?? 0 | currency:(item.moneda || moneda) }}</span>
+              <strong>{{ totalItem(item) | currency:(item.moneda || moneda) }}</strong>
+              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" [disabled]="actionItemId === (item.id || item.itemId)" (click)="quitarItem(item)">Quitar</button>
+            </div>
+          </article>
+        </section>
+
+        <aside class="cart-summary">
+          <h3 class="h5 mb-3">Resumen</h3>
+          <div class="cart-summary-row">
+            <span>Subtotal</span>
+            <strong>{{ cart.subtotal ?? 0 | currency:moneda }}</strong>
+          </div>
+          <div class="cart-summary-row">
+            <span>Descuento</span>
+            <strong>{{ cart.descuentoTotal ?? 0 | currency:moneda }}</strong>
+          </div>
+          <div class="cart-summary-row total">
+            <span>Total final</span>
+            <strong>{{ (cart.totalFinal ?? cart.total ?? 0) | currency:moneda }}</strong>
+          </div>
+
+          <div class="cart-coupon my-4">
+            <div *ngIf="cart.cuponCodigo || cart.cuponAplicado" class="alert alert-light border">
+              <strong>Cupon aplicado:</strong>
+              {{ cart.cuponCodigo || cart.cuponAplicado?.codigo || '-' }}
+            </div>
+
+            <form [formGroup]="couponForm" (ngSubmit)="aplicarCupon()" class="row g-2" novalidate>
+              <div class="col-12">
+                <label class="form-label" for="couponCode">Codigo de cupon</label>
+                <input id="couponCode" type="text" class="form-control" formControlName="codigo" placeholder="Ingresar codigo">
+                <small *ngIf="couponForm.controls.codigo.invalid && (couponForm.controls.codigo.touched || submittedCoupon)" class="text-danger">El codigo es requerido.</small>
+              </div>
+              <div class="col-12 app-actions">
+                <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="applying">
+                  <span *ngIf="applying" class="spinner-border spinner-border-sm me-2"></span>
+                  Aplicar
+                </button>
+                <button type="button" class="btn btn-outline-dark rounded-pill px-4" [disabled]="removingCoupon" (click)="quitarCupon()">Quitar cupon</button>
+              </div>
+            </form>
+          </div>
+
+          <button type="button" class="btn btn-primary rounded-pill w-100" [disabled]="items.length === 0 || creatingOrder" (click)="crearPedido()">
+            <span *ngIf="creatingOrder" class="spinner-border spinner-border-sm me-2"></span>
+            Crear pedido
+          </button>
+          <p class="app-meta mt-3 mb-0">El descuento y total final son calculados por el backend al validar el carrito.</p>
+        </aside>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -149,9 +149,24 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No renderizar `cuerpoHtml` de plantillas como HTML activo inseguro; editarlo en textarea y mostrar previews como texto seguro.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales y menu dinamico.
 
+## Fase 5 ventas avanzadas
+
+- El carrito de compras vive en `/carrito`, es solo para `Usuario`/Cliente y `Admin`; `Invitado` no ve ni modifica carrito.
+- No guardar carrito, reportes, descuentos, cupones aplicados ni datos financieros en `localStorage`, sessionStorage ni otro almacenamiento del navegador.
+- El frontend no calcula descuentos finales; debe mostrar `subtotal`, `descuentoTotal` y `totalFinal` devueltos por el backend.
+- La validacion y aplicacion de cupones siempre consume backend: `POST /Cupones/validar`, `POST /Carrito/cupon` y `DELETE /Carrito/cupon`.
+- La gestion de cupones vive en `/admin/cupones`, es solo `Admin` y no debe mostrarse a `Usuario` ni `Invitado`.
+- Las promociones publicas viven en `/promociones` y `/promociones/{id}`; la gestion admin vive en `/admin/promociones`.
+- Los testimonios publicos viven en `/testimonios` y no deben mostrar emails de clientes; la gestion admin vive en `/admin/testimonios`.
+- Los carritos abandonados viven en `/admin/carritos-abandonados`, solo `Admin`; no exponerlos a usuarios no-admin.
+- Reportes y resumen comercial viven en `/admin/reportes/ventas` y `/admin/ventas`, solo `Admin`; no mostrar datos financieros a `Usuario` ni `Invitado`.
+- No loguear respuestas completas con datos privados, ventas, descuentos, carritos abandonados, emails o informacion financiera.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas publicas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
+- Admin ventas: `GET /Admin/ventas/resumen`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
@@ -163,6 +178,12 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Pedidos: `GET/POST /Pedidos`, `GET /Pedidos/{id}`, `PUT /Pedidos/{id}/estado`, `GET /Pedidos/{id}/historial-estados`.
 - Pagos: `POST /Pagos/checkout-pro/preferencias`.
 - Descargas: `GET /Descargas/mis-descargas`, `GET /Descargas/{id}`, `POST /Descargas/link`, `POST /Descargas/{id}/regenerar`, `GET /Descargas/admin`.
+- Carrito: `GET /Carrito`, `POST /Carrito/items/foto-evento/{fotoId}`, `POST /Carrito/items/paquete-evento/{paqueteId}`, `POST /Carrito/items/foto-privada/{fotoPrivadaId}`, `DELETE /Carrito/items/{itemId}`, `DELETE /Carrito/vaciar`, `POST /Carrito/cupon`, `DELETE /Carrito/cupon`, `POST /Carrito/crear-pedido`.
+- Cupones: `POST /Cupones/validar`, `GET /Cupones/admin`, `GET /Cupones/admin/{id}`, `POST /Cupones`, `PUT /Cupones/{id}`, `DELETE /Cupones/{id}`, `POST /Cupones/{id}/activar`, `POST /Cupones/{id}/desactivar`, `GET /Cupones/{id}/usos`.
+- Promociones: `GET /Promociones`, `GET /Promociones/{id}`, `GET /Promociones/admin`, `POST /Promociones`, `PUT /Promociones/{id}`, `DELETE /Promociones/{id}`, `POST /Promociones/{id}/activar`, `POST /Promociones/{id}/desactivar`.
+- Testimonios: `GET /Testimonios`, `GET /Testimonios/destacados`, `POST /Testimonios`, `GET /Testimonios/admin`, `GET /Testimonios/admin/{id}`, `PUT /Testimonios/{id}`, `DELETE /Testimonios/{id}`, `POST /Testimonios/{id}/publicar`, `POST /Testimonios/{id}/ocultar`.
+- Carritos abandonados: `GET /CarritosAbandonados`, `GET /CarritosAbandonados/resumen`, `POST /CarritosAbandonados/detectar`, `POST /CarritosAbandonados/{id}/notificar`.
+- Reportes: `GET /Reportes/ventas/resumen`.
 - Sitio publico: `GET /Sitio/home`, `GET /Sitio/contacto`, `GET /Sitio/perfil-fotografa`.
 - Portfolio: `GET /Portfolio`, `GET /Portfolio/{id}`, `GET /Portfolio/admin`, `POST /Portfolio`, `PUT /Portfolio/{id}`, `DELETE /Portfolio/{id}`.
 - Servicios: `GET /Servicios`, `GET /Servicios/{id}`, `GET /Servicios/admin`, `POST /Servicios`, `PUT /Servicios/{id}`, `DELETE /Servicios/{id}`.

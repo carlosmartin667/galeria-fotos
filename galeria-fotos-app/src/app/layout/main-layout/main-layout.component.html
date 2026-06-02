@@ -44,6 +44,8 @@
             <a routerLink="/">Home</a>
             <a routerLink="/portfolio">Portfolio</a>
             <a routerLink="/servicios">Servicios</a>
+            <a routerLink="/promociones">Promociones</a>
+            <a routerLink="/testimonios">Testimonios</a>
             <a routerLink="/presupuesto">Solicitar presupuesto</a>
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
@@ -61,6 +63,7 @@
           <h3 class="h6 text-white mb-3">Operaciones</h3>
           <div class="footer-links">
             <a *ngIf="session.isAuthenticated" routerLink="/pedidos">Pedidos</a>
+            <a *ngIf="session.isUser" routerLink="/carrito">Carrito</a>
             <a *ngIf="session.isAuthenticated" routerLink="/favoritos">Favoritos</a>
             <a *ngIf="session.isAuthenticated" routerLink="/pagos">Pagos</a>
             <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
@@ -74,6 +77,12 @@
             <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones">Notificaciones</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas">Plantillas de notificacion</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/ventas">Resumen ventas</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/cupones">Cupones</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/promociones">Admin promociones</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/testimonios">Admin testimonios</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/carritos-abandonados">Carritos abandonados</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/reportes/ventas">Reportes ventas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
           </div>
         </div>
