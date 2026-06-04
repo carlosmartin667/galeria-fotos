@@ -33,12 +33,16 @@
       <div class="col-12">
         <label class="form-label" for="fotoStorage">Storage key</label>
         <div class="input-group">
-          <input id="fotoStorage" type="text" class="form-control" formControlName="storageKey">
+          <input id="fotoStorage" [type]="showStorageKey ? 'text' : 'password'" class="form-control" formControlName="storageKey" autocomplete="off">
+          <button type="button" class="btn btn-outline-dark" (click)="toggleStorageKey()">
+            {{ showStorageKey ? 'Ocultar' : 'Mostrar' }}
+          </button>
           <button type="button" class="btn btn-outline-primary" (click)="generateStorageKey()" [disabled]="isEdit || generatingKey">
             <span *ngIf="generatingKey" class="spinner-border spinner-border-sm me-2"></span>
             Generar storageKey
           </button>
         </div>
+        <small class="text-muted">Dato tecnico oculto por defecto.</small>
       </div>
       <div class="col-md-6">
         <label class="form-label" for="fotoPreview">Preview URL</label>
@@ -46,7 +50,12 @@
       </div>
       <div class="col-md-6">
         <label class="form-label" for="fotoMarca">Marca de agua storage key</label>
-        <input id="fotoMarca" type="text" class="form-control" formControlName="marcaAguaStorageKey">
+        <div class="input-group">
+          <input id="fotoMarca" [type]="showMarcaAguaKey ? 'text' : 'password'" class="form-control" formControlName="marcaAguaStorageKey" autocomplete="off">
+          <button type="button" class="btn btn-outline-dark" (click)="toggleMarcaAguaKey()">
+            {{ showMarcaAguaKey ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="fotoSize">Size bytes</label>

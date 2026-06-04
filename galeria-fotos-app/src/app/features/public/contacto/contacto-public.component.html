@@ -5,7 +5,7 @@
 
     <div *ngIf="!loading && contacto as item" class="public-detail-layout">
       <div>
-        <img *ngIf="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl" [src]="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl || ''" [alt]="nombre" class="public-detail-image">
+        <img *ngIf="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl" [src]="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl || ''" [alt]="nombre" class="public-detail-image" loading="lazy">
         <div *ngIf="!item.perfil?.bannerUrl && !item.perfil?.fotoPerfilUrl" class="public-detail-placeholder"><i class="fas fa-address-card"></i></div>
       </div>
       <div class="public-detail-content">

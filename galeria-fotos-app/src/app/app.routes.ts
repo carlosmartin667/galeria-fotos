@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { authChildGuard } from './core/guards/auth.guard';
-import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
-import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
 export const routes: Routes = [
   {
@@ -15,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: PublicLayoutComponent,
+    loadComponent: () => import('./layout/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
     children: [
       {
         path: '',
@@ -69,7 +67,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: MainLayoutComponent,
+    loadComponent: () => import('./layout/main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
     canActivateChild: [authChildGuard],
     children: [
       {

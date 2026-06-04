@@ -28,7 +28,7 @@
     <div class="public-gallery-grid" *ngIf="!loading && filteredItems.length > 0">
       <article class="public-gallery-card animated fadeIn" *ngFor="let item of filteredItems; trackBy: trackById">
         <button *ngIf="item.imagenUrl" type="button" class="photo-media-trigger" (click)="openLightbox(item)">
-          <img [src]="item.imagenUrl" [alt]="item.titulo">
+          <img [src]="item.imagenUrl" [alt]="item.titulo" loading="lazy">
           <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
         </button>
         <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-image"></i></div>

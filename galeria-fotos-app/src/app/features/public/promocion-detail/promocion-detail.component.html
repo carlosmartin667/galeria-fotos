@@ -6,7 +6,7 @@
     <ng-container *ngIf="!loading && promocion as promo">
       <div class="public-detail-layout">
         <div class="public-detail-media">
-          <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'">
+          <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy">
           <div *ngIf="!promo.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
         </div>
 

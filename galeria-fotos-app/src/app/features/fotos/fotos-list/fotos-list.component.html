@@ -36,7 +36,7 @@
     <div *ngIf="!loading && filteredFotos.length > 0" class="photo-grid">
       <article *ngFor="let foto of filteredFotos; trackBy: trackById" class="photo-card">
         <button *ngIf="foto.previewUrl" type="button" class="photo-media-trigger" (click)="openLightbox(foto)" [attr.aria-label]="'Ampliar ' + foto.nombreArchivo">
-          <img [src]="foto.previewUrl" [alt]="foto.nombreArchivo">
+          <img [src]="foto.previewUrl" [alt]="foto.nombreArchivo" loading="lazy">
           <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
         </button>
         <div *ngIf="!foto.previewUrl" class="photo-placeholder"><i class="fas fa-image"></i></div>

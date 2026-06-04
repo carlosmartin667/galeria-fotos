@@ -23,7 +23,7 @@
       <div class="cart-layout" *ngIf="carrito as cart">
         <section class="cart-items" *ngIf="items.length > 0">
           <article class="cart-item" *ngFor="let item of items; trackBy: trackById">
-            <img *ngIf="item.previewUrl" [src]="item.previewUrl" [alt]="item.nombre || 'Item del carrito'">
+            <img *ngIf="item.previewUrl" [src]="item.previewUrl" [alt]="item.nombre || 'Item del carrito'" loading="lazy">
             <div *ngIf="!item.previewUrl" class="cart-item-placeholder"><i class="fas fa-shopping-bag"></i></div>
             <div>
               <div class="app-badge-row mb-2">

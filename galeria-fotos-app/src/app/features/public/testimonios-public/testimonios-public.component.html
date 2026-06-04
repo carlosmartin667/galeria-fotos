@@ -15,7 +15,7 @@
 
         <div class="public-card-grid public-card-grid-3" *ngIf="!loading && testimonios.length > 0">
           <article class="public-card testimonial-card" *ngFor="let item of testimonios; trackBy: trackById">
-            <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.nombreCliente || 'Cliente'">
+            <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.nombreCliente || 'Cliente'" loading="lazy">
             <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-user"></i></div>
             <div class="public-card-body">
               <div class="testimonial-stars" aria-label="Calificacion">

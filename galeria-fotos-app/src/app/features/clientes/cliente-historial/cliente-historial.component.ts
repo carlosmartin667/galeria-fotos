@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { ClienteHistorial } from '../../../core/models/cliente-historial.models';
 import { ClienteHistorialService } from '../../../core/services/cliente-historial.service';
 import { SessionService } from '../../../core/services/session.service';
+import { isSensitiveKey, redactSensitiveText } from '../../../core/utils/sensitive-text';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -126,17 +127,7 @@ export class ClienteHistorialComponent implements OnInit {
 
   private isSafeKey(key: string): boolean {
     const normalized = key.toLowerCase();
-    return ![
-      'storage',
-      'storagekey',
-      'url',
-      'signed',
-      'firmada',
-      'firma',
-      'token',
-      'secret',
-      'password'
-    ].some((blocked) => normalized.includes(blocked));
+    return !isSensitiveKey(key) && !['url', 'firma'].some((blocked) => normalized.includes(blocked));
   }
 
   private isRenderable(value: unknown): boolean {
@@ -148,7 +139,7 @@ export class ClienteHistorialComponent implements OnInit {
       return value ? 'Si' : 'No';
     }
 
-    return String(value);
+    return redactSensitiveText(value);
   }
 
   private label(key: string): string {

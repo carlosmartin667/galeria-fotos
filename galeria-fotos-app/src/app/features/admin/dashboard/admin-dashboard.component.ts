@@ -72,6 +72,18 @@ export class AdminDashboardComponent implements OnInit {
     return values.map((value) => String(value)).join(' - ');
   }
 
+  trackByMetric(_: number, metric: DashboardMetric): string {
+    return metric.label;
+  }
+
+  trackBySection(_: number, section: DashboardSection): string {
+    return section.title;
+  }
+
+  trackByItem(index: number, item: Record<string, unknown>): string {
+    return String(item['id'] ?? item['pedidoId'] ?? item['fotoId'] ?? item['paqueteId'] ?? index);
+  }
+
   private buildMetrics(dashboard: AdminDashboard): DashboardMetric[] {
     return [
       { label: 'Eventos activos', value: this.metricValue(dashboard, ['eventosActivos', 'EventosActivos']), icon: 'fas fa-calendar-check' },

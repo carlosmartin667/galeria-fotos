@@ -12,7 +12,7 @@
 
     <div class="public-card-grid public-card-grid-3" *ngIf="!loading && promociones.length > 0">
       <article class="public-card animated fadeIn" *ngFor="let promo of promociones; trackBy: trackById">
-        <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'">
+        <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy">
         <div *ngIf="!promo.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
         <div class="public-card-body">
           <div class="app-badge-row mb-2">

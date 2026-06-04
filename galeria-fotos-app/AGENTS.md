@@ -163,6 +163,20 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No loguear respuestas completas con datos privados, ventas, descuentos, carritos abandonados, emails o informacion financiera.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas publicas existentes.
 
+## Fase 6B calidad, seguridad y performance
+
+- Preferir lazy loading con `loadComponent` para layouts y pantallas pesadas sin cambiar rutas publicas ni contratos.
+- Mantener mensajes de error seguros y claros para `401`, `403`, `409`, `429`, `500`, `502` y `503`; solo `401` debe limpiar sesion y redirigir desde el interceptor.
+- No mostrar `JSON.stringify` de cuerpos de error completos al usuario.
+- No mostrar stacktraces, tokens, URLs firmadas, secretos, StorageKey ni MarcaAguaStorageKey en errores visibles.
+- No usar `console.log`, `console.error` ni otros logs con datos privados, financieros, tokens, URLs firmadas o payloads sensibles.
+- No renderizar StorageKey, MarcaAguaStorageKey ni URLs firmadas completas en UI; si Admin necesita una referencia tecnica, mostrarla redactada o truncada.
+- Usar utilidades de sanitizacion para textos dinamicos de notificaciones, historiales, descargas, importaciones y pantallas tecnicas.
+- Usar `loading="lazy"` en imagenes de listados, cards y grillas que no sean hero principal.
+- Usar `trackBy` en listas grandes o repetidas cuando el cambio sea simple y seguro.
+- No subir budgets como primera solucion; priorizar lazy loading, limpieza de imports y reduccion de carga inicial.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.

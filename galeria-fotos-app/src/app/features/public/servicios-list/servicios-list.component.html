@@ -14,7 +14,7 @@
 
     <div class="public-card-grid public-card-grid-3" *ngIf="!loading && servicios.length > 0">
       <article class="public-card animated fadeIn" *ngFor="let servicio of servicios; trackBy: trackById">
-        <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre">
+        <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre" loading="lazy">
         <div *ngIf="!servicio.imagenUrl" class="public-card-placeholder"><i class="fas fa-camera-retro"></i></div>
         <div class="public-card-body">
           <h2 class="h4">{{ servicio.nombre }}</h2>

@@ -102,6 +102,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  trackByLabel(_: number, item: SummaryCard): string {
+    return `${item.label}-${item.link}`;
+  }
+
   private buildCards(clientes: number, eventos: number, pedidos: number): SummaryCard[] {
     const cards: SummaryCard[] = [
       { label: 'Eventos', value: eventos, link: '/eventos', icon: 'fas fa-calendar-alt' },

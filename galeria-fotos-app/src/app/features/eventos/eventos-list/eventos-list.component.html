@@ -28,7 +28,7 @@
     <div *ngIf="!loading && filteredEventos.length > 0" class="events-grid">
       <article class="event-card event-showcase animated fadeIn" *ngFor="let evento of filteredEventos; trackBy: trackById">
         <div class="event-image-wrap">
-          <img *ngIf="eventPreviewUrls[evento.id]" [src]="eventPreviewUrls[evento.id] || ''" [alt]="evento.nombre">
+          <img *ngIf="eventPreviewUrls[evento.id]" [src]="eventPreviewUrls[evento.id] || ''" [alt]="evento.nombre" loading="lazy">
           <div *ngIf="hasCachedPreview(evento.id) && !eventPreviewUrls[evento.id]" class="event-placeholder">
             <i class="fas fa-camera-retro"></i>
           </div>

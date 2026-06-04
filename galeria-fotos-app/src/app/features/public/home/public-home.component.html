@@ -29,7 +29,7 @@
       </div>
       <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="servicios.length > 0; else sinServicios">
         <article class="public-card animated fadeIn" *ngFor="let servicio of servicios; trackBy: trackById">
-          <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre">
+          <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre" loading="lazy">
           <div *ngIf="!servicio.imagenUrl" class="public-card-placeholder"><i class="fas fa-camera-retro"></i></div>
           <div class="public-card-body">
             <h3 class="h5">{{ servicio.nombre }}</h3>
@@ -53,7 +53,7 @@
       </div>
       <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="promociones.length > 0">
         <article class="public-card public-image-card animated fadeIn" *ngFor="let promocion of promociones; trackBy: trackById">
-          <img *ngIf="promocion.imagenUrl" [src]="promocion.imagenUrl" [alt]="promocion.titulo || 'Promocion'">
+          <img *ngIf="promocion.imagenUrl" [src]="promocion.imagenUrl" [alt]="promocion.titulo || 'Promocion'" loading="lazy">
           <div *ngIf="!promocion.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
           <div class="public-card-body">
             <span class="badge bg-primary mb-2" *ngIf="promocion.tipo">{{ promocion.tipo }}</span>
@@ -72,7 +72,7 @@
       </div>
       <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="portfolio.length > 0">
         <article class="public-card public-image-card animated fadeIn" *ngFor="let item of portfolio; trackBy: trackById">
-          <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.titulo">
+          <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.titulo" loading="lazy">
           <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-image"></i></div>
           <div class="public-card-body">
             <h3 class="h5">{{ item.titulo }}</h3>
@@ -102,7 +102,7 @@
         <article class="public-card animated fadeIn" *ngFor="let testimonio of testimonios; trackBy: trackById">
           <div class="public-card-body">
             <div class="public-stars mb-2" *ngIf="testimonio.calificacion">
-              <i class="fas fa-star" *ngFor="let star of [1, 2, 3, 4, 5]" [class.text-primary]="star <= (testimonio.calificacion || 0)"></i>
+              <i class="fas fa-star" *ngFor="let star of [1, 2, 3, 4, 5]; trackBy: trackByNumber" [class.text-primary]="star <= (testimonio.calificacion || 0)"></i>
             </div>
             <h3 class="h5">{{ testimonio.nombreCliente || 'Cliente' }}</h3>
             <p>{{ testimonio.texto }}</p>

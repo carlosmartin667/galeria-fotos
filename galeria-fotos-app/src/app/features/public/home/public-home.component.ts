@@ -78,6 +78,10 @@ export class PublicHomeComponent implements OnInit {
     return typeof item === 'string' ? item : item.id ?? String(_);
   }
 
+  trackByNumber(_: number, item: number): number {
+    return item;
+  }
+
   couponCode(promocion: Promocion): string {
     return promocion.cuponCodigo || promocion.codigoCupon || '';
   }

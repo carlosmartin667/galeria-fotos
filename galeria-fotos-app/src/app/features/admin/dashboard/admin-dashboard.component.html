@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="!loading">
       <div class="admin-metrics-grid" *ngIf="metrics.length > 0">
-        <article class="dashboard-card admin-dashboard-card" *ngFor="let metric of metrics">
+        <article class="dashboard-card admin-dashboard-card" *ngFor="let metric of metrics; trackBy: trackByMetric">
           <i [class]="metric.icon"></i>
           <span>{{ metric.label }}</span>
           <strong>{{ metric.value }}</strong>
@@ -25,10 +25,10 @@
       </div>
 
       <div class="row g-4 mt-1" *ngIf="sections.length > 0">
-        <section class="col-xl-4" *ngFor="let section of sections">
+        <section class="col-xl-4" *ngFor="let section of sections; trackBy: trackBySection">
           <div class="admin-section">
             <h3 class="h5 mb-3">{{ section.title }}</h3>
-            <article class="admin-section-item" *ngFor="let item of section.items">
+            <article class="admin-section-item" *ngFor="let item of section.items; trackBy: trackByItem">
               <strong>{{ itemTitle(item) }}</strong>
               <span>{{ itemMeta(item) || 'Sin detalle' }}</span>
             </article>

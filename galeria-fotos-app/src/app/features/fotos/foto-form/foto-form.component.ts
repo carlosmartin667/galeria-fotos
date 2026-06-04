@@ -43,6 +43,8 @@ export class FotoFormComponent implements OnInit {
   saving = false;
   generatingKey = false;
   submitted = false;
+  showStorageKey = false;
+  showMarcaAguaKey = false;
   error = '';
 
   readonly form = this.fb.nonNullable.group({
@@ -165,6 +167,14 @@ export class FotoFormComponent implements OnInit {
   showError(controlName: 'eventoId' | 'nombreArchivo' | 'contentType' | 'storageKey' | 'precioUnitario'): boolean {
     const control = this.form.controls[controlName];
     return control.invalid && (control.touched || this.submitted);
+  }
+
+  toggleStorageKey(): void {
+    this.showStorageKey = !this.showStorageKey;
+  }
+
+  toggleMarcaAguaKey(): void {
+    this.showMarcaAguaKey = !this.showMarcaAguaKey;
   }
 
   private toCreatePayload(raw: FotoFormValue): CrearFotoMetadataRequest {

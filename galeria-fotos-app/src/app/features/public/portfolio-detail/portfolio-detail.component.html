@@ -5,7 +5,7 @@
 
     <div *ngIf="!loading && item as data" class="public-detail-layout">
       <div>
-        <img *ngIf="data.imagenUrl" [src]="data.imagenUrl" [alt]="data.titulo" class="public-detail-image">
+        <img *ngIf="data.imagenUrl" [src]="data.imagenUrl" [alt]="data.titulo" class="public-detail-image" loading="lazy">
         <div *ngIf="!data.imagenUrl" class="public-detail-placeholder"><i class="fas fa-image"></i></div>
       </div>
       <div class="public-detail-content">
