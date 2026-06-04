@@ -1,0 +1,35 @@
+<div *ngIf="session.isAuthenticated" class="notification-bell">
+  <button type="button" class="notification-bell-button" (click)="toggle()" aria-label="Notificaciones">
+    <i class="fas fa-bell"></i>
+    <span *ngIf="unreadCount > 0" class="notification-bell-count">{{ unreadCount }}</span>
+  </button>
+
+  <div *ngIf="open" class="notification-bell-menu">
+    <div class="notification-bell-head">
+      <strong>Notificaciones</strong>
+      <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="load()">Actualizar</button>
+    </div>
+
+    <p *ngIf="loading" class="app-meta mb-2">Cargando...</p>
+    <p *ngIf="error" class="text-danger small mb-2">{{ error }}</p>
+    <p *ngIf="!loading && latest.length === 0" class="app-meta mb-2">No tenes notificaciones.</p>
+
+    <div class="notification-bell-list" *ngIf="latest.length > 0">
+      <article *ngFor="let item of latest; trackBy: trackById" class="notification-bell-item" [class.unread]="item.leida !== true">
+        <div class="app-badge-row mb-1">
+          <span class="badge bg-light text-dark border">{{ item.canal || 'Interna' }}</span>
+          <span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Pendiente' }}</span>
+        </div>
+        <strong>{{ text(item.titulo || item.tipo || 'Notificacion') }}</strong>
+        <p class="mb-1">{{ text(item.mensaje || '') }}</p>
+        <span class="app-meta">{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</span>
+        <button *ngIf="item.leida !== true" type="button" class="btn btn-sm btn-link px-0" (click)="marcarLeida(item)">Marcar leida</button>
+      </article>
+    </div>
+
+    <div class="notification-bell-actions">
+      <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="marcarTodas()">Marcar todas</button>
+      <a routerLink="/notificaciones" class="btn btn-sm btn-primary rounded-pill" (click)="open = false">Ver todas</a>
+    </div>
+  </div>
+</div>

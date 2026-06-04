@@ -1,0 +1,96 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Fotos</small>
+      <h2 class="h3 mb-0">{{ isEdit ? 'Editar metadata' : 'Crear metadata' }}</h2>
+    </div>
+    <a [routerLink]="form.controls.eventoId.getRawValue() ? ['/fotos/evento', form.controls.eventoId.getRawValue()] : ['/eventos']" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading"></app-loading>
+
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoEvento">Evento ID</label>
+        <input id="fotoEvento" type="text" class="form-control" formControlName="eventoId">
+        <small *ngIf="showError('eventoId')" class="text-danger">El eventoId es requerido.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoArchivo">Nombre archivo</label>
+        <input id="fotoArchivo" type="text" class="form-control" formControlName="nombreArchivo">
+        <small *ngIf="showError('nombreArchivo')" class="text-danger">El nombre de archivo es requerido.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoContent">Content type</label>
+        <input id="fotoContent" type="text" class="form-control" formControlName="contentType">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoPrecio">Precio unitario</label>
+        <input id="fotoPrecio" type="number" min="0" step="0.01" class="form-control" formControlName="precioUnitario">
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="fotoStorage">Storage key</label>
+        <div class="input-group">
+          <input id="fotoStorage" [type]="showStorageKey ? 'text' : 'password'" class="form-control" formControlName="storageKey" autocomplete="off">
+          <button type="button" class="btn btn-outline-dark" (click)="toggleStorageKey()">
+            {{ showStorageKey ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          <button type="button" class="btn btn-outline-primary" (click)="generateStorageKey()" [disabled]="isEdit || generatingKey">
+            <span *ngIf="generatingKey" class="spinner-border spinner-border-sm me-2"></span>
+            Generar storageKey
+          </button>
+        </div>
+        <small class="text-muted">Dato tecnico oculto por defecto.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoPreview">Preview URL</label>
+        <input id="fotoPreview" type="url" class="form-control" formControlName="previewUrl">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="fotoMarca">Marca de agua storage key</label>
+        <div class="input-group">
+          <input id="fotoMarca" [type]="showMarcaAguaKey ? 'text' : 'password'" class="form-control" formControlName="marcaAguaStorageKey" autocomplete="off">
+          <button type="button" class="btn btn-outline-dark" (click)="toggleMarcaAguaKey()">
+            {{ showMarcaAguaKey ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoSize">Size bytes</label>
+        <input id="fotoSize" type="number" min="0" class="form-control" formControlName="sizeInBytes">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoWidth">Width</label>
+        <input id="fotoWidth" type="number" min="0" class="form-control" formControlName="width">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="fotoHeight">Height</label>
+        <input id="fotoHeight" type="number" min="0" class="form-control" formControlName="height">
+      </div>
+      <div class="col-12">
+        <div class="app-badge-row">
+          <div class="form-check">
+            <input id="fotoActiva" type="checkbox" class="form-check-input" formControlName="activa">
+            <label for="fotoActiva" class="form-check-label">Activa</label>
+          </div>
+          <div class="form-check">
+            <input id="fotoMarcaAgua" type="checkbox" class="form-check-input" formControlName="tieneMarcaAgua">
+            <label for="fotoMarcaAgua" class="form-check-label">Tiene marca de agua</label>
+          </div>
+          <div class="form-check">
+            <input id="fotoProcesada" type="checkbox" class="form-check-input" formControlName="procesada">
+            <label for="fotoProcesada" class="form-check-label">Procesada</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 app-actions">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Descargas</small>
+      <h2 class="h3 mb-0">Mis descargas</h2>
+    </div>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    <app-loading *ngIf="loading" text="Cargando descargas..."></app-loading>
+    <app-empty-state *ngIf="!loading && descargas.length === 0" text="Todavia no tenes descargas para mostrar."></app-empty-state>
+
+    <div *ngIf="!loading && descargas.length > 0" class="download-grid">
+      <article class="download-card animated fadeIn" *ngFor="let descarga of descargas; trackBy: trackById">
+        <div class="download-card-header">
+          <div>
+            <small class="app-kicker">{{ tipo(descarga) }}</small>
+            <h3 class="h5 mb-1 text-break">{{ descarga.nombreArchivo || 'Descarga' }}</h3>
+            <p class="app-meta mb-0 text-break">Pedido {{ descarga.pedidoId }}</p>
+          </div>
+          <a [routerLink]="['/descargas', descarga.id]" class="btn btn-sm btn-outline-primary rounded-pill">Detalle</a>
+        </div>
+
+        <div class="app-badge-row my-3">
+          <span *ngFor="let badge of statusBadges(descarga)" class="badge" [ngClass]="badge.className">{{ badge.label }}</span>
+        </div>
+
+        <div class="download-meta-grid">
+          <span>Expira</span>
+          <strong>{{ expira(descarga) ? (expira(descarga) | date:'short') : '-' }}</strong>
+          <span>Max descargas</span>
+          <strong>{{ descarga.maxDescargas === null || descarga.maxDescargas === undefined ? 'Sin limite' : descarga.maxDescargas }}</strong>
+          <span>Realizadas</span>
+          <strong>{{ descarga.descargasRealizadas ?? 0 }}</strong>
+          <span>Ultima descarga</span>
+          <strong>{{ descarga.ultimaDescargaUtc ? (descarga.ultimaDescargaUtc | date:'short') : '-' }}</strong>
+        </div>
+
+        <div class="app-actions mt-3">
+          <a *ngIf="descarga.url" [href]="descarga.url" target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill">Abrir link</a>
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="regeneratingId === descarga.id" (click)="regenerar(descarga)">
+            <span *ngIf="regeneratingId === descarga.id" class="spinner-border spinner-border-sm me-2"></span>
+            Regenerar
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>

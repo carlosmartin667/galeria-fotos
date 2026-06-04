@@ -1,0 +1,33 @@
+<section>
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-2">Dashboard</small>
+      <h2 class="h3 mb-1">Resumen del sistema</h2>
+      <p class="text-muted mb-0">Estas navegando como {{ session.displayRole }}.</p>
+    </div>
+    <a *ngIf="session.isAdmin" routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
+  </div>
+
+  <div *ngIf="message" class="alert alert-warning">{{ message }}</div>
+  <app-error-alert [message]="error"></app-error-alert>
+  <app-loading *ngIf="loading" text="Cargando resumen..."></app-loading>
+
+  <div class="row g-4" *ngIf="!loading">
+    <div class="col-md-6 col-xl-4" *ngFor="let card of cards; trackBy: trackByLabel">
+      <a [routerLink]="card.link" class="dashboard-card">
+        <i [class]="card.icon"></i>
+        <span>{{ card.label }}</span>
+        <strong>{{ card.value }}</strong>
+      </a>
+    </div>
+  </div>
+
+  <div class="app-panel mt-4">
+    <div class="app-panel-body">
+      <h3 class="h5 mb-3">Accesos rapidos</h3>
+      <div class="app-actions">
+        <a *ngFor="let link of quickLinks; trackBy: trackByLabel" [routerLink]="link.link" class="btn btn-outline-primary rounded-pill">{{ link.label }}</a>
+      </div>
+    </div>
+  </div>
+</section>

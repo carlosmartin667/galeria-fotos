@@ -1,0 +1,54 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Clientes</small>
+      <h2 class="h3 mb-0">Listado</h2>
+    </div>
+    <a *ngIf="session.isAdmin" routerLink="/clientes/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo cliente</a>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-8">
+        <input type="search" class="form-control" placeholder="Buscar por nombre, email, telefono o documento" [ngModel]="search()" (ngModelChange)="search.set($event)">
+      </div>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-outline-primary rounded-pill w-100" (click)="load()">Actualizar</button>
+      </div>
+    </div>
+
+    <app-loading *ngIf="loading"></app-loading>
+    <app-empty-state *ngIf="!loading && filteredClientes().length === 0" text="No hay clientes para mostrar."></app-empty-state>
+
+    <div *ngIf="!loading && filteredClientes().length > 0" class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Documento</th>
+            <th *ngIf="session.isAdmin" class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of filteredClientes(); trackBy: trackById">
+            <td>{{ cliente.nombre }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefono || '-' }}</td>
+            <td>{{ cliente.documento || '-' }}</td>
+            <td *ngIf="session.isAdmin" class="text-end">
+              <div class="app-actions justify-content-end">
+                <a [routerLink]="['/clientes/editar', cliente.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar</a>
+                <a [routerLink]="['/clientes', cliente.id, 'historial']" class="btn btn-sm btn-outline-primary rounded-pill">Historial</a>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteCliente(cliente)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

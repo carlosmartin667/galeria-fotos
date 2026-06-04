@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.testimonial-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+  color: var(--app-primary);
+}
+
+.testimonial-card img,
+.testimonial-card .public-card-placeholder {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}

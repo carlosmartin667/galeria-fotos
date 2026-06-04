@@ -1,0 +1,79 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Ventas</small>
+      <h2 class="h3 mb-0">Carritos abandonados</h2>
+    </div>
+    <div class="app-actions">
+      <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+      <button type="button" class="btn btn-primary rounded-pill px-4" [disabled]="detecting" (click)="detectar()">
+        <span *ngIf="detecting" class="spinner-border spinner-border-sm me-2"></span>
+        Detectar
+      </button>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    <app-loading *ngIf="loading" text="Cargando carritos abandonados..."></app-loading>
+
+    <ng-container *ngIf="!loading">
+      <div class="admin-metrics-grid mb-4">
+        <article class="dashboard-card admin-dashboard-card">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Total</span>
+          <strong>{{ resumenValue(['total', 'totalAbandonados']) }}</strong>
+        </article>
+        <article class="dashboard-card admin-dashboard-card">
+          <i class="fas fa-bell"></i>
+          <span>Notificados</span>
+          <strong>{{ resumenValue(['notificados']) }}</strong>
+        </article>
+        <article class="dashboard-card admin-dashboard-card">
+          <i class="fas fa-undo"></i>
+          <span>Recuperados</span>
+          <strong>{{ resumenValue(['recuperados']) }}</strong>
+        </article>
+        <article class="dashboard-card admin-dashboard-card">
+          <i class="fas fa-dollar-sign"></i>
+          <span>Valor estimado</span>
+          <strong>{{ resumenValue(['totalEstimado', 'valorEstimado']) | currency:'USD' }}</strong>
+        </article>
+      </div>
+
+      <app-empty-state *ngIf="registros.length === 0" text="No hay carritos abandonados."></app-empty-state>
+
+      <div class="table-responsive" *ngIf="registros.length > 0">
+        <table class="table table-hover align-middle admin-wide-table">
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Cliente</th>
+              <th>Items</th>
+              <th>Total estimado</th>
+              <th>Recordatorios</th>
+              <th>Abandono</th>
+              <th>Ultima notif.</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of registros; trackBy: trackById">
+              <td><span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Pendiente' }}</span></td>
+              <td class="text-break">{{ item.clienteNombre || item.clienteEmail || item.email || item.clienteId || item.usuarioId || '-' }}</td>
+              <td>{{ item.cantidadItems ?? '-' }}</td>
+              <td>{{ item.totalEstimado ?? 0 | currency:(item.moneda || 'USD') }}</td>
+              <td>{{ item.recordatoriosEnviados ?? item.cantidadRecordatorios ?? 0 }}</td>
+              <td>{{ (item.fechaAbandonoUtc || item.fechaDeteccionUtc || item.fechaCreacionUtc) ? ((item.fechaAbandonoUtc || item.fechaDeteccionUtc || item.fechaCreacionUtc) | date:'short') : '-' }}</td>
+              <td>{{ item.ultimaNotificacionUtc ? (item.ultimaNotificacionUtc | date:'short') : '-' }}</td>
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="actionId === item.id" (click)="notificar(item)">Notificar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </div>
+</div>

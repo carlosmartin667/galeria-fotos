@@ -1,0 +1,95 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Evento</small>
+      <h2 class="h3 mb-0">Detalle</h2>
+    </div>
+    <div class="app-actions">
+      <a routerLink="/eventos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+      <a *ngIf="session.isAdmin && evento" [routerLink]="['/eventos/editar', evento.id]" class="btn btn-primary rounded-pill px-4">Editar</a>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    <app-loading *ngIf="loading"></app-loading>
+
+    <ng-container *ngIf="!loading && evento as item">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <h3 class="h2 mb-3">{{ item.nombre }}</h3>
+          <div class="app-badge-row mb-3">
+            <span class="badge" [ngClass]="badgeClass(item.estado)">{{ item.estado || 'Sin estado' }}</span>
+            <span class="badge" [ngClass]="badgeClass(item.visibilidad, 'visibilidad')">{{ item.visibilidad || 'Sin visibilidad' }}</span>
+            <span class="badge" [ngClass]="badgeClass(item.activo === false ? 'false' : 'true', 'activo')">{{ item.activo === false ? 'Inactivo' : 'Activo' }}</span>
+          </div>
+          <p class="lead">{{ item.descripcion || 'Sin descripcion' }}</p>
+          <div class="row g-3">
+            <div class="col-md-6"><strong>Fecha:</strong> {{ item.fechaEventoUtc | date:'short' }}</div>
+            <div class="col-md-6"><strong>Estado:</strong> {{ item.estado || '-' }}</div>
+            <div class="col-md-6"><strong>Visibilidad:</strong> {{ item.visibilidad || '-' }}</div>
+            <div class="col-md-6"><strong>Limite compra:</strong> {{ item.fechaLimiteCompraUtc ? (item.fechaLimiteCompraUtc | date:'short') : '-' }}</div>
+            <div class="col-md-6"><strong>Portada foto:</strong> {{ item.portadaFotoId || '-' }}</div>
+            <div class="col-12 text-break"><strong>Cliente principal:</strong> {{ item.clientePrincipalId || '-' }}</div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="app-actions justify-content-lg-end">
+            <a [routerLink]="['/fotos/evento', item.id]" class="btn btn-outline-dark rounded-pill px-4">Ver fotos</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" [queryParams]="{ eventoId: item.id }" class="btn btn-outline-primary rounded-pill px-4">Importar fotos demo</a>
+            <button *ngIf="session.isAuthenticated" type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="favoriteLoading" (click)="toggleFavorite()">
+              <span *ngIf="favoriteLoading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isFavorite ? 'Quitar favorito' : 'Guardar favorito' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <section>
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          <h3 class="h5 mb-0">Comentarios</h3>
+          <span class="app-meta">{{ comentarios.length }} publicados</span>
+        </div>
+
+        <div *ngIf="session.isAuthenticated" class="mb-4">
+          <label class="form-label" for="eventoComentario">Nuevo comentario</label>
+          <textarea id="eventoComentario" rows="3" class="form-control mb-3" [(ngModel)]="comentarioTexto"></textarea>
+          <button type="button" class="btn btn-primary rounded-pill px-4" [disabled]="savingComment" (click)="addComment()">
+            <span *ngIf="savingComment" class="spinner-border spinner-border-sm me-2"></span>
+            Comentar
+          </button>
+        </div>
+
+        <p *ngIf="!session.isAuthenticated" class="alert alert-light border">Inicia sesion para comentar o guardar favoritos.</p>
+        <app-empty-state *ngIf="comentarios.length === 0" text="Todavia no hay comentarios."></app-empty-state>
+
+        <div class="comment-list">
+          <article *ngFor="let comment of comentarios; trackBy: trackByComment" class="comment-item">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <strong>{{ comment.nombreUsuario || 'Usuario' }}</strong>
+              <small class="text-muted">{{ comment.fechaCreacionUtc | date:'short' }}</small>
+            </div>
+
+            <p *ngIf="editingCommentId !== comment.id" class="mb-2">{{ comment.texto }}</p>
+
+            <div *ngIf="editingCommentId === comment.id">
+              <textarea rows="3" class="form-control mb-2" [(ngModel)]="editingText"></textarea>
+              <div class="app-actions">
+                <button type="button" class="btn btn-sm btn-primary rounded-pill" (click)="saveEdit(comment)">Guardar</button>
+                <button type="button" class="btn btn-sm btn-outline-dark rounded-pill" (click)="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+
+            <div *ngIf="editingCommentId !== comment.id && canManageComment(comment)" class="app-actions">
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="startEdit(comment)">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteComment(comment)">Eliminar</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</div>

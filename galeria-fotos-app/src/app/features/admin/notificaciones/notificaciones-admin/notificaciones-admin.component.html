@@ -1,0 +1,91 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="h3 mb-0">Notificaciones</h2>
+    </div>
+    <div class="app-actions">
+      <a routerLink="/admin/notificaciones/plantillas" class="btn btn-outline-primary rounded-pill px-4">Plantillas</a>
+      <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+    <form [formGroup]="filtros" class="row g-3 mb-4">
+      <div class="col-md-2">
+        <label class="form-label" for="adminNotiEstado">Estado</label>
+        <input id="adminNotiEstado" type="search" class="form-control" formControlName="estado">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label" for="adminNotiCanal">Canal</label>
+        <input id="adminNotiCanal" type="search" class="form-control" formControlName="canal">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label" for="adminNotiTipo">Tipo</label>
+        <input id="adminNotiTipo" type="search" class="form-control" formControlName="tipo">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label" for="adminNotiActiva">Activa</label>
+        <select id="adminNotiActiva" class="form-select" formControlName="activa">
+          <option value="all">Todas</option>
+          <option value="true">Activas</option>
+          <option value="false">Inactivas</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label" for="adminNotiTake">Take</label>
+        <input id="adminNotiTake" type="number" min="1" max="500" class="form-control" formControlName="take">
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="button" class="btn btn-primary rounded-pill w-100" (click)="load()">Filtrar</button>
+      </div>
+    </form>
+
+    <app-loading *ngIf="loading" text="Cargando notificaciones..."></app-loading>
+    <app-empty-state *ngIf="!loading && notificaciones.length === 0" text="No hay notificaciones admin."></app-empty-state>
+
+    <div class="table-responsive" *ngIf="!loading && notificaciones.length > 0">
+      <table class="table table-hover align-middle admin-wide-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Canal</th>
+            <th>Estado</th>
+            <th>Destinatario</th>
+            <th>Intentos</th>
+            <th>Error</th>
+            <th>Entidad</th>
+            <th>Leida</th>
+            <th>Activa</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of notificaciones; trackBy: trackById">
+            <td>{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</td>
+            <td>{{ text(item.tipo || '-') }}</td>
+            <td>{{ item.canal || '-' }}</td>
+            <td><span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Pendiente' }}</span></td>
+            <td class="text-break">{{ text(item.destinatarioEmail || '-') }}</td>
+            <td>{{ item.intentos ?? 0 }} / {{ item.maxIntentos ?? '-' }}</td>
+            <td class="text-break">{{ text(item.error || '-') }}</td>
+            <td class="text-break">{{ text(item.entidadTipo || '-') }} <span *ngIf="item.entidadId">/ {{ text(item.entidadId) }}</span></td>
+            <td><span class="badge" [ngClass]="item.leida ? 'bg-success' : 'bg-warning text-dark'">{{ item.leida ? 'Si' : 'No' }}</span></td>
+            <td><span class="badge" [ngClass]="item.activa === false ? 'bg-secondary' : 'bg-success'">{{ item.activa === false ? 'No' : 'Si' }}</span></td>
+            <td>
+              <div class="app-actions">
+                <a [routerLink]="['/admin/notificaciones', item.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver</a>
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="actionId === item.id" (click)="reenviar(item)">Reenviar</button>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" [disabled]="actionId === item.id" (click)="cancelar(item)">Cancelar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

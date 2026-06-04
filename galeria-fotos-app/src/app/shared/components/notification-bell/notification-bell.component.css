@@ -1,0 +1,130 @@
+:host {
+  display: inline-flex;
+}
+
+.notification-bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notification-bell-button {
+  position: relative;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(212, 167, 98, .5);
+  border-radius: 999px;
+  background: var(--app-soft);
+  color: var(--app-heading);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.notification-bell-button:hover {
+  border-color: var(--app-primary);
+  background: rgba(212, 167, 98, .18);
+  transform: translateY(-1px);
+}
+
+.notification-bell-count {
+  position: absolute;
+  top: -6px;
+  right: -5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--app-primary);
+  color: #111;
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+
+.notification-bell-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 1080;
+  width: min(360px, calc(100vw - 24px));
+  padding: 14px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  color: var(--app-text);
+  box-shadow: var(--app-shadow);
+}
+
+.notification-bell-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.notification-bell-list {
+  display: grid;
+  max-height: 360px;
+  gap: 12px;
+  margin: 12px 0;
+  overflow: auto;
+}
+
+.notification-bell-item {
+  padding: 12px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  box-shadow: var(--app-card-shadow);
+}
+
+.notification-bell-item.unread {
+  border-color: rgba(212, 167, 98, .6);
+  background: linear-gradient(135deg, rgba(212, 167, 98, .12), var(--app-surface));
+}
+
+.notification-bell-item strong {
+  color: var(--app-heading);
+}
+
+.notification-bell-item p {
+  color: var(--app-text);
+  overflow-wrap: anywhere;
+}
+
+.notification-bell-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--app-line);
+}
+
+@media (max-width: 767.98px) {
+  :host,
+  .notification-bell {
+    width: 100%;
+  }
+
+  .notification-bell-button {
+    width: 100%;
+  }
+
+  .notification-bell-menu {
+    right: auto;
+    left: 0;
+  }
+
+  .notification-bell-actions {
+    flex-direction: column;
+  }
+
+  .notification-bell-actions .btn {
+    width: 100%;
+  }
+}

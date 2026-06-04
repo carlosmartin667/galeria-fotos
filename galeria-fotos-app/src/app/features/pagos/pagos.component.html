@@ -1,0 +1,32 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Pagos</small>
+      <h2 class="h3 mb-0">Crear preferencia</h2>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+      <div class="col-md-8">
+        <label class="form-label" for="pagoPedido">Pedido ID</label>
+        <input id="pagoPedido" type="text" class="form-control" formControlName="pedidoId">
+        <small *ngIf="form.controls.pedidoId.invalid && (form.controls.pedidoId.touched || submitted)" class="text-danger">El pedidoId es requerido.</small>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          Crear preferencia
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="preference" class="alert alert-success mt-4">
+      <p class="mb-2">Preferencia creada.</p>
+      <p *ngIf="preference.preferenceId" class="mb-2"><strong>ID:</strong> {{ preference.preferenceId }}</p>
+      <a *ngIf="checkoutUrl" [href]="checkoutUrl" target="_blank" rel="noopener" class="btn btn-primary rounded-pill">Ir a Mercado Pago</a>
+    </div>
+  </div>
+</div>

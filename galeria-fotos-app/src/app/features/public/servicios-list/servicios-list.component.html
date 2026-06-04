@@ -1,0 +1,36 @@
+<section class="public-page-hero">
+  <div class="container-fluid public-wide-container">
+    <small class="app-kicker">Servicios</small>
+    <h1 class="display-5 mb-2">Coberturas y sesiones</h1>
+    <p class="public-page-copy">Opciones pensadas para eventos, familias, parejas y momentos especiales.</p>
+  </div>
+</section>
+
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando servicios..."></app-loading>
+    <app-empty-state *ngIf="!loading && servicios.length === 0" text="Todavia no hay servicios publicados."></app-empty-state>
+
+    <div class="public-card-grid public-card-grid-3" *ngIf="!loading && servicios.length > 0">
+      <article class="public-card animated fadeIn" *ngFor="let servicio of servicios; trackBy: trackById">
+        <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre" loading="lazy">
+        <div *ngIf="!servicio.imagenUrl" class="public-card-placeholder"><i class="fas fa-camera-retro"></i></div>
+        <div class="public-card-body">
+          <h2 class="h4">{{ servicio.nombre }}</h2>
+          <p>{{ servicio.descripcion || 'Servicio fotografico personalizado.' }}</p>
+          <div class="public-service-facts">
+            <span *ngIf="servicio.precioDesde !== null && servicio.precioDesde !== undefined">Desde {{ servicio.precioDesde | currency:'USD' }}</span>
+            <span *ngIf="servicio.duracionEstimada">{{ servicio.duracionEstimada }}</span>
+            <span *ngIf="servicio.cantidadFotosIncluidas !== null && servicio.cantidadFotosIncluidas !== undefined">{{ servicio.cantidadFotosIncluidas }} fotos</span>
+          </div>
+          <div class="app-actions mt-3">
+            <a routerLink="/presupuesto" class="btn btn-sm btn-primary rounded-pill">Solicitar presupuesto</a>
+            <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary rounded-pill">WhatsApp</a>
+            <a *ngIf="servicio.id" [routerLink]="['/servicios', servicio.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,132 @@
+<section class="public-hero" [style.background-image]="'linear-gradient(90deg, rgba(8, 9, 12, .72), rgba(8, 9, 12, .26)), url(' + heroBackground() + ')'">
+  <div class="container-fluid public-wide-container">
+    <div class="public-hero-content animated bounceInDown">
+      <img *ngIf="perfil?.logoUrl || perfil?.fotoPerfilUrl" [src]="perfil?.logoUrl || perfil?.fotoPerfilUrl || ''" [alt]="perfil?.nombre || 'Fotografa'" class="public-hero-logo">
+      <small class="app-kicker">Fotografia profesional</small>
+      <h1>{{ perfil?.nombre || 'GaleriaFotos' }}</h1>
+      <p class="public-hero-title">{{ perfil?.titulo || perfil?.descripcion || 'Eventos, sesiones y recuerdos con una mirada cuidada.' }}</p>
+      <p class="public-hero-copy">{{ perfil?.textoBienvenida || 'Explora servicios, portfolio y eventos disponibles para clientes.' }}</p>
+      <div class="app-actions">
+        <a *ngIf="perfil?.whatsAppUrl" [href]="perfil?.whatsAppUrl || ''" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">WhatsApp</a>
+        <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
+        <a routerLink="/servicios" class="btn btn-outline-light rounded-pill px-4">Ver servicios</a>
+        <a routerLink="/portfolio" class="btn btn-outline-light rounded-pill px-4">Ver portfolio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando sitio..."></app-loading>
+
+    <ng-container *ngIf="!loading">
+      <div class="public-section-head">
+        <small class="app-kicker">Servicios</small>
+        <h2 class="h2 mb-0">Experiencias fotograficas</h2>
+        <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Ver todos</a>
+      </div>
+      <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="servicios.length > 0; else sinServicios">
+        <article class="public-card animated fadeIn" *ngFor="let servicio of servicios; trackBy: trackById">
+          <img *ngIf="servicio.imagenUrl" [src]="servicio.imagenUrl" [alt]="servicio.nombre" loading="lazy">
+          <div *ngIf="!servicio.imagenUrl" class="public-card-placeholder"><i class="fas fa-camera-retro"></i></div>
+          <div class="public-card-body">
+            <h3 class="h5">{{ servicio.nombre }}</h3>
+            <p>{{ servicio.descripcion || 'Servicio fotografico personalizado.' }}</p>
+            <p class="app-meta mb-0">
+              <span *ngIf="servicio.precioDesde !== null && servicio.precioDesde !== undefined">Desde {{ servicio.precioDesde | currency:'USD' }}</span>
+              <span *ngIf="servicio.duracionEstimada"> - {{ servicio.duracionEstimada }}</span>
+            </p>
+            <a routerLink="/presupuesto" class="btn btn-sm btn-outline-primary rounded-pill mt-3">Pedir presupuesto</a>
+          </div>
+        </article>
+      </div>
+      <ng-template #sinServicios>
+        <app-empty-state text="Todavia no hay servicios publicados."></app-empty-state>
+      </ng-template>
+
+      <div class="public-section-head" *ngIf="promociones.length > 0">
+        <small class="app-kicker">Promociones</small>
+        <h2 class="h2 mb-0">Beneficios disponibles</h2>
+        <a routerLink="/promociones" class="btn btn-outline-primary rounded-pill px-4">Ver promociones</a>
+      </div>
+      <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="promociones.length > 0">
+        <article class="public-card public-image-card animated fadeIn" *ngFor="let promocion of promociones; trackBy: trackById">
+          <img *ngIf="promocion.imagenUrl" [src]="promocion.imagenUrl" [alt]="promocion.titulo || 'Promocion'" loading="lazy">
+          <div *ngIf="!promocion.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
+          <div class="public-card-body">
+            <span class="badge bg-primary mb-2" *ngIf="promocion.tipo">{{ promocion.tipo }}</span>
+            <h3 class="h5">{{ promocion.titulo || 'Promocion especial' }}</h3>
+            <p>{{ promocion.descripcion || 'Beneficio disponible para tus compras fotograficas.' }}</p>
+            <p class="app-meta mb-0" *ngIf="couponCode(promocion)">Cupon: {{ couponCode(promocion) }}</p>
+            <a [routerLink]="['/promociones', promocion.id]" class="btn btn-sm btn-outline-primary rounded-pill mt-3">Ver detalle</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="public-section-head">
+        <small class="app-kicker">Portfolio</small>
+        <h2 class="h2 mb-0">Trabajos destacados</h2>
+        <a routerLink="/portfolio" class="btn btn-outline-primary rounded-pill px-4">Ver portfolio</a>
+      </div>
+      <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="portfolio.length > 0">
+        <article class="public-card public-image-card animated fadeIn" *ngFor="let item of portfolio; trackBy: trackById">
+          <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.titulo" loading="lazy">
+          <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-image"></i></div>
+          <div class="public-card-body">
+            <h3 class="h5">{{ item.titulo }}</h3>
+            <p class="app-meta mb-0">{{ item.categoria || 'Portfolio' }}</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="public-section-head">
+        <small class="app-kicker">FAQ</small>
+        <h2 class="h2 mb-0">Preguntas frecuentes</h2>
+        <a routerLink="/faq" class="btn btn-outline-primary rounded-pill px-4">Ver FAQ</a>
+      </div>
+      <div class="public-list mb-5" *ngIf="preguntas.length > 0">
+        <article class="public-list-item" *ngFor="let pregunta of preguntas; trackBy: trackById">
+          <strong>{{ pregunta.pregunta }}</strong>
+          <p class="mb-0">{{ pregunta.respuesta }}</p>
+        </article>
+      </div>
+
+      <div class="public-section-head" *ngIf="testimonios.length > 0">
+        <small class="app-kicker">Testimonios</small>
+        <h2 class="h2 mb-0">Clientes que confiaron</h2>
+        <a routerLink="/testimonios" class="btn btn-outline-primary rounded-pill px-4">Ver testimonios</a>
+      </div>
+      <div class="public-card-grid public-card-grid-3 mb-5" *ngIf="testimonios.length > 0">
+        <article class="public-card animated fadeIn" *ngFor="let testimonio of testimonios; trackBy: trackById">
+          <div class="public-card-body">
+            <div class="public-stars mb-2" *ngIf="testimonio.calificacion">
+              <i class="fas fa-star" *ngFor="let star of [1, 2, 3, 4, 5]; trackBy: trackByNumber" [class.text-primary]="star <= (testimonio.calificacion || 0)"></i>
+            </div>
+            <h3 class="h5">{{ testimonio.nombreCliente || 'Cliente' }}</h3>
+            <p>{{ testimonio.texto }}</p>
+            <p class="app-meta mb-0" *ngIf="testimonio.fechaPublicacionUtc || testimonio.fechaCreacionUtc">
+              {{ (testimonio.fechaPublicacionUtc || testimonio.fechaCreacionUtc) | date:'shortDate' }}
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <div class="public-section-head" *ngIf="eventos.length > 0">
+        <small class="app-kicker">Eventos</small>
+        <h2 class="h2 mb-0">Eventos recientes</h2>
+        <a routerLink="/eventos" class="btn btn-outline-primary rounded-pill px-4">Ver eventos</a>
+      </div>
+      <div class="public-card-grid public-card-grid-3" *ngIf="eventos.length > 0">
+        <article class="public-card" *ngFor="let evento of eventos; trackBy: trackById">
+          <div class="public-card-body">
+            <h3 class="h5">{{ evento.nombre }}</h3>
+            <p>{{ evento.descripcion || 'Evento disponible.' }}</p>
+            <p class="app-meta mb-0">{{ evento.fechaEventoUtc ? (evento.fechaEventoUtc | date:'shortDate') : '-' }}</p>
+          </div>
+        </article>
+      </div>
+    </ng-container>
+  </div>
+</section>

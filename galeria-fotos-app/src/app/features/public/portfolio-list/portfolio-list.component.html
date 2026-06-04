@@ -1,0 +1,49 @@
+<section class="public-page-hero">
+  <div class="container-fluid public-wide-container">
+    <small class="app-kicker">Portfolio</small>
+    <h1 class="display-5 mb-2">Historias fotografiadas</h1>
+    <p class="public-page-copy">Una seleccion de trabajos, eventos y sesiones publicadas.</p>
+  </div>
+</section>
+
+<section class="public-section">
+  <div class="container-fluid public-wide-container">
+    <div class="public-section-head">
+      <div>
+        <small class="app-kicker">Galeria</small>
+        <h2 class="h2 mb-0">Portfolio publico</h2>
+      </div>
+      <div class="public-filter">
+        <label class="form-label" for="portfolioCategory">Categoria</label>
+        <select id="portfolioCategory" class="form-select" [(ngModel)]="category">
+          <option *ngFor="let option of categories" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+    </div>
+
+    <app-error-alert [message]="error"></app-error-alert>
+    <app-loading *ngIf="loading" text="Cargando portfolio..."></app-loading>
+    <app-empty-state *ngIf="!loading && filteredItems.length === 0" text="No hay trabajos para mostrar."></app-empty-state>
+
+    <div class="public-gallery-grid" *ngIf="!loading && filteredItems.length > 0">
+      <article class="public-gallery-card animated fadeIn" *ngFor="let item of filteredItems; trackBy: trackById">
+        <button *ngIf="item.imagenUrl" type="button" class="photo-media-trigger" (click)="openLightbox(item)">
+          <img [src]="item.imagenUrl" [alt]="item.titulo" loading="lazy">
+          <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
+        </button>
+        <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-image"></i></div>
+        <div class="public-card-body">
+          <div class="app-badge-row mb-2">
+            <span class="badge bg-light text-dark border">{{ item.categoria || 'Portfolio' }}</span>
+            <span *ngIf="item.destacado" class="badge bg-warning text-dark">Destacado</span>
+          </div>
+          <h3 class="h5">{{ item.titulo }}</h3>
+          <p>{{ item.descripcion || 'Trabajo fotografico publicado.' }}</p>
+          <a *ngIf="item.id" [routerLink]="['/portfolio', item.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<app-image-lightbox [open]="lightboxOpen" [imageUrl]="lightboxImageUrl" [title]="lightboxTitle" (closed)="closeLightbox()"></app-image-lightbox>
