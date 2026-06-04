@@ -15,6 +15,8 @@ describe('sensitive text utils', () => {
     expect(isSensitiveKey('marcaAguaStorageKey')).toBe(true);
     expect(isSensitiveKey('signedUrl')).toBe(true);
     expect(isSensitiveKey('init_point')).toBe(true);
+    expect(isSensitiveKey('password')).toBe(true);
+    expect(isSensitiveKey('apiKey')).toBe(true);
   });
 
   it('hides sensitive keyed values and exposes only technical references', () => {
@@ -25,9 +27,14 @@ describe('sensitive text utils', () => {
   it('sanitizes bitacora metadata without leaking signed URLs or storage keys', () => {
     const safe = sanitizeMetadata(JSON.stringify({
       storageKey: 'private/original.jpg',
+      marcaAguaStorageKey: 'private/watermark.jpg',
+      password: '12345678',
+      apiKey: 'pexels-secret',
       callbackUrl: 'https://example.com/file.jpg?token=abc&signature=secret',
+      signedUrl: 'https://cdn.example.com/original.jpg?X-Amz-Signature=abc&X-Amz-Credential=key',
       nested: {
         token: 'eyJabc.def.ghi',
+        bearer: 'Bearer eyJprivate.payload.signature',
         action: 'created'
       }
     }));
@@ -36,7 +43,20 @@ describe('sensitive text utils', () => {
     expect(safe).toContain('[url oculta]');
     expect(safe).toContain('created');
     expect(safe).not.toContain('private/original.jpg');
+    expect(safe).not.toContain('private/watermark.jpg');
+    expect(safe).not.toContain('12345678');
+    expect(safe).not.toContain('pexels-secret');
     expect(safe).not.toContain('signature=secret');
+    expect(safe).not.toContain('X-Amz-Signature=abc');
     expect(safe).not.toContain('eyJabc.def.ghi');
+    expect(safe).not.toContain('eyJprivate.payload.signature');
+  });
+
+  it('redacts long URLs with sensitive query values', () => {
+    const value = redactSensitiveText('Descarga https://cdn.example.com/foto.jpg?access_token=abc123&sig=secret&expires=999');
+
+    expect(value).toContain('[url oculta]');
+    expect(value).not.toContain('access_token=abc123');
+    expect(value).not.toContain('sig=secret');
   });
 });

@@ -27,9 +27,17 @@ describe('BitacoraService', () => {
   });
 
   it('loads paginated bitacora with allowed query params', () => {
+    const setItem = vi.spyOn(Storage.prototype, 'setItem');
+
     service.getBitacora({
+      desde: '2026-06-01T00:00:00.000Z',
+      hasta: '2026-06-04T23:59:59.000Z',
       usuarioEmail: 'admin@example.com',
       accion: 'LOGIN',
+      entidadTipo: 'Pedido',
+      entidadId: '30000000-0000-0000-0000-000000000101',
+      severidad: 'Info',
+      correlationId: 'trace-123',
       page: 2,
       pageSize: 20
     }).subscribe((response) => {
@@ -41,8 +49,14 @@ describe('BitacoraService', () => {
 
     const req = http.expectOne((request) =>
       request.url === `${apiUrl}/Bitacora`
+      && request.params.get('Desde') === '2026-06-01T00:00:00.000Z'
+      && request.params.get('Hasta') === '2026-06-04T23:59:59.000Z'
       && request.params.get('UsuarioEmail') === 'admin@example.com'
       && request.params.get('Accion') === 'LOGIN'
+      && request.params.get('EntidadTipo') === 'Pedido'
+      && request.params.get('EntidadId') === '30000000-0000-0000-0000-000000000101'
+      && request.params.get('Severidad') === 'Info'
+      && request.params.get('CorrelationId') === 'trace-123'
       && request.params.get('Page') === '2'
       && request.params.get('PageSize') === '20'
     );
@@ -60,6 +74,7 @@ describe('BitacoraService', () => {
         hasNextPage: false
       }
     });
+    expect(setItem).not.toHaveBeenCalled();
   });
 
   it('loads detail and summary endpoints', () => {

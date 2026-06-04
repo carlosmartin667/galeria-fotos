@@ -1,5 +1,6 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
@@ -22,6 +23,7 @@ export class BitacoraAdminComponent implements OnInit {
   private readonly bitacoraService = inject(BitacoraService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   bitacora = this.emptyResponse();
   resumenCards: BitacoraSummaryCard[] = [];
@@ -69,6 +71,7 @@ export class BitacoraAdminComponent implements OnInit {
       }),
       resumen: this.bitacoraService.getResumen().pipe(catchError(() => of(null)))
     }).pipe(
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
@@ -129,6 +132,7 @@ export class BitacoraAdminComponent implements OnInit {
     this.selected = item;
 
     this.bitacoraService.getDetalle(item.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => {
         this.detailLoading = false;
         this.cdr.markForCheck();

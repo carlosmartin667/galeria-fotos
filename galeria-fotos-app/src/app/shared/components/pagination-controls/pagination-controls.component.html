@@ -10,7 +10,7 @@
   <div class="pagination-actions">
     <label class="pagination-size">
       <span>Mostrar</span>
-      <select class="form-select form-select-sm" [(ngModel)]="selectedSize" [disabled]="disabled">
+      <select class="form-select form-select-sm" aria-label="Cantidad de registros a mostrar" [(ngModel)]="selectedSize" [disabled]="disabled">
         <option value="all">Todos</option>
         <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
       </select>
@@ -29,6 +29,7 @@
         class="pagination-btn pagination-number"
         [class.active]="item === page"
         [disabled]="disabled || all || item === page"
+        [attr.aria-label]="'Ir a pagina ' + item"
         [attr.aria-current]="item === page ? 'page' : null"
         (click)="goToPage(item)">
         {{ item }}

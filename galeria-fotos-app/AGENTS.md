@@ -194,6 +194,20 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No usar Signal Forms mientras siga siendo experimental para el proyecto.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## Fase 7B tests criticos, modernizacion gradual y accesibilidad
+
+- Agregar tests criticos y mantenibles para `SessionService`, guards, interceptores, services tecnicos y sanitizadores cuando el cambio toque esas areas.
+- Los tests no deben depender de HTML grande ni de backend corriendo.
+- Preferir `takeUntilDestroyed` en componentes tocados con suscripciones manuales; no refactorizar componentes complejos solo por estilo.
+- Aplicar `ChangeDetectionStrategy.OnPush` solo en componentes puros o componentes tocados donde no rompa formularios ni flujos existentes.
+- Usar control flow moderno `@if`/`@for` de forma gradual en componentes tocados; no hacer migraciones masivas de templates.
+- No migrar masivamente a signals; usar signals solo para estado local simple cuando aporte claridad.
+- No activar zoneless ni usar Signal Forms en esta fase.
+- Mantener accesibilidad basica: `aria-label` en botones icon-only, labels claros en formularios, foco visible, tablas con encabezados y dropdowns con estado accesible.
+- No exponer StorageKey, MarcaAguaStorageKey, URLs firmadas, tokens, secretos, metadata cruda ni datos financieros en UI o tests.
+- No agregar `console.log` ni `console.error` con datos sensibles.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
