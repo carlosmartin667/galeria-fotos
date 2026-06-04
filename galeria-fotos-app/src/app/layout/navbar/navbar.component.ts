@@ -5,11 +5,12 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { GuestBadgeComponent } from '../../shared/components/guest-badge/guest-badge.component';
+import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-internal-navbar',
   standalone: true,
-  imports: [NgIf, RouterLink, RouterLinkActive, GuestBadgeComponent],
+  imports: [NgIf, RouterLink, RouterLinkActive, GuestBadgeComponent, NotificationBellComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

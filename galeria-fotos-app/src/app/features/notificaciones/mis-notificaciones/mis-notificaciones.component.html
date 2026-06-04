@@ -1,0 +1,61 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Notificaciones</small>
+      <h2 class="h3 mb-0">Mis notificaciones</h2>
+    </div>
+    <div class="app-actions">
+      <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+      <button type="button" class="btn btn-primary rounded-pill px-4" (click)="marcarTodas()">Marcar todas leidas</button>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+    <form [formGroup]="filtros" class="row g-3 mb-4">
+      <div class="col-md-3">
+        <label class="form-label" for="lecturaFiltro">Lectura</label>
+        <select id="lecturaFiltro" class="form-select" formControlName="lectura">
+          <option value="all">Todas</option>
+          <option value="unread">No leidas</option>
+          <option value="read">Leidas</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label" for="canalFiltro">Canal</label>
+        <input id="canalFiltro" type="search" class="form-control" formControlName="canal" placeholder="Email, Interna">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label" for="estadoFiltro">Estado</label>
+        <input id="estadoFiltro" type="search" class="form-control" formControlName="estado" placeholder="Pendiente, Enviada...">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label" for="tipoFiltro">Tipo</label>
+        <input id="tipoFiltro" type="search" class="form-control" formControlName="tipo">
+      </div>
+    </form>
+
+    <app-loading *ngIf="loading" text="Cargando notificaciones..."></app-loading>
+    <app-empty-state *ngIf="!loading && filtered.length === 0" text="No hay notificaciones para mostrar."></app-empty-state>
+
+    <div class="notification-list" *ngIf="!loading && filtered.length > 0">
+      <article class="notification-card" *ngFor="let item of filtered; trackBy: trackById" [class.unread]="item.leida !== true">
+        <div class="notification-card-head">
+          <div>
+            <div class="app-badge-row mb-2">
+              <span class="badge" [ngClass]="canalClass(item.canal)">{{ item.canal || 'Interna' }}</span>
+              <span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Pendiente' }}</span>
+              <span class="badge" [ngClass]="item.leida ? 'bg-success' : 'bg-warning text-dark'">{{ item.leida ? 'Leida' : 'No leida' }}</span>
+            </div>
+            <h3 class="h5 mb-1">{{ text(item.titulo || item.tipo || 'Notificacion') }}</h3>
+            <p class="app-meta mb-0">{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</p>
+          </div>
+          <button *ngIf="item.leida !== true" type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="marcarLeida(item)">Marcar leida</button>
+        </div>
+        <p class="mb-0">{{ text(item.mensaje || '') }}</p>
+      </article>
+    </div>
+  </div>
+</div>

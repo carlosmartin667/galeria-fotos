@@ -51,6 +51,8 @@ export class DashboardComponent implements OnInit {
         { label: 'Presupuestos', value: '', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' },
         { label: 'Agenda', value: '', link: '/admin/agenda', icon: 'fas fa-calendar-check' },
         { label: 'Sesiones privadas', value: '', link: '/admin/sesiones-privadas', icon: 'fas fa-camera-retro' },
+        { label: 'Notificaciones', value: '', link: '/admin/notificaciones', icon: 'fas fa-bell' },
+        { label: 'Ventas', value: '', link: '/admin/ventas', icon: 'fas fa-chart-line' },
         { label: 'Gestion descargas', value: '', link: '/admin/descargas', icon: 'fas fa-download' },
         { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
       ];
@@ -60,10 +62,13 @@ export class DashboardComponent implements OnInit {
       return [
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Promociones', value: '', link: '/promociones', icon: 'fas fa-tags' },
         { label: 'Solicitar presupuesto', value: '', link: '/presupuesto', icon: 'fas fa-file-signature' },
+        { label: 'Carrito', value: '', link: '/carrito', icon: 'fas fa-shopping-cart' },
         { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
         { label: 'Mis descargas', value: '', link: '/descargas', icon: 'fas fa-download' },
         { label: 'Mi historial', value: '', link: '/mi-historial', icon: 'fas fa-history' },
+        { label: 'Notificaciones', value: '', link: '/notificaciones', icon: 'fas fa-bell' },
         { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
       ];
     }
@@ -97,10 +102,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  trackByLabel(_: number, item: SummaryCard): string {
+    return `${item.label}-${item.link}`;
+  }
+
   private buildCards(clientes: number, eventos: number, pedidos: number): SummaryCard[] {
     const cards: SummaryCard[] = [
       { label: 'Eventos', value: eventos, link: '/eventos', icon: 'fas fa-calendar-alt' },
       { label: 'Fotos', value: 'Por evento', link: '/fotos/evento', icon: 'fas fa-images' },
+      { label: 'Promociones', value: 'Ver', link: '/promociones', icon: 'fas fa-tags' },
       { label: 'Perfil publico', value: 'Visible', link: '/admin/perfil-publico', icon: 'fas fa-address-card' }
     ];
 
@@ -120,6 +130,8 @@ export class DashboardComponent implements OnInit {
       cards.push({ label: 'Operaciones', value: 'Admin', link: '/admin/operaciones', icon: 'fas fa-tasks' });
       cards.push({ label: 'Presupuestos', value: 'Admin', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' });
       cards.push({ label: 'Agenda', value: 'Admin', link: '/admin/agenda', icon: 'fas fa-calendar-check' });
+      cards.push({ label: 'Notificaciones', value: 'Admin', link: '/admin/notificaciones', icon: 'fas fa-bell' });
+      cards.push({ label: 'Ventas', value: 'Admin', link: '/admin/ventas', icon: 'fas fa-chart-line' });
     } else {
       cards.push({ label: 'Solicitar presupuesto', value: 'Publico', link: '/presupuesto', icon: 'fas fa-file-signature' });
     }

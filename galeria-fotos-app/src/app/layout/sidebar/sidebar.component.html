@@ -23,6 +23,8 @@
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home publico</a>
     <a routerLink="/portfolio" routerLinkActive="active">Portfolio</a>
     <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
+    <a routerLink="/promociones" routerLinkActive="active">Promociones</a>
+    <a routerLink="/testimonios" routerLinkActive="active">Testimonios</a>
     <a routerLink="/presupuesto" routerLinkActive="active">Solicitar presupuesto</a>
     <a routerLink="/faq" routerLinkActive="active">FAQ</a>
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
@@ -33,6 +35,7 @@
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/fotos/bulk" routerLinkActive="active">Carga masiva fotos</a>
     <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
+    <a *ngIf="session.isUser" routerLink="/carrito" routerLinkActive="active">Carrito</a>
     <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
     <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>
     <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
@@ -43,11 +46,20 @@
     <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos" routerLinkActive="active">Presupuestos</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/agenda" routerLinkActive="active">Agenda</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas" routerLinkActive="active">Sesiones privadas</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones" routerLinkActive="active">Notificaciones</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas" routerLinkActive="active">Plantillas notif.</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/ventas" routerLinkActive="active">Resumen ventas</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/cupones" routerLinkActive="active">Cupones</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/promociones" routerLinkActive="active">Admin promociones</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/testimonios" routerLinkActive="active">Admin testimonios</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/carritos-abandonados" routerLinkActive="active">Carritos abandonados</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/reportes/ventas" routerLinkActive="active">Reportes ventas</a>
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
     <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
     <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active">Mi historial</a>
+    <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active">Notificaciones</a>
     <a *ngIf="!session.isAuthenticated" routerLink="/login" routerLinkActive="active">Iniciar sesion</a>
   </nav>
 

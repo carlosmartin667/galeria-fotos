@@ -76,11 +76,11 @@
 
       <div *ngIf="fotosImportadas.length > 0" class="pexels-grid mt-4">
         <article *ngFor="let foto of fotosImportadas; trackBy: trackFoto" class="pexels-photo">
-          <img *ngIf="foto.previewUrl" [src]="foto.previewUrl" [alt]="foto.nombreArchivo || 'Foto importada'">
+          <img *ngIf="foto.previewUrl" [src]="foto.previewUrl" [alt]="foto.nombreArchivo || 'Foto importada'" loading="lazy">
           <div *ngIf="!foto.previewUrl" class="pexels-placeholder"><i class="fas fa-image"></i></div>
           <div class="p-3">
             <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo || 'Foto importada' }}</h3>
-            <p *ngIf="foto.storageKey" class="app-meta mb-2 text-break">{{ foto.storageKey }}</p>
+            <p *ngIf="foto.storageKey" class="app-meta mb-2 text-break">{{ technicalValue(foto.storageKey) }}</p>
             <p class="mb-0"><strong>Precio:</strong> {{ foto.precioUnitario ?? form.controls.precioUnitario.getRawValue() | currency }}</p>
           </div>
         </article>

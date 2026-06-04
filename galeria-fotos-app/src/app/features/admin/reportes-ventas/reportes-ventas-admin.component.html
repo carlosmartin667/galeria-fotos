@@ -1,0 +1,109 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Ventas</small>
+      <h2 class="h3 mb-0">Reportes de ventas</h2>
+    </div>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <form [formGroup]="filtros" class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label" for="repDesde">Desde</label>
+        <input id="repDesde" type="date" class="form-control" formControlName="desde">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="repHasta">Hasta</label>
+        <input id="repHasta" type="date" class="form-control" formControlName="hasta">
+      </div>
+      <div class="col-md-4 d-flex align-items-end gap-2">
+        <button type="button" class="btn btn-primary rounded-pill flex-fill" (click)="load()">Filtrar</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill flex-fill" (click)="clear()">Limpiar</button>
+      </div>
+    </form>
+
+    <app-loading *ngIf="loading" text="Cargando reporte..."></app-loading>
+    <app-empty-state *ngIf="!loading && !reporte" text="No hay reporte para mostrar."></app-empty-state>
+
+    <ng-container *ngIf="!loading && reporte as rep">
+      <div class="admin-metrics-grid mb-4">
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-receipt"></i><span>Total pedidos</span><strong>{{ rep.totalPedidos ?? 0 }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-dollar-sign"></i><span>Total ventas</span><strong>{{ rep.totalVentas ?? 0 | currency:'USD' }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-tags"></i><span>Descuentos</span><strong>{{ rep.totalDescuentos ?? 0 | currency:'USD' }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-chart-line"></i><span>Ticket promedio</span><strong>{{ rep.ticketPromedio ?? 0 | currency:'USD' }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-check"></i><span>Pagados</span><strong>{{ rep.pedidosPagados ?? 0 }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-clock"></i><span>Pendientes</span><strong>{{ rep.pedidosPendientes ?? 0 }}</strong></article>
+        <article class="dashboard-card admin-dashboard-card"><i class="fas fa-ban"></i><span>Cancelados</span><strong>{{ rep.pedidosCancelados ?? 0 }}</strong></article>
+      </div>
+
+      <div class="row g-4">
+        <section class="col-xl-6">
+          <div class="historial-section h-100">
+            <h3 class="h5 mb-3">Ventas por dia</h3>
+            <app-empty-state *ngIf="ventasPorDia.length === 0" text="Sin ventas por dia."></app-empty-state>
+            <div class="table-responsive" *ngIf="ventasPorDia.length > 0">
+              <table class="table table-hover align-middle">
+                <thead><tr><th>Fecha</th><th>Pedidos</th><th>Ventas</th><th>Descuentos</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let item of ventasPorDia; trackBy: trackByIndex">
+                    <td>{{ (item.fechaUtc || item.fecha) ? ((item.fechaUtc || item.fecha) | date:'shortDate') : '-' }}</td>
+                    <td>{{ item.totalPedidos ?? item.cantidadPedidos ?? 0 }}</td>
+                    <td>{{ item.totalVentas ?? 0 | currency:'USD' }}</td>
+                    <td>{{ item.totalDescuentos ?? 0 | currency:'USD' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="col-xl-6">
+          <div class="historial-section h-100">
+            <h3 class="h5 mb-3">Ventas por estado</h3>
+            <article class="historial-item" *ngFor="let item of ventasPorEstado; trackBy: trackByIndex">
+              <strong>{{ item.estado || '-' }}</strong>
+              <span>{{ item.cantidad ?? 0 }} pedidos - {{ item.total ?? 0 | currency:'USD' }}</span>
+            </article>
+            <app-empty-state *ngIf="ventasPorEstado.length === 0" text="Sin ventas por estado."></app-empty-state>
+          </div>
+        </section>
+
+        <section class="col-xl-6">
+          <div class="historial-section h-100">
+            <h3 class="h5 mb-3">Ventas por tipo item</h3>
+            <article class="historial-item" *ngFor="let item of ventasPorTipoItem; trackBy: trackByIndex">
+              <strong>{{ item.tipoItem || item.tipo || '-' }}</strong>
+              <span>{{ item.cantidad ?? 0 }} items - {{ item.total ?? 0 | currency:'USD' }}</span>
+            </article>
+            <app-empty-state *ngIf="ventasPorTipoItem.length === 0" text="Sin ventas por tipo."></app-empty-state>
+          </div>
+        </section>
+
+        <section class="col-xl-6">
+          <div class="historial-section h-100">
+            <h3 class="h5 mb-3">Cupones mas usados</h3>
+            <article class="historial-item" *ngFor="let item of cuponesMasUsados; trackBy: trackByIndex">
+              <strong>{{ item.codigo || item.cuponId || '-' }}</strong>
+              <span>{{ item.usos ?? item.cantidadUsos ?? 0 }} usos - {{ item.descuentoTotal ?? 0 | currency:'USD' }}</span>
+            </article>
+            <app-empty-state *ngIf="cuponesMasUsados.length === 0" text="Sin cupones usados."></app-empty-state>
+          </div>
+        </section>
+
+        <section class="col-xl-4" *ngFor="let group of topGroups; trackBy: trackByIndex">
+          <div class="historial-section h-100">
+            <h3 class="h5 mb-3">{{ group.title }}</h3>
+            <article class="historial-item" *ngFor="let item of group.items; trackBy: trackByIndex">
+              <strong>{{ productName(item) }}</strong>
+              <span>{{ item.cantidad ?? 0 }} ventas - {{ productTotal(item) | currency:'USD' }}</span>
+            </article>
+            <app-empty-state *ngIf="group.items.length === 0" text="Sin registros."></app-empty-state>
+          </div>
+        </section>
+      </div>
+    </ng-container>
+  </div>
+</div>

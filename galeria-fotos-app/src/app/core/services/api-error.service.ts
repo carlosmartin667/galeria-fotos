@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { redactSensitiveText } from '../utils/sensitive-text';
+
 @Injectable({ providedIn: 'root' })
 export class ApiErrorService {
   toMessage(error: unknown): string {
@@ -36,8 +38,20 @@ export class ApiErrorService {
       return 'No se encontro el recurso solicitado.';
     }
 
+    if (error.status === 409) {
+      return this.messageFromBody(error) || 'La operacion no se pudo completar porque hay un conflicto con el estado actual.';
+    }
+
+    if (error.status === 429) {
+      return 'Demasiados intentos. Proba nuevamente en unos minutos.';
+    }
+
     if (error.status === 500) {
       return 'Error del servidor. Intenta nuevamente mas tarde.';
+    }
+
+    if (error.status === 502 || error.status === 503) {
+      return 'El servicio externo no esta disponible. Intenta nuevamente mas tarde.';
     }
 
     return this.messageFromBody(error) || `La API respondio con estado ${error.status}.`;
@@ -45,7 +59,7 @@ export class ApiErrorService {
 
   private messageFromBody(error: HttpErrorResponse): string {
     if (typeof error.error === 'string') {
-      return error.error;
+      return this.safeMessage(error.error);
     }
 
     if (!error.error || typeof error.error !== 'object') {
@@ -66,30 +80,69 @@ export class ApiErrorService {
         .join(' ')
       : '';
 
-    return validationErrors || body.message || body.detail || body.error || body.title || this.stringifyBody(error.error);
+    return validationErrors
+      || this.safeMessage(body.message)
+      || this.safeMessage(body.error)
+      || this.safeMessage(body.detail)
+      || this.safeMessage(body.title);
   }
 
   private normalizeErrorValue(field: string, value: unknown): string[] {
     if (Array.isArray(value)) {
-      return value.map((item) => `${field}: ${String(item)}`);
+      return value.flatMap((item) => {
+        if (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean') {
+          const message = this.safeMessage(`${field}: ${String(item)}`);
+          return message ? [message] : [];
+        }
+
+        return [`${field}: dato invalido.`];
+      });
     }
 
     if (typeof value === 'string') {
-      return [`${field}: ${value}`];
+      const message = this.safeMessage(`${field}: ${value}`);
+      return message ? [message] : [];
     }
 
     if (value && typeof value === 'object') {
-      return [`${field}: ${JSON.stringify(value)}`];
+      return [`${field}: dato invalido.`];
     }
 
-    return value == null ? [] : [`${field}: ${String(value)}`];
+    const message = value == null ? '' : this.safeMessage(`${field}: ${String(value)}`);
+    return message ? [message] : [];
   }
 
-  private stringifyBody(body: unknown): string {
-    try {
-      return JSON.stringify(body);
-    } catch {
+  private safeMessage(value: unknown): string {
+    if (typeof value !== 'string') {
       return '';
     }
+
+    const trimmed = redactSensitiveText(value).trim();
+
+    if (!trimmed || trimmed.length > 300 || this.looksUnsafe(trimmed)) {
+      return '';
+    }
+
+    return trimmed;
+  }
+
+  private looksUnsafe(value: string): boolean {
+    const normalized = value.toLowerCase();
+    return [
+      'stacktrace',
+      'stack trace',
+      'exception',
+      ' at ',
+      'system.',
+      'microsoft.',
+      '<html',
+      '<body',
+      'traceid',
+      'storagekey',
+      'marcaaguastoragekey',
+      'bearer ',
+      'password',
+      'secret'
+    ].some((part) => normalized.includes(part));
   }
 }

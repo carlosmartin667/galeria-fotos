@@ -62,7 +62,7 @@
         <div *ngIf="!fotosLoading && filteredFotos.length > 0" class="favorite-list">
           <article *ngFor="let item of filteredFotos; trackBy: trackFoto" class="favorite-item">
             <button *ngIf="item.previewUrl" type="button" class="favorite-thumb-button" (click)="openLightbox(item)" [attr.aria-label]="'Ampliar ' + (item.nombreArchivo || item.fotoId)">
-              <img [src]="item.previewUrl" [alt]="item.nombreArchivo || item.fotoId" class="favorite-thumb">
+              <img [src]="item.previewUrl" [alt]="item.nombreArchivo || item.fotoId" class="favorite-thumb" loading="lazy">
               <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
             </button>
             <div *ngIf="!item.previewUrl" class="favorite-thumb favorite-thumb-empty"><i class="fas fa-image"></i></div>

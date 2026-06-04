@@ -19,7 +19,7 @@
       <div class="row g-4">
         <div class="col-lg-6">
           <button *ngIf="item.previewUrl" type="button" class="photo-detail-trigger" (click)="openLightbox()" [attr.aria-label]="'Ampliar ' + item.nombreArchivo">
-            <img [src]="item.previewUrl" [alt]="item.nombreArchivo" class="photo-detail-img">
+            <img [src]="item.previewUrl" [alt]="item.nombreArchivo" class="photo-detail-img" loading="lazy">
             <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
           </button>
           <div *ngIf="!item.previewUrl" class="photo-detail-placeholder"><i class="fas fa-image"></i></div>

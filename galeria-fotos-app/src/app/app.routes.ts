@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { authChildGuard } from './core/guards/auth.guard';
-import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
-import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
 export const routes: Routes = [
   {
@@ -15,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: PublicLayoutComponent,
+    loadComponent: () => import('./layout/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
     children: [
       {
         path: '',
@@ -42,6 +40,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/public/servicio-detail/servicio-detail.component').then((m) => m.ServicioDetailComponent)
       },
       {
+        path: 'promociones',
+        loadComponent: () => import('./features/public/promociones-list/promociones-list.component').then((m) => m.PromocionesListComponent)
+      },
+      {
+        path: 'promociones/:id',
+        loadComponent: () => import('./features/public/promocion-detail/promocion-detail.component').then((m) => m.PromocionDetailComponent)
+      },
+      {
+        path: 'testimonios',
+        loadComponent: () => import('./features/public/testimonios-public/testimonios-public.component').then((m) => m.TestimoniosPublicComponent)
+      },
+      {
         path: 'faq',
         loadComponent: () => import('./features/public/faq/faq-public.component').then((m) => m.FaqPublicComponent)
       },
@@ -57,7 +67,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: MainLayoutComponent,
+    loadComponent: () => import('./layout/main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
     canActivateChild: [authChildGuard],
     children: [
       {
@@ -129,9 +139,54 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/sesiones-privadas/sesiones-privadas-admin.component').then((m) => m.SesionesPrivadasAdminComponent)
       },
       {
+        path: 'admin/notificaciones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/notificaciones-admin/notificaciones-admin.component').then((m) => m.NotificacionesAdminComponent)
+      },
+      {
+        path: 'admin/notificaciones/plantillas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/plantillas-admin/plantillas-admin.component').then((m) => m.PlantillasAdminComponent)
+      },
+      {
+        path: 'admin/notificaciones/:id',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/notificaciones/notificacion-detail-admin/notificacion-detail-admin.component').then((m) => m.NotificacionDetailAdminComponent)
+      },
+      {
         path: 'admin/pexels/importar-fotos',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/pexels-import/pexels-import.component').then((m) => m.PexelsImportComponent)
+      },
+      {
+        path: 'admin/ventas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/ventas/ventas-admin.component').then((m) => m.VentasAdminComponent)
+      },
+      {
+        path: 'admin/cupones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/cupones/cupones-admin.component').then((m) => m.CuponesAdminComponent)
+      },
+      {
+        path: 'admin/promociones',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/promociones/promociones-admin.component').then((m) => m.PromocionesAdminComponent)
+      },
+      {
+        path: 'admin/testimonios',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/testimonios/testimonios-admin.component').then((m) => m.TestimoniosAdminComponent)
+      },
+      {
+        path: 'admin/carritos-abandonados',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/carritos-abandonados/carritos-abandonados-admin.component').then((m) => m.CarritosAbandonadosAdminComponent)
+      },
+      {
+        path: 'admin/reportes/ventas',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/reportes-ventas/reportes-ventas-admin.component').then((m) => m.ReportesVentasAdminComponent)
       },
       {
         path: 'clientes',
@@ -229,6 +284,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pagos/pagos.component').then((m) => m.PagosComponent)
       },
       {
+        path: 'carrito',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/carrito/carrito.component').then((m) => m.CarritoComponent)
+      },
+      {
         path: 'descargas',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/descargas/descargas.component').then((m) => m.DescargasComponent)
@@ -237,6 +297,11 @@ export const routes: Routes = [
         path: 'descargas/:id',
         data: { roles: ['Usuario', 'Admin'] },
         loadComponent: () => import('./features/descargas/descarga-detail/descarga-detail.component').then((m) => m.DescargaDetailComponent)
+      },
+      {
+        path: 'notificaciones',
+        data: { roles: ['Usuario', 'Admin'] },
+        loadComponent: () => import('./features/notificaciones/mis-notificaciones/mis-notificaciones.component').then((m) => m.MisNotificacionesComponent)
       },
       {
         path: 'favoritos',

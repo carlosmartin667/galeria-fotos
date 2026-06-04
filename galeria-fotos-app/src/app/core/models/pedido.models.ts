@@ -5,8 +5,18 @@ export interface Pedido {
   fotoIds?: string[];
   fotoPrivadaIds?: string[];
   estado?: string;
+  subtotal?: number | null;
+  descuentoTotal?: number | null;
   total?: number;
+  totalFinal?: number | null;
   moneda?: string;
+  cuponCodigo?: string | null;
+  cuponAplicado?: string | {
+    codigo?: string | null;
+    descripcion?: string | null;
+    descuentoAplicado?: number | null;
+    descuentoTotal?: number | null;
+  } | null;
   fechaCreacionUtc?: string;
 }
 

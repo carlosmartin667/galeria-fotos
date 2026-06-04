@@ -4,11 +4,12 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { SessionService } from '../../core/services/session.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
-  imports: [NgIf, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [NgIf, RouterLink, RouterLinkActive, RouterOutlet, NotificationBellComponent],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css'
 })

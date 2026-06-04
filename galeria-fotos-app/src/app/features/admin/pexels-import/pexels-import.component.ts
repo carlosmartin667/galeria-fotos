@@ -8,6 +8,7 @@ import { Evento } from '../../../core/models/evento.models';
 import { ImportarFotosPexelsRequest, ImportarFotosPexelsResponse } from '../../../core/models/pexels.models';
 import { AdminService } from '../../../core/services/admin.service';
 import { EventosService } from '../../../core/services/eventos.service';
+import { technicalReference } from '../../../core/utils/sensitive-text';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -102,7 +103,6 @@ export class PexelsImportComponent implements OnInit {
       return;
     }
 
-    console.log('Importar Pexels request', request);
     this.importing = true;
 
     this.adminService.importarFotosPexels(request).subscribe({
@@ -118,7 +118,6 @@ export class PexelsImportComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
-        console.error('Importar Pexels error', error);
         this.error = this.message(error);
         this.importing = false;
         this.cdr.markForCheck();
@@ -150,7 +149,11 @@ export class PexelsImportComponent implements OnInit {
 
   trackFoto(index: number): string {
     const foto = this.fotosImportadas[index];
-    return foto?.fotoId || foto?.storageKey || String(index);
+    return foto?.fotoId || foto?.nombreArchivo || String(index);
+  }
+
+  technicalValue(value: unknown): string {
+    return technicalReference(value);
   }
 
   private message(error: unknown): string {

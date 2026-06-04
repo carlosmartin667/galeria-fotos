@@ -17,7 +17,7 @@
         <label class="form-label" for="bulkEvento">Evento</label>
         <select id="bulkEvento" class="form-select" formControlName="eventoId">
           <option value="">Seleccionar evento</option>
-          <option *ngFor="let evento of eventos" [value]="evento.id">{{ evento.nombre }} - {{ evento.fechaEventoUtc | date:'shortDate' }}</option>
+          <option *ngFor="let evento of eventos; trackBy: trackEvento" [value]="evento.id">{{ evento.nombre }} - {{ evento.fechaEventoUtc | date:'shortDate' }}</option>
         </select>
       </div>
 
@@ -96,14 +96,14 @@
         <thead>
           <tr>
             <th>Archivo</th>
-            <th>Storage key generada</th>
+            <th>Referencia tecnica</th>
             <th>Estado</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of generatedItems">
+          <tr *ngFor="let item of generatedItems; trackBy: trackStorageItem">
             <td class="text-break">{{ fileNameOf(item) || '-' }}</td>
-            <td class="text-break">{{ storageKeyOf(item) || '-' }}</td>
+            <td class="text-break">{{ storageKeyPreview(item) }}</td>
             <td>
               <span class="badge bg-success" *ngIf="storageKeyOf(item)">OK</span>
               <span class="badge bg-warning text-dark" *ngIf="!storageKeyOf(item)">Sin key</span>
@@ -116,7 +116,7 @@
     <div class="alert alert-danger mt-4" *ngIf="errores(metadataResponse).length || errores(storageResponse).length">
       <strong>Errores:</strong>
       <ul class="mb-0">
-        <li *ngFor="let item of errores(metadataResponse).length ? errores(metadataResponse) : errores(storageResponse)">{{ item }}</li>
+        <li *ngFor="let item of errores(metadataResponse).length ? errores(metadataResponse) : errores(storageResponse); trackBy: trackError">{{ errorText(item) }}</li>
       </ul>
     </div>
   </div>

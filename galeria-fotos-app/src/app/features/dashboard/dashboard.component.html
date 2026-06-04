@@ -13,7 +13,7 @@
   <app-loading *ngIf="loading" text="Cargando resumen..."></app-loading>
 
   <div class="row g-4" *ngIf="!loading">
-    <div class="col-md-6 col-xl-4" *ngFor="let card of cards">
+    <div class="col-md-6 col-xl-4" *ngFor="let card of cards; trackBy: trackByLabel">
       <a [routerLink]="card.link" class="dashboard-card">
         <i [class]="card.icon"></i>
         <span>{{ card.label }}</span>
@@ -26,7 +26,7 @@
     <div class="app-panel-body">
       <h3 class="h5 mb-3">Accesos rapidos</h3>
       <div class="app-actions">
-        <a *ngFor="let link of quickLinks" [routerLink]="link.link" class="btn btn-outline-primary rounded-pill">{{ link.label }}</a>
+        <a *ngFor="let link of quickLinks; trackBy: trackByLabel" [routerLink]="link.link" class="btn btn-outline-primary rounded-pill">{{ link.label }}</a>
       </div>
     </div>
   </div>

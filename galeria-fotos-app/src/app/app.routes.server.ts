@@ -26,6 +26,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'promociones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'promociones/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'testimonios',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'faq',
     renderMode: RenderMode.Server
   },
@@ -86,7 +98,43 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/notificaciones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/notificaciones/plantillas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/notificaciones/:id',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/pexels/importar-fotos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/ventas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/cupones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/promociones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/testimonios',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/carritos-abandonados',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/reportes/ventas',
     renderMode: RenderMode.Server
   },
   {
@@ -122,11 +170,19 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'carrito',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'descargas',
     renderMode: RenderMode.Server
   },
   {
     path: 'descargas/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'notificaciones',
     renderMode: RenderMode.Server
   },
   {

@@ -11,6 +11,7 @@ import {
 } from '../../../core/models/foto.models';
 import { EventosService } from '../../../core/services/eventos.service';
 import { FotosService } from '../../../core/services/fotos.service';
+import { redactSensitiveText, technicalReference } from '../../../core/utils/sensitive-text';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
@@ -150,6 +151,10 @@ export class FotosBulkComponent implements OnInit {
     return String(item.storageKey ?? item.key ?? item['StorageKey'] ?? item['Key'] ?? '');
   }
 
+  storageKeyPreview(item: StorageKeyBulkItem): string {
+    return technicalReference(this.storageKeyOf(item));
+  }
+
   fileNameOf(item: StorageKeyBulkItem): string {
     return String(item.nombreArchivo ?? item['NombreArchivo'] ?? item['archivo'] ?? item['Archivo'] ?? '');
   }
@@ -171,6 +176,22 @@ export class FotosBulkComponent implements OnInit {
 
     const value = response.errores ?? response['Errores'] ?? response['errors'] ?? response['Errors'];
     return Array.isArray(value) ? value : [];
+  }
+
+  errorText(value: unknown): string {
+    return redactSensitiveText(value);
+  }
+
+  trackEvento(_: number, evento: Evento): string {
+    return evento.id;
+  }
+
+  trackStorageItem(index: number, item: StorageKeyBulkItem): string {
+    return this.fileNameOf(item) || String(index);
+  }
+
+  trackError(index: number): number {
+    return index;
   }
 
   private normalizeStorageKeys(response: GenerarStorageKeysBulkResponse, nombresArchivo: string[]): StorageKeyBulkItem[] {
