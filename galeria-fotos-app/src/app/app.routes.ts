@@ -89,6 +89,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/operaciones/operaciones-admin.component').then((m) => m.OperacionesAdminComponent)
       },
       {
+        path: 'admin/bitacora',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/bitacora/bitacora-admin.component').then((m) => m.BitacoraAdminComponent)
+      },
+      {
         path: 'admin/mi-perfil',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/mi-perfil/mi-perfil-admin.component').then((m) => m.MiPerfilAdminComponent)

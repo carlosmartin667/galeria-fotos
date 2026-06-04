@@ -66,6 +66,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/bitacora',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/descargas',
     renderMode: RenderMode.Server
   },

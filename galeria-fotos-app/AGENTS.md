@@ -177,12 +177,30 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No subir budgets como primera solucion; priorizar lazy loading, limpieza de imports y reduccion de carga inicial.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## Fase 7A calidad tecnica frontend, CI, tests y bitacora
+
+- El frontend usa Angular 21 con standalone components, lazy loading y SSR configurado.
+- Mantener documentacion frontend en `docs`: arquitectura, seguridad, testing y demo.
+- Mantener CI frontend en `.github/workflows/frontend-ci.yml` usando `npm ci`, build y tests sin secretos ni deploy.
+- La Bitacora Admin vive en `/admin/bitacora`, es solo `Admin` y consume `GET /Bitacora`, `GET /Bitacora/{id}` y `GET /Bitacora/resumen`.
+- La metadata de bitacora siempre debe pasar por sanitizacion antes de renderizarse.
+- No renderizar `MetadataJson` como HTML activo; mostrarlo como texto seguro.
+- No mostrar tokens, passwords, StorageKey, MarcaAguaStorageKey, URLs firmadas, secretos ni datos financieros en bitacora.
+- No guardar bitacora, reportes ni metadata tecnica en `localStorage`, sessionStorage ni otro storage del navegador.
+- No usar `console.log` ni `console.error` con metadata de bitacora, payloads privados o datos sensibles.
+- Agregar tests nuevos para services, guards, interceptores o sanitizadores cuando se agregue comportamiento transversal.
+- Usar mejoras modernas de Angular de forma gradual y justificada: `OnPush`, `trackBy`, lazy loading y `takeUntilDestroyed` cuando aporten valor.
+- No migrar masivamente a signals ni a `@if`/`@for` sin una fase dedicada.
+- No usar Signal Forms mientras siga siendo experimental para el proyecto.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
 - Admin ventas: `GET /Admin/ventas/resumen`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
+- Bitacora: `GET /Bitacora`, `GET /Bitacora/{id}`, `GET /Bitacora/resumen`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
 - Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.

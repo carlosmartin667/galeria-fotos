@@ -30,6 +30,7 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
     <a *ngIf="session.isAdmin" routerLink="/admin/operaciones" routerLinkActive="active">Operaciones</a>
+    <a *ngIf="session.isAdmin" routerLink="/admin/bitacora" routerLinkActive="active">Bitacora</a>
     <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>

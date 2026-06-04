@@ -1,4 +1,4 @@
-import { isSensitiveKey, redactSensitiveText, redactSensitiveValue, technicalReference } from './sensitive-text';
+import { isSensitiveKey, redactSensitiveText, redactSensitiveValue, sanitizeMetadata, technicalReference } from './sensitive-text';
 
 describe('sensitive text utils', () => {
   it('redacts tokens, bearer headers and URLs', () => {
@@ -20,5 +20,23 @@ describe('sensitive text utils', () => {
   it('hides sensitive keyed values and exposes only technical references', () => {
     expect(redactSensitiveValue('storageKey', 'folder/private-file.jpg')).toBe('Dato tecnico oculto');
     expect(technicalReference('folder/private-file.jpg')).toBe('Dato tecnico oculto (...file.jpg)');
+  });
+
+  it('sanitizes bitacora metadata without leaking signed URLs or storage keys', () => {
+    const safe = sanitizeMetadata(JSON.stringify({
+      storageKey: 'private/original.jpg',
+      callbackUrl: 'https://example.com/file.jpg?token=abc&signature=secret',
+      nested: {
+        token: 'eyJabc.def.ghi',
+        action: 'created'
+      }
+    }));
+
+    expect(safe).toContain('Dato tecnico oculto');
+    expect(safe).toContain('[url oculta]');
+    expect(safe).toContain('created');
+    expect(safe).not.toContain('private/original.jpg');
+    expect(safe).not.toContain('signature=secret');
+    expect(safe).not.toContain('eyJabc.def.ghi');
   });
 });

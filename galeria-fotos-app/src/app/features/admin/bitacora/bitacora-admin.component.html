@@ -1,0 +1,165 @@
+<div class="app-panel">
+  <div class="app-panel-header">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="h3 mb-0">Bitacora</h2>
+    </div>
+    <div class="app-actions">
+      <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <app-error-alert [message]="error"></app-error-alert>
+
+    <div class="bitacora-summary-grid mb-4" *ngIf="resumenCards.length > 0">
+      <article class="dashboard-card bitacora-summary-card" *ngFor="let card of resumenCards; trackBy: trackByCard">
+        <i class="fas fa-chart-line"></i>
+        <span>{{ card.label }}</span>
+        <strong>{{ card.value }}</strong>
+      </article>
+    </div>
+
+    <form [formGroup]="filtros" class="row g-3 mb-4">
+      <div class="col-md-3 col-xl-2">
+        <label class="form-label" for="bitacoraDesde">Desde</label>
+        <input id="bitacoraDesde" type="date" class="form-control" formControlName="desde">
+      </div>
+      <div class="col-md-3 col-xl-2">
+        <label class="form-label" for="bitacoraHasta">Hasta</label>
+        <input id="bitacoraHasta" type="date" class="form-control" formControlName="hasta">
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <label class="form-label" for="bitacoraUsuario">Usuario email</label>
+        <input id="bitacoraUsuario" type="search" class="form-control" formControlName="usuarioEmail" autocomplete="off">
+      </div>
+      <div class="col-md-4 col-xl-2">
+        <label class="form-label" for="bitacoraAccion">Accion</label>
+        <input id="bitacoraAccion" type="search" class="form-control" formControlName="accion" autocomplete="off">
+      </div>
+      <div class="col-md-4 col-xl-2">
+        <label class="form-label" for="bitacoraSeveridad">Severidad</label>
+        <input id="bitacoraSeveridad" type="search" class="form-control" formControlName="severidad" autocomplete="off">
+      </div>
+      <div class="col-md-4 col-xl-1">
+        <label class="form-label" for="bitacoraPageSize">PageSize</label>
+        <select id="bitacoraPageSize" class="form-select" formControlName="pageSize">
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="40">40</option>
+        </select>
+      </div>
+      <div class="col-md-4 col-xl-3">
+        <label class="form-label" for="bitacoraEntidadTipo">Entidad tipo</label>
+        <input id="bitacoraEntidadTipo" type="search" class="form-control" formControlName="entidadTipo" autocomplete="off">
+      </div>
+      <div class="col-md-4 col-xl-3">
+        <label class="form-label" for="bitacoraEntidadId">Entidad ID</label>
+        <input id="bitacoraEntidadId" type="search" class="form-control" formControlName="entidadId" autocomplete="off">
+      </div>
+      <div class="col-md-4 col-xl-3">
+        <label class="form-label" for="bitacoraCorrelation">Correlation ID</label>
+        <input id="bitacoraCorrelation" type="search" class="form-control" formControlName="correlationId" autocomplete="off">
+      </div>
+      <div class="col-xl-3 d-flex align-items-end gap-2">
+        <button type="button" class="btn btn-primary rounded-pill px-4" (click)="applyFilters()">Filtrar</button>
+        <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="clearFilters()">Limpiar</button>
+      </div>
+    </form>
+
+    <app-loading *ngIf="loading" text="Cargando bitacora..."></app-loading>
+    <app-empty-state *ngIf="!loading && bitacora.items.length === 0" text="No hay registros de bitacora para mostrar."></app-empty-state>
+
+    <div class="row g-4" *ngIf="!loading && bitacora.items.length > 0">
+      <section class="col-xl-8">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle bitacora-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Accion</th>
+                <th>Entidad</th>
+                <th>Severidad</th>
+                <th>Usuario</th>
+                <th>Correlation ID</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of bitacora.items; trackBy: trackById" [class.bitacora-row-active]="selected?.id === item.id">
+                <td>{{ fecha(item) ? (fecha(item) | date:'short') : '-' }}</td>
+                <td class="text-break">{{ accion(item) }}</td>
+                <td class="text-break">{{ entidad(item) }}</td>
+                <td>
+                  <span class="badge" [ngClass]="severidadClass(severidad(item))">{{ severidad(item) }}</span>
+                </td>
+                <td class="text-break">{{ usuario(item) }}</td>
+                <td class="text-break">{{ correlationId(item) }}</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="viewDetail(item)">Ver detalle</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bitacora-pagination">
+          <div>
+            <strong>{{ bitacora.totalItems }}</strong>
+            <span>registros</span>
+            <span class="pagination-dot"></span>
+            <span>Pagina {{ bitacora.page }} de {{ bitacora.totalPages }}</span>
+          </div>
+          <div class="app-actions">
+            <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="!bitacora.hasPreviousPage" (click)="previousPage()">Anterior</button>
+            <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="!bitacora.hasNextPage" (click)="nextPage()">Siguiente</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="col-xl-4">
+        <div class="bitacora-detail">
+          <div class="bitacora-detail-head">
+            <div>
+              <small class="app-kicker">Detalle seguro</small>
+              <h3 class="h5 mb-0">{{ accion(selected) }}</h3>
+            </div>
+            <span class="badge" [ngClass]="severidadClass(severidad(selected))">{{ severidad(selected) }}</span>
+          </div>
+
+          <app-error-alert [message]="detailError"></app-error-alert>
+          <app-loading *ngIf="detailLoading" text="Cargando detalle..."></app-loading>
+
+          <div class="bitacora-detail-grid" *ngIf="!detailLoading && selected">
+            <div>
+              <span>Fecha</span>
+              <strong>{{ fecha(selected) ? (fecha(selected) | date:'medium') : '-' }}</strong>
+            </div>
+            <div>
+              <span>Usuario</span>
+              <strong class="text-break">{{ usuario(selected) }}</strong>
+            </div>
+            <div>
+              <span>Entidad</span>
+              <strong class="text-break">{{ entidad(selected) }}</strong>
+            </div>
+            <div>
+              <span>Correlation ID</span>
+              <strong class="text-break">{{ correlationId(selected) }}</strong>
+            </div>
+            <div>
+              <span>Mensaje</span>
+              <p class="mb-0 text-break">{{ mensaje(selected) }}</p>
+            </div>
+          </div>
+
+          <div class="mt-3" *ngIf="!detailLoading && selected">
+            <span class="bitacora-metadata-label">Metadata sanitizada</span>
+            <pre class="bitacora-metadata">{{ metadata(selected) }}</pre>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
