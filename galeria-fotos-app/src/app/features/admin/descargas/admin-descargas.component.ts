@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -12,9 +12,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-admin-descargas',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './admin-descargas.component.html',
-  styleUrl: './admin-descargas.component.css'
+  styleUrl: './admin-descargas.component.css',
 })
 export class AdminDescargasComponent implements OnInit {
   private readonly descargasService = inject(DescargasService);
@@ -35,19 +42,22 @@ export class AdminDescargasComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.descargasService.getDescargasAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (descargas) => {
-        this.descargas = descargas;
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.descargasService
+      .getDescargasAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (descargas) => {
+          this.descargas = descargas;
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   regenerar(descarga: Descarga): void {
@@ -66,18 +76,20 @@ export class AdminDescargasComponent implements OnInit {
         this.error = this.message(error);
         this.regeneratingId = '';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
   owner(descarga: Descarga): string {
-    return descarga.clienteNombre
-      || descarga.clienteEmail
-      || descarga.usuarioNombre
-      || descarga.usuarioEmail
-      || descarga.clienteId
-      || descarga.usuarioId
-      || '-';
+    return (
+      descarga.clienteNombre ||
+      descarga.clienteEmail ||
+      descarga.usuarioNombre ||
+      descarga.usuarioEmail ||
+      descarga.clienteId ||
+      descarga.usuarioId ||
+      '-'
+    );
   }
 
   expira(descarga: Descarga): string | undefined {
@@ -90,9 +102,11 @@ export class AdminDescargasComponent implements OnInit {
   }
 
   limitReached(descarga: Descarga): boolean {
-    return descarga.maxDescargas !== null
-      && descarga.maxDescargas !== undefined
-      && Number(descarga.descargasRealizadas ?? 0) >= Number(descarga.maxDescargas);
+    return (
+      descarga.maxDescargas !== null &&
+      descarga.maxDescargas !== undefined &&
+      Number(descarga.descargasRealizadas ?? 0) >= Number(descarga.maxDescargas)
+    );
   }
 
   badgeClass(descarga: Descarga): string {
@@ -124,7 +138,7 @@ export class AdminDescargasComponent implements OnInit {
         maxDescargas: response.maxDescargas ?? descarga.maxDescargas,
         descargasRealizadas: response.descargasRealizadas ?? descarga.descargasRealizadas,
         ultimaDescargaUtc: response.ultimaDescargaUtc ?? descarga.ultimaDescargaUtc,
-        activa: true
+        activa: true,
       };
     });
   }
@@ -133,11 +147,19 @@ export class AdminDescargasComponent implements OnInit {
     const message = error instanceof Error ? error.message : '';
     const normalized = message.toLowerCase();
 
-    if (normalized.includes('permiso') || normalized.includes('forbidden') || normalized.includes('403')) {
+    if (
+      normalized.includes('permiso') ||
+      normalized.includes('forbidden') ||
+      normalized.includes('403')
+    ) {
       return 'No tenes permisos para gestionar descargas.';
     }
 
-    if (normalized.includes('limite') || normalized.includes('limit') || normalized.includes('max')) {
+    if (
+      normalized.includes('limite') ||
+      normalized.includes('limit') ||
+      normalized.includes('max')
+    ) {
       return 'Se alcanzo el limite de descargas permitido para este link.';
     }
 

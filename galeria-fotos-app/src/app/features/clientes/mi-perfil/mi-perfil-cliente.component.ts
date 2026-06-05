@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,8 +13,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-mi-perfil-cliente',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './mi-perfil-cliente.component.html'
+  imports: [ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './mi-perfil-cliente.component.html',
 })
 export class MiPerfilClienteComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
@@ -35,7 +34,7 @@ export class MiPerfilClienteComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.maxLength(160)]],
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', Validators.maxLength(64)],
-    documento: ['', Validators.maxLength(64)]
+    documento: ['', Validators.maxLength(64)],
   });
 
   ngOnInit(): void {
@@ -53,25 +52,28 @@ export class MiPerfilClienteComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.clientesService.get(id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (cliente) => {
-        this.cliente = cliente;
-        this.form.patchValue({
-          nombre: cliente.nombre,
-          email: cliente.email,
-          telefono: cliente.telefono ?? '',
-          documento: cliente.documento ?? ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.clientesService
+      .get(id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (cliente) => {
+          this.cliente = cliente;
+          this.form.patchValue({
+            nombre: cliente.nombre,
+            email: cliente.email,
+            telefono: cliente.telefono ?? '',
+            documento: cliente.documento ?? '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   submit(): void {
@@ -87,24 +89,26 @@ export class MiPerfilClienteComponent implements OnInit {
     const raw = this.form.getRawValue();
     this.saving = true;
 
-    this.clientesService.update(this.cliente.id, {
-      nombre: raw.nombre.trim(),
-      email: raw.email.trim(),
-      telefono: raw.telefono.trim() || undefined,
-      documento: raw.documento.trim() || undefined
-    }).subscribe({
-      next: (cliente) => {
-        this.cliente = cliente;
-        this.success = 'Perfil actualizado correctamente.';
-        this.saving = false;
-        this.cdr.markForCheck();
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-        this.saving = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.clientesService
+      .update(this.cliente.id, {
+        nombre: raw.nombre.trim(),
+        email: raw.email.trim(),
+        telefono: raw.telefono.trim() || undefined,
+        documento: raw.documento.trim() || undefined,
+      })
+      .subscribe({
+        next: (cliente) => {
+          this.cliente = cliente;
+          this.success = 'Perfil actualizado correctamente.';
+          this.saving = false;
+          this.cdr.markForCheck();
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+          this.saving = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   deleteProfile(): void {
@@ -120,7 +124,7 @@ export class MiPerfilClienteComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

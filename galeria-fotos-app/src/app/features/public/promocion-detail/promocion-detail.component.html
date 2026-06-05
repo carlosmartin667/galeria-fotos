@@ -1,42 +1,55 @@
 <section class="public-section">
   <div class="container-fluid public-wide-container">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando promocion..."></app-loading>
+    @if (loading) {
+      <app-loading text="Cargando promocion..."></app-loading>
+    }
 
-    <ng-container *ngIf="!loading && promocion as promo">
+    @if (!loading && promocion; as promo) {
       <div class="public-detail-layout">
         <div class="public-detail-media">
-          <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy">
-          <div *ngIf="!promo.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
+          @if (promo.imagenUrl) {
+            <img [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy" />
+          }
+          @if (!promo.imagenUrl) {
+            <div class="public-card-placeholder"><i class="fas fa-tags"></i></div>
+          }
         </div>
-
         <div class="public-detail-content">
           <small class="app-kicker">{{ promo.tipo || 'Promocion' }}</small>
           <h1>{{ promo.titulo || 'Promocion' }}</h1>
           <p>{{ promo.descripcion || 'Beneficio disponible por tiempo limitado.' }}</p>
-
           <div class="admin-detail-summary my-4">
             <div>
               <span>Inicio</span>
-              <strong>{{ promo.fechaInicioUtc ? (promo.fechaInicioUtc | date:'shortDate') : '-' }}</strong>
+              <strong>{{
+                promo.fechaInicioUtc ? (promo.fechaInicioUtc | date: 'shortDate') : '-'
+              }}</strong>
             </div>
             <div>
               <span>Fin</span>
-              <strong>{{ promo.fechaFinUtc ? (promo.fechaFinUtc | date:'shortDate') : '-' }}</strong>
+              <strong>{{
+                promo.fechaFinUtc ? (promo.fechaFinUtc | date: 'shortDate') : '-'
+              }}</strong>
             </div>
-            <div *ngIf="couponCode(promo)">
-              <span>Codigo seguro</span>
-              <strong>{{ couponCode(promo) }}</strong>
-            </div>
+            @if (couponCode(promo)) {
+              <div>
+                <span>Codigo seguro</span>
+                <strong>{{ couponCode(promo) }}</strong>
+              </div>
+            }
           </div>
-
           <div class="app-actions">
-            <a [routerLink]="ctaLink(promo)" class="btn btn-primary rounded-pill px-4">Usar promocion</a>
-            <a routerLink="/contacto" class="btn btn-outline-primary rounded-pill px-4">Consultar</a>
+            <a [routerLink]="ctaLink(promo)" class="btn btn-primary rounded-pill px-4"
+              >Usar promocion</a
+            >
+            <a routerLink="/contacto" class="btn btn-outline-primary rounded-pill px-4"
+              >Consultar</a
+            >
             <a routerLink="/promociones" class="btn btn-outline-dark rounded-pill px-4">Volver</a>
           </div>
         </div>
       </div>
-    </ng-container>
+    }
   </div>
 </section>

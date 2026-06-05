@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -9,9 +8,9 @@ import { GuestBadgeComponent } from '../../shared/components/guest-badge/guest-b
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [NgIf, RouterLink, RouterLinkActive, GuestBadgeComponent],
+  imports: [RouterLink, RouterLinkActive, GuestBadgeComponent],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
   readonly session = inject(SessionService);

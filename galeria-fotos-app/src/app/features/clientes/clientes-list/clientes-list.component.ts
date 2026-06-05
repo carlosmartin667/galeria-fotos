@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -14,8 +13,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-clientes-list',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './clientes-list.component.html'
+  imports: [FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './clientes-list.component.html',
 })
 export class ClientesListComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
@@ -32,8 +31,9 @@ export class ClientesListComponent implements OnInit {
     }
 
     return this.clientes().filter((cliente) =>
-      [cliente.nombre, cliente.email, cliente.telefono, cliente.documento]
-        .some((value) => value?.toLowerCase().includes(term))
+      [cliente.nombre, cliente.email, cliente.telefono, cliente.documento].some((value) =>
+        value?.toLowerCase().includes(term),
+      ),
     );
   });
 
@@ -48,19 +48,22 @@ export class ClientesListComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.clientesService.list().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (clientes) => {
-        this.clientes.set(clientes);
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.clientesService
+      .list()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (clientes) => {
+          this.clientes.set(clientes);
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   deleteCliente(cliente: Cliente): void {
@@ -78,7 +81,7 @@ export class ClientesListComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

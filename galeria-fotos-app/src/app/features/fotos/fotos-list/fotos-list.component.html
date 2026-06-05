@@ -4,78 +4,154 @@
       <small class="app-kicker">Fotos</small>
       <h2 class="h3 mb-0">Fotos por evento</h2>
     </div>
-    <a *ngIf="session.isAdmin && eventoId" [routerLink]="['/fotos/metadata']" [queryParams]="{ eventoId: eventoId }" class="btn btn-primary rounded-pill px-4">Crear metadata</a>
+    @if (session.isAdmin && eventoId) {
+      <a
+        [routerLink]="['/fotos/metadata']"
+        [queryParams]="{ eventoId: eventoId }"
+        class="btn btn-primary rounded-pill px-4"
+        >Crear metadata</a
+      >
+    }
   </div>
 
   <div class="app-panel-body">
     <div class="row g-3 align-items-end mb-4">
       <div class="col-lg-5">
         <label class="form-label" for="eventoIdSearch">Evento ID</label>
-        <input id="eventoIdSearch" type="text" class="form-control" [value]="eventoId" placeholder="UUID del evento" #eventoInput>
+        <input
+          id="eventoIdSearch"
+          type="text"
+          class="form-control"
+          [value]="eventoId"
+          placeholder="UUID del evento"
+          #eventoInput
+        />
       </div>
       <div class="col-lg-2">
-        <button type="button" class="btn btn-primary rounded-pill w-100" (click)="searchByValue(eventoInput.value)">Buscar</button>
+        <button
+          type="button"
+          class="btn btn-primary rounded-pill w-100"
+          (click)="searchByValue(eventoInput.value)"
+        >
+          Buscar
+        </button>
       </div>
       <div class="col-lg-3">
         <label class="form-label" for="fotosSearch">Filtrar</label>
-        <input id="fotosSearch" type="search" class="form-control" [(ngModel)]="searchTerm" placeholder="Archivo, tipo o precio">
+        <input
+          id="fotosSearch"
+          type="search"
+          class="form-control"
+          [(ngModel)]="searchTerm"
+          placeholder="Archivo, tipo o precio"
+        />
       </div>
-      <div class="col-lg-2" *ngIf="session.isAdmin">
-        <label class="form-label" for="fotosActiva">Estado</label>
-        <select id="fotosActiva" class="form-select" [(ngModel)]="activaFilter">
-          <option *ngFor="let option of activaOptions" [value]="option.value">{{ option.label }}</option>
-        </select>
-      </div>
+      @if (session.isAdmin) {
+        <div class="col-lg-2">
+          <label class="form-label" for="fotosActiva">Estado</label>
+          <select id="fotosActiva" class="form-select" [(ngModel)]="activaFilter">
+            @for (option of activaOptions; track option) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      }
     </div>
 
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loading"></app-loading>
-    <app-empty-state *ngIf="!loading && filteredFotos.length === 0" text="No hay fotos para mostrar."></app-empty-state>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loading) {
+      <app-loading></app-loading>
+    }
+    @if (!loading && filteredFotos.length === 0) {
+      <app-empty-state text="No hay fotos para mostrar."></app-empty-state>
+    }
 
-    <div *ngIf="!loading && filteredFotos.length > 0" class="photo-grid">
-      <article *ngFor="let foto of filteredFotos; trackBy: trackById" class="photo-card">
-        <button *ngIf="foto.previewUrl" type="button" class="photo-media-trigger" (click)="openLightbox(foto)" [attr.aria-label]="'Ampliar ' + foto.nombreArchivo">
-          <img [src]="foto.previewUrl" [alt]="foto.nombreArchivo" loading="lazy">
-          <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
-        </button>
-        <div *ngIf="!foto.previewUrl" class="photo-placeholder"><i class="fas fa-image"></i></div>
-        <div class="p-3">
-          <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo }}</h3>
-          <div class="app-badge-row mb-2">
-            <span class="badge" [ngClass]="fotoBadgeClass(foto.procesada === true)">{{ foto.procesada ? 'Procesada' : 'Pendiente' }}</span>
-            <span class="badge" [ngClass]="fotoBadgeClass(foto.tieneMarcaAgua === true)">{{ foto.tieneMarcaAgua ? 'Con marca de agua' : 'Sin marca de agua' }}</span>
-            <span *ngIf="isPortada(foto)" class="badge bg-primary">Portada</span>
-          </div>
-          <p class="mb-1"><strong>Precio:</strong> {{ foto.precioUnitario ?? 0 | currency }}</p>
-          <p class="mb-3"><strong>Activa:</strong> {{ foto.activa === false ? 'No' : 'Si' }}</p>
-          <div class="app-actions">
-            <a [routerLink]="['/fotos', foto.id]" class="btn btn-sm btn-primary rounded-pill">Ver detalle</a>
-            <ng-container *ngIf="session.isAdmin">
-            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="coverLoadingId === foto.id || isPortada(foto)" (click)="asignarPortada(foto)">
-              <span *ngIf="coverLoadingId === foto.id" class="spinner-border spinner-border-sm me-1"></span>
-              {{ isPortada(foto) ? 'Portada actual' : 'Usar como portada' }}
-            </button>
-            <a [routerLink]="['/fotos/editar', foto.id]" class="btn btn-sm btn-outline-primary rounded-pill">Editar metadata</a>
-            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="deleteFoto(foto)">Eliminar</button>
-            </ng-container>
-          </div>
-        </div>
-      </article>
-    </div>
+    @if (!loading && filteredFotos.length > 0) {
+      <div class="photo-grid">
+        @for (foto of filteredFotos; track trackById($index, foto)) {
+          <article class="photo-card">
+            @if (foto.previewUrl) {
+              <button
+                type="button"
+                class="photo-media-trigger"
+                (click)="openLightbox(foto)"
+                [attr.aria-label]="'Ampliar ' + foto.nombreArchivo"
+              >
+                <img [src]="foto.previewUrl" [alt]="foto.nombreArchivo" loading="lazy" />
+                <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
+              </button>
+            }
+            @if (!foto.previewUrl) {
+              <div class="photo-placeholder"><i class="fas fa-image"></i></div>
+            }
+            <div class="p-3">
+              <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo }}</h3>
+              <div class="app-badge-row mb-2">
+                <span class="badge" [ngClass]="fotoBadgeClass(foto.procesada === true)">{{
+                  foto.procesada ? 'Procesada' : 'Pendiente'
+                }}</span>
+                <span class="badge" [ngClass]="fotoBadgeClass(foto.tieneMarcaAgua === true)">{{
+                  foto.tieneMarcaAgua ? 'Con marca de agua' : 'Sin marca de agua'
+                }}</span>
+                @if (isPortada(foto)) {
+                  <span class="badge bg-primary">Portada</span>
+                }
+              </div>
+              <p class="mb-1"><strong>Precio:</strong> {{ foto.precioUnitario ?? 0 | currency }}</p>
+              <p class="mb-3"><strong>Activa:</strong> {{ foto.activa === false ? 'No' : 'Si' }}</p>
+              <div class="app-actions">
+                <a [routerLink]="['/fotos', foto.id]" class="btn btn-sm btn-primary rounded-pill"
+                  >Ver detalle</a
+                >
+                @if (session.isAdmin) {
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    [disabled]="coverLoadingId === foto.id || isPortada(foto)"
+                    (click)="asignarPortada(foto)"
+                  >
+                    @if (coverLoadingId === foto.id) {
+                      <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    {{ isPortada(foto) ? 'Portada actual' : 'Usar como portada' }}
+                  </button>
+                  <a
+                    [routerLink]="['/fotos/editar', foto.id]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Editar metadata</a
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger rounded-pill"
+                    (click)="deleteFoto(foto)"
+                  >
+                    Eliminar
+                  </button>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
 
-    <app-pagination-controls
-      *ngIf="!loading && fotos.length > 0"
-      [page]="pagination.page"
-      [pageSize]="pagination.pageSize"
-      [all]="pagination.all"
-      [totalItems]="totalItems"
-      [totalPages]="totalPages"
-      [hasPreviousPage]="hasPreviousPage"
-      [hasNextPage]="hasNextPage"
-      [disabled]="loading"
-      (paginationChange)="onPaginationChange($event)">
-    </app-pagination-controls>
+    @if (!loading && fotos.length > 0) {
+      <app-pagination-controls
+        [page]="pagination.page"
+        [pageSize]="pagination.pageSize"
+        [all]="pagination.all"
+        [totalItems]="totalItems"
+        [totalPages]="totalPages"
+        [hasPreviousPage]="hasPreviousPage"
+        [hasNextPage]="hasNextPage"
+        [disabled]="loading"
+        (paginationChange)="onPaginationChange($event)"
+      >
+      </app-pagination-controls>
+    }
   </div>
 </div>
 
@@ -83,5 +159,6 @@
   [open]="lightboxOpen"
   [imageUrl]="lightboxImageUrl"
   [title]="lightboxTitle"
-  (closed)="closeLightbox()">
+  (closed)="closeLightbox()"
+>
 </app-image-lightbox>

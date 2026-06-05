@@ -2,7 +2,9 @@
   <div class="container-fluid public-wide-container">
     <small class="app-kicker">Presupuesto</small>
     <h1 class="display-5 mb-2">Solicitar presupuesto</h1>
-    <p class="public-page-copy">Contame que queres fotografiar y te respondo con una propuesta ajustada a tu evento o sesion.</p>
+    <p class="public-page-copy">
+      Contame que queres fotografiar y te respondo con una propuesta ajustada a tu evento o sesion.
+    </p>
   </div>
 </section>
 
@@ -15,81 +17,171 @@
             <small class="app-kicker">Formulario</small>
             <h2 class="h3 mb-0">Datos de la solicitud</h2>
           </div>
-          <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Ver servicios</a>
+          <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4"
+            >Ver servicios</a
+          >
         </div>
 
         <div class="app-panel-body">
           <app-error-alert [message]="error"></app-error-alert>
-          <div *ngIf="success" class="alert alert-success">
-            <strong>Listo.</strong>
-            <span class="d-block">{{ success }}</span>
-            <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill mt-3">Abrir WhatsApp</a>
-          </div>
-
-          <app-loading *ngIf="loading" text="Cargando formulario..."></app-loading>
-          <app-empty-state *ngIf="!loading && servicios.length === 0" text="No hay servicios publicados, pero podes enviar tu consulta igual."></app-empty-state>
-
-          <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoNombre">Nombre</label>
-              <input id="presupuestoNombre" type="text" class="form-control" formControlName="nombre" autocomplete="name" [attr.aria-invalid]="showError('nombre')" [attr.aria-describedby]="showError('nombre') ? 'presupuestoNombreError' : null">
-              <small *ngIf="showError('nombre')" id="presupuestoNombreError" class="text-danger">El nombre es requerido.</small>
+          @if (success) {
+            <div class="alert alert-success">
+              <strong>Listo.</strong>
+              <span class="d-block">{{ success }}</span>
+              @if (whatsAppUrl) {
+                <a
+                  [href]="whatsAppUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-sm btn-primary rounded-pill mt-3"
+                  >Abrir WhatsApp</a
+                >
+              }
             </div>
+          }
 
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoEmail">Email</label>
-              <input id="presupuestoEmail" type="email" class="form-control" formControlName="email" autocomplete="email" [attr.aria-invalid]="showError('email')" [attr.aria-describedby]="showError('email') ? 'presupuestoEmailError' : null">
-              <small *ngIf="showError('email')" id="presupuestoEmailError" class="text-danger">Ingresa un email valido.</small>
-            </div>
+          @if (loading) {
+            <app-loading text="Cargando formulario..."></app-loading>
+          }
+          @if (!loading && servicios.length === 0) {
+            <app-empty-state
+              text="No hay servicios publicados, pero podes enviar tu consulta igual."
+            ></app-empty-state>
+          }
 
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoWhatsapp">WhatsApp</label>
-              <input id="presupuestoWhatsapp" type="tel" class="form-control" formControlName="whatsApp" autocomplete="tel">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoTipo">Tipo de evento</label>
-              <input id="presupuestoTipo" type="text" class="form-control" formControlName="tipoEvento" placeholder="Boda, cumpleanos, sesion, empresa...">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoServicio">Servicio</label>
-              <select id="presupuestoServicio" class="form-select" formControlName="servicioId">
-                <option value="">Sin seleccionar</option>
-                <option *ngFor="let servicio of servicios; trackBy: trackById" [value]="servicio.id">{{ servicio.nombre }}</option>
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label" for="presupuestoFecha">Fecha tentativa</label>
-              <input id="presupuestoFecha" type="date" class="form-control" formControlName="fechaTentativa">
-            </div>
-
-            <div class="col-md-8">
-              <label class="form-label" for="presupuestoLugar">Lugar</label>
-              <input id="presupuestoLugar" type="text" class="form-control" formControlName="lugar" placeholder="Zona o ciudad">
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label" for="presupuestoInvitados">Cantidad invitados</label>
-              <input id="presupuestoInvitados" type="number" min="1" class="form-control" formControlName="cantidadInvitados" [attr.aria-invalid]="showError('cantidadInvitados')" [attr.aria-describedby]="showError('cantidadInvitados') ? 'presupuestoInvitadosError' : null">
-              <small *ngIf="showError('cantidadInvitados')" id="presupuestoInvitadosError" class="text-danger">La cantidad debe ser mayor a 0.</small>
-            </div>
-
-            <div class="col-12">
-              <label class="form-label" for="presupuestoMensaje">Mensaje</label>
-              <textarea id="presupuestoMensaje" rows="5" class="form-control" formControlName="mensaje" placeholder="Contame horarios, estilo buscado y cualquier detalle importante." [attr.aria-invalid]="showError('mensaje')" [attr.aria-describedby]="showError('mensaje') ? 'presupuestoMensajeError' : null"></textarea>
-              <small *ngIf="showError('mensaje')" id="presupuestoMensajeError" class="text-danger">El mensaje es requerido.</small>
-            </div>
-
-            <div class="col-12 app-actions">
-              <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
-                <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
-                Enviar solicitud
-              </button>
-              <a routerLink="/contacto" class="btn btn-outline-dark rounded-pill px-4">Contacto</a>
-            </div>
-          </form>
+          @if (!loading) {
+            <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoNombre">Nombre</label>
+                <input
+                  id="presupuestoNombre"
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre"
+                  autocomplete="name"
+                  [attr.aria-invalid]="showError('nombre')"
+                  [attr.aria-describedby]="showError('nombre') ? 'presupuestoNombreError' : null"
+                />
+                @if (showError('nombre')) {
+                  <small id="presupuestoNombreError" class="text-danger"
+                    >El nombre es requerido.</small
+                  >
+                }
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoEmail">Email</label>
+                <input
+                  id="presupuestoEmail"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  autocomplete="email"
+                  [attr.aria-invalid]="showError('email')"
+                  [attr.aria-describedby]="showError('email') ? 'presupuestoEmailError' : null"
+                />
+                @if (showError('email')) {
+                  <small id="presupuestoEmailError" class="text-danger"
+                    >Ingresa un email valido.</small
+                  >
+                }
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoWhatsapp">WhatsApp</label>
+                <input
+                  id="presupuestoWhatsapp"
+                  type="tel"
+                  class="form-control"
+                  formControlName="whatsApp"
+                  autocomplete="tel"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoTipo">Tipo de evento</label>
+                <input
+                  id="presupuestoTipo"
+                  type="text"
+                  class="form-control"
+                  formControlName="tipoEvento"
+                  placeholder="Boda, cumpleanos, sesion, empresa..."
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoServicio">Servicio</label>
+                <select id="presupuestoServicio" class="form-select" formControlName="servicioId">
+                  <option value="">Sin seleccionar</option>
+                  @for (servicio of servicios; track trackById($index, servicio)) {
+                    <option [value]="servicio.id">{{ servicio.nombre }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="presupuestoFecha">Fecha tentativa</label>
+                <input
+                  id="presupuestoFecha"
+                  type="date"
+                  class="form-control"
+                  formControlName="fechaTentativa"
+                />
+              </div>
+              <div class="col-md-8">
+                <label class="form-label" for="presupuestoLugar">Lugar</label>
+                <input
+                  id="presupuestoLugar"
+                  type="text"
+                  class="form-control"
+                  formControlName="lugar"
+                  placeholder="Zona o ciudad"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="presupuestoInvitados">Cantidad invitados</label>
+                <input
+                  id="presupuestoInvitados"
+                  type="number"
+                  min="1"
+                  class="form-control"
+                  formControlName="cantidadInvitados"
+                  [attr.aria-invalid]="showError('cantidadInvitados')"
+                  [attr.aria-describedby]="
+                    showError('cantidadInvitados') ? 'presupuestoInvitadosError' : null
+                  "
+                />
+                @if (showError('cantidadInvitados')) {
+                  <small id="presupuestoInvitadosError" class="text-danger"
+                    >La cantidad debe ser mayor a 0.</small
+                  >
+                }
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="presupuestoMensaje">Mensaje</label>
+                <textarea
+                  id="presupuestoMensaje"
+                  rows="5"
+                  class="form-control"
+                  formControlName="mensaje"
+                  placeholder="Contame horarios, estilo buscado y cualquier detalle importante."
+                  [attr.aria-invalid]="showError('mensaje')"
+                  [attr.aria-describedby]="showError('mensaje') ? 'presupuestoMensajeError' : null"
+                ></textarea>
+                @if (showError('mensaje')) {
+                  <small id="presupuestoMensajeError" class="text-danger"
+                    >El mensaje es requerido.</small
+                  >
+                }
+              </div>
+              <div class="col-12 app-actions">
+                <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+                  @if (saving) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  Enviar solicitud
+                </button>
+                <a routerLink="/contacto" class="btn btn-outline-dark rounded-pill px-4"
+                  >Contacto</a
+                >
+              </div>
+            </form>
+          }
         </div>
       </div>
 

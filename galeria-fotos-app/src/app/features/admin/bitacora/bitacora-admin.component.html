@@ -5,41 +5,70 @@
       <h2 class="h3 mb-0">Bitacora</h2>
     </div>
     <div class="app-actions">
-      <button type="button" class="btn btn-outline-primary rounded-pill px-4" aria-label="Actualizar bitacora" (click)="load()">Actualizar</button>
+      <button
+        type="button"
+        class="btn btn-outline-primary rounded-pill px-4"
+        aria-label="Actualizar bitacora"
+        (click)="load()"
+      >
+        Actualizar
+      </button>
     </div>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
 
-    <div class="bitacora-summary-grid mb-4" *ngIf="resumenCards.length > 0">
-      <article class="dashboard-card bitacora-summary-card" *ngFor="let card of resumenCards; trackBy: trackByCard">
-        <i class="fas fa-chart-line"></i>
-        <span>{{ card.label }}</span>
-        <strong>{{ card.value }}</strong>
-      </article>
-    </div>
+    @if (resumenCards.length > 0) {
+      <div class="bitacora-summary-grid mb-4">
+        @for (card of resumenCards; track trackByCard($index, card)) {
+          <article class="dashboard-card bitacora-summary-card">
+            <i class="fas fa-chart-line"></i>
+            <span>{{ card.label }}</span>
+            <strong>{{ card.value }}</strong>
+          </article>
+        }
+      </div>
+    }
 
     <form [formGroup]="filtros" class="row g-3 mb-4">
       <div class="col-md-3 col-xl-2">
         <label class="form-label" for="bitacoraDesde">Desde</label>
-        <input id="bitacoraDesde" type="date" class="form-control" formControlName="desde">
+        <input id="bitacoraDesde" type="date" class="form-control" formControlName="desde" />
       </div>
       <div class="col-md-3 col-xl-2">
         <label class="form-label" for="bitacoraHasta">Hasta</label>
-        <input id="bitacoraHasta" type="date" class="form-control" formControlName="hasta">
+        <input id="bitacoraHasta" type="date" class="form-control" formControlName="hasta" />
       </div>
       <div class="col-md-6 col-xl-3">
         <label class="form-label" for="bitacoraUsuario">Usuario email</label>
-        <input id="bitacoraUsuario" type="search" class="form-control" formControlName="usuarioEmail" autocomplete="off">
+        <input
+          id="bitacoraUsuario"
+          type="search"
+          class="form-control"
+          formControlName="usuarioEmail"
+          autocomplete="off"
+        />
       </div>
       <div class="col-md-4 col-xl-2">
         <label class="form-label" for="bitacoraAccion">Accion</label>
-        <input id="bitacoraAccion" type="search" class="form-control" formControlName="accion" autocomplete="off">
+        <input
+          id="bitacoraAccion"
+          type="search"
+          class="form-control"
+          formControlName="accion"
+          autocomplete="off"
+        />
       </div>
       <div class="col-md-4 col-xl-2">
         <label class="form-label" for="bitacoraSeveridad">Severidad</label>
-        <input id="bitacoraSeveridad" type="search" class="form-control" formControlName="severidad" autocomplete="off">
+        <input
+          id="bitacoraSeveridad"
+          type="search"
+          class="form-control"
+          formControlName="severidad"
+          autocomplete="off"
+        />
       </div>
       <div class="col-md-4 col-xl-1">
         <label class="form-label" for="bitacoraPageSize">PageSize</label>
@@ -52,121 +81,180 @@
       </div>
       <div class="col-md-4 col-xl-3">
         <label class="form-label" for="bitacoraEntidadTipo">Entidad tipo</label>
-        <input id="bitacoraEntidadTipo" type="search" class="form-control" formControlName="entidadTipo" autocomplete="off">
+        <input
+          id="bitacoraEntidadTipo"
+          type="search"
+          class="form-control"
+          formControlName="entidadTipo"
+          autocomplete="off"
+        />
       </div>
       <div class="col-md-4 col-xl-3">
         <label class="form-label" for="bitacoraEntidadId">Entidad ID</label>
-        <input id="bitacoraEntidadId" type="search" class="form-control" formControlName="entidadId" autocomplete="off">
+        <input
+          id="bitacoraEntidadId"
+          type="search"
+          class="form-control"
+          formControlName="entidadId"
+          autocomplete="off"
+        />
       </div>
       <div class="col-md-4 col-xl-3">
         <label class="form-label" for="bitacoraCorrelation">Correlation ID</label>
-        <input id="bitacoraCorrelation" type="search" class="form-control" formControlName="correlationId" autocomplete="off">
+        <input
+          id="bitacoraCorrelation"
+          type="search"
+          class="form-control"
+          formControlName="correlationId"
+          autocomplete="off"
+        />
       </div>
       <div class="col-xl-3 d-flex align-items-end gap-2">
-        <button type="button" class="btn btn-primary rounded-pill px-4" (click)="applyFilters()">Filtrar</button>
-        <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="clearFilters()">Limpiar</button>
+        <button type="button" class="btn btn-primary rounded-pill px-4" (click)="applyFilters()">
+          Filtrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary rounded-pill px-4"
+          (click)="clearFilters()"
+        >
+          Limpiar
+        </button>
       </div>
     </form>
 
-    <app-loading *ngIf="loading" text="Cargando bitacora..."></app-loading>
-    <app-empty-state *ngIf="!loading && bitacora.items.length === 0" text="No hay registros de bitacora para mostrar."></app-empty-state>
+    @if (loading) {
+      <app-loading text="Cargando bitacora..."></app-loading>
+    }
+    @if (!loading && bitacora.items.length === 0) {
+      <app-empty-state text="No hay registros de bitacora para mostrar."></app-empty-state>
+    }
 
-    <div class="row g-4" *ngIf="!loading && bitacora.items.length > 0">
-      <section class="col-xl-8" aria-labelledby="bitacoraTableTitle">
-        <h3 id="bitacoraTableTitle" class="visually-hidden">Registros de bitacora</h3>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle bitacora-table" aria-describedby="bitacoraTableTitle">
-            <thead>
-              <tr>
-                <th scope="col">Fecha</th>
-                <th scope="col">Accion</th>
-                <th scope="col">Entidad</th>
-                <th scope="col">Severidad</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Correlation ID</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of bitacora.items; trackBy: trackById" [class.bitacora-row-active]="selected?.id === item.id">
-                <td>{{ fecha(item) ? (fecha(item) | date:'short') : '-' }}</td>
-                <td class="text-break">{{ accion(item) }}</td>
-                <td class="text-break">{{ entidad(item) }}</td>
-                <td>
-                  <span class="badge" [ngClass]="severidadClass(severidad(item))">{{ severidad(item) }}</span>
-                </td>
-                <td class="text-break">{{ usuario(item) }}</td>
-                <td class="text-break">{{ correlationId(item) }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-primary rounded-pill"
-                    [attr.aria-label]="'Ver detalle de bitacora ' + accion(item)"
-                    (click)="viewDetail(item)">
-                    Ver detalle
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="bitacora-pagination">
-          <div>
-            <strong>{{ bitacora.totalItems }}</strong>
-            <span>registros</span>
-            <span class="pagination-dot"></span>
-            <span>Pagina {{ bitacora.page }} de {{ bitacora.totalPages }}</span>
+    @if (!loading && bitacora.items.length > 0) {
+      <div class="row g-4">
+        <section class="col-xl-8" aria-labelledby="bitacoraTableTitle">
+          <h3 id="bitacoraTableTitle" class="visually-hidden">Registros de bitacora</h3>
+          <div class="table-responsive">
+            <table
+              class="table table-hover align-middle bitacora-table"
+              aria-describedby="bitacoraTableTitle"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Accion</th>
+                  <th scope="col">Entidad</th>
+                  <th scope="col">Severidad</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Correlation ID</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of bitacora.items; track trackById($index, item)) {
+                  <tr [class.bitacora-row-active]="selected?.id === item.id">
+                    <td>{{ fecha(item) ? (fecha(item) | date: 'short') : '-' }}</td>
+                    <td class="text-break">{{ accion(item) }}</td>
+                    <td class="text-break">{{ entidad(item) }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="severidadClass(severidad(item))">{{
+                        severidad(item)
+                      }}</span>
+                    </td>
+                    <td class="text-break">{{ usuario(item) }}</td>
+                    <td class="text-break">{{ correlationId(item) }}</td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary rounded-pill"
+                        [attr.aria-label]="'Ver detalle de bitacora ' + accion(item)"
+                        (click)="viewDetail(item)"
+                      >
+                        Ver detalle
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
-          <div class="app-actions">
-            <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="!bitacora.hasPreviousPage" aria-label="Pagina anterior de bitacora" (click)="previousPage()">Anterior</button>
-            <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="!bitacora.hasNextPage" aria-label="Pagina siguiente de bitacora" (click)="nextPage()">Siguiente</button>
-          </div>
-        </div>
-      </section>
-
-      <aside class="col-xl-4" aria-label="Detalle de bitacora">
-        <div class="bitacora-detail">
-          <div class="bitacora-detail-head">
+          <div class="bitacora-pagination">
             <div>
-              <small class="app-kicker">Detalle seguro</small>
-              <h3 class="h5 mb-0">{{ accion(selected) }}</h3>
+              <strong>{{ bitacora.totalItems }}</strong>
+              <span>registros</span>
+              <span class="pagination-dot"></span>
+              <span>Pagina {{ bitacora.page }} de {{ bitacora.totalPages }}</span>
             </div>
-            <span class="badge" [ngClass]="severidadClass(severidad(selected))">{{ severidad(selected) }}</span>
-          </div>
-
-          <app-error-alert [message]="detailError"></app-error-alert>
-          <app-loading *ngIf="detailLoading" text="Cargando detalle..."></app-loading>
-
-          <div class="bitacora-detail-grid" *ngIf="!detailLoading && selected">
-            <div>
-              <span>Fecha</span>
-              <strong>{{ fecha(selected) ? (fecha(selected) | date:'medium') : '-' }}</strong>
-            </div>
-            <div>
-              <span>Usuario</span>
-              <strong class="text-break">{{ usuario(selected) }}</strong>
-            </div>
-            <div>
-              <span>Entidad</span>
-              <strong class="text-break">{{ entidad(selected) }}</strong>
-            </div>
-            <div>
-              <span>Correlation ID</span>
-              <strong class="text-break">{{ correlationId(selected) }}</strong>
-            </div>
-            <div>
-              <span>Mensaje</span>
-              <p class="mb-0 text-break">{{ mensaje(selected) }}</p>
+            <div class="app-actions">
+              <button
+                type="button"
+                class="btn btn-outline-primary rounded-pill px-4"
+                [disabled]="!bitacora.hasPreviousPage"
+                aria-label="Pagina anterior de bitacora"
+                (click)="previousPage()"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary rounded-pill px-4"
+                [disabled]="!bitacora.hasNextPage"
+                aria-label="Pagina siguiente de bitacora"
+                (click)="nextPage()"
+              >
+                Siguiente
+              </button>
             </div>
           </div>
-
-          <div class="mt-3" *ngIf="!detailLoading && selected">
-            <span class="bitacora-metadata-label">Metadata sanitizada</span>
-            <pre class="bitacora-metadata">{{ metadata(selected) }}</pre>
+        </section>
+        <aside class="col-xl-4" aria-label="Detalle de bitacora">
+          <div class="bitacora-detail">
+            <div class="bitacora-detail-head">
+              <div>
+                <small class="app-kicker">Detalle seguro</small>
+                <h3 class="h5 mb-0">{{ accion(selected) }}</h3>
+              </div>
+              <span class="badge" [ngClass]="severidadClass(severidad(selected))">{{
+                severidad(selected)
+              }}</span>
+            </div>
+            <app-error-alert [message]="detailError"></app-error-alert>
+            @if (detailLoading) {
+              <app-loading text="Cargando detalle..."></app-loading>
+            }
+            @if (!detailLoading && selected) {
+              <div class="bitacora-detail-grid">
+                <div>
+                  <span>Fecha</span>
+                  <strong>{{ fecha(selected) ? (fecha(selected) | date: 'medium') : '-' }}</strong>
+                </div>
+                <div>
+                  <span>Usuario</span>
+                  <strong class="text-break">{{ usuario(selected) }}</strong>
+                </div>
+                <div>
+                  <span>Entidad</span>
+                  <strong class="text-break">{{ entidad(selected) }}</strong>
+                </div>
+                <div>
+                  <span>Correlation ID</span>
+                  <strong class="text-break">{{ correlationId(selected) }}</strong>
+                </div>
+                <div>
+                  <span>Mensaje</span>
+                  <p class="mb-0 text-break">{{ mensaje(selected) }}</p>
+                </div>
+              </div>
+            }
+            @if (!detailLoading && selected) {
+              <div class="mt-3">
+                <span class="bitacora-metadata-label">Metadata sanitizada</span>
+                <pre class="bitacora-metadata">{{ metadata(selected) }}</pre>
+              </div>
+            }
           </div>
-        </div>
-      </aside>
-    </div>
+        </aside>
+      </div>
+    }
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -25,9 +25,16 @@ interface SafeEntry {
 @Component({
   selector: 'app-cliente-historial',
   standalone: true,
-  imports: [CurrencyPipe, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
+  imports: [
+    CurrencyPipe,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+    NotasInternasComponent,
+  ],
   templateUrl: './cliente-historial.component.html',
-  styleUrl: './cliente-historial.component.css'
+  styleUrl: './cliente-historial.component.css',
 })
 export class ClienteHistorialComponent implements OnInit {
   private readonly historialService = inject(ClienteHistorialService);
@@ -44,7 +51,7 @@ export class ClienteHistorialComponent implements OnInit {
     { key: 'solicitudesPresupuesto', label: 'Solicitudes' },
     { key: 'agenda', label: 'Agenda' },
     { key: 'favoritos', label: 'Favoritos' },
-    { key: 'comentarios', label: 'Comentarios' }
+    { key: 'comentarios', label: 'Comentarios' },
   ];
 
   historial: ClienteHistorial | null = null;
@@ -69,25 +76,30 @@ export class ClienteHistorialComponent implements OnInit {
       ? this.historialService.getHistorialCliente(clienteId)
       : this.historialService.getMiHistorial();
 
-    request.pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (historial) => {
-        this.historial = historial;
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el historial.';
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (historial) => {
+          this.historial = historial;
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar el historial.';
+        },
+      });
   }
 
   sectionItems(key: string): Record<string, unknown>[] {
     const value = this.historial?.[key];
     return Array.isArray(value)
-      ? value.filter((item): item is Record<string, unknown> => !!item && typeof item === 'object' && !Array.isArray(item))
+      ? value.filter(
+          (item): item is Record<string, unknown> =>
+            !!item && typeof item === 'object' && !Array.isArray(item),
+        )
       : [];
   }
 
@@ -99,7 +111,10 @@ export class ClienteHistorialComponent implements OnInit {
   }
 
   itemTitle(item: Record<string, unknown>): string {
-    return String(this.firstValue(item, ['nombre', 'titulo', 'estado', 'id', 'pedidoId', 'tipoEvento']) ?? 'Registro');
+    return String(
+      this.firstValue(item, ['nombre', 'titulo', 'estado', 'id', 'pedidoId', 'tipoEvento']) ??
+        'Registro',
+    );
   }
 
   totalNumber(keys: string[]): number {
@@ -127,11 +142,17 @@ export class ClienteHistorialComponent implements OnInit {
 
   private isSafeKey(key: string): boolean {
     const normalized = key.toLowerCase();
-    return !isSensitiveKey(key) && !['url', 'firma'].some((blocked) => normalized.includes(blocked));
+    return (
+      !isSensitiveKey(key) && !['url', 'firma'].some((blocked) => normalized.includes(blocked))
+    );
   }
 
   private isRenderable(value: unknown): boolean {
-    return value !== null && value !== undefined && ['string', 'number', 'boolean'].includes(typeof value);
+    return (
+      value !== null &&
+      value !== undefined &&
+      ['string', 'number', 'boolean'].includes(typeof value)
+    );
   }
 
   private value(value: unknown): string {

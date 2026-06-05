@@ -4,120 +4,193 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Carga masiva fotos</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="loadEventos()">Actualizar eventos</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="loadEventos()">
+      Actualizar eventos
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loadingEventos" text="Cargando eventos..."></app-loading>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loadingEventos) {
+      <app-loading text="Cargando eventos..."></app-loading>
+    }
 
     <form [formGroup]="form" class="row g-3" novalidate>
       <div class="col-lg-6">
         <label class="form-label" for="bulkEvento">Evento</label>
         <select id="bulkEvento" class="form-select" formControlName="eventoId">
           <option value="">Seleccionar evento</option>
-          <option *ngFor="let evento of eventos; trackBy: trackEvento" [value]="evento.id">{{ evento.nombre }} - {{ evento.fechaEventoUtc | date:'shortDate' }}</option>
+          @for (evento of eventos; track trackEvento($index, evento)) {
+            <option [value]="evento.id">
+              {{ evento.nombre }} - {{ evento.fechaEventoUtc | date: 'shortDate' }}
+            </option>
+          }
         </select>
       </div>
 
       <div class="col-lg-3">
         <label class="form-label" for="bulkContentType">Content type</label>
-        <input id="bulkContentType" type="text" class="form-control" formControlName="contentType">
+        <input
+          id="bulkContentType"
+          type="text"
+          class="form-control"
+          formControlName="contentType"
+        />
       </div>
 
       <div class="col-lg-3">
         <label class="form-label" for="bulkPrecio">Precio unitario</label>
-        <input id="bulkPrecio" type="number" min="0" step="0.01" class="form-control" formControlName="precioUnitario">
+        <input
+          id="bulkPrecio"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          formControlName="precioUnitario"
+        />
       </div>
 
       <div class="col-12">
         <label class="form-label" for="bulkNombres">Nombres de archivo</label>
-        <textarea id="bulkNombres" rows="6" class="form-control" formControlName="nombresArchivo" placeholder="foto-001.jpg&#10;foto-002.jpg&#10;foto-003.jpg"></textarea>
+        <textarea
+          id="bulkNombres"
+          rows="6"
+          class="form-control"
+          formControlName="nombresArchivo"
+          placeholder="foto-001.jpg&#10;foto-002.jpg&#10;foto-003.jpg"
+        ></textarea>
         <small class="text-muted">Un archivo por linea. Tambien acepta coma o punto y coma.</small>
       </div>
 
       <div class="col-lg-4">
         <label class="form-label" for="bulkSize">Size bytes</label>
-        <input id="bulkSize" type="number" min="0" class="form-control" formControlName="sizeInBytes">
+        <input
+          id="bulkSize"
+          type="number"
+          min="0"
+          class="form-control"
+          formControlName="sizeInBytes"
+        />
       </div>
 
       <div class="col-lg-8">
         <label class="form-label" for="bulkPreviewBase">Preview URL base opcional</label>
-        <input id="bulkPreviewBase" type="url" class="form-control" formControlName="previewBaseUrl" placeholder="https://cdn.midominio.com/evento">
+        <input
+          id="bulkPreviewBase"
+          type="url"
+          class="form-control"
+          formControlName="previewBaseUrl"
+          placeholder="https://cdn.midominio.com/evento"
+        />
       </div>
 
       <div class="col-12">
         <div class="app-actions">
           <label class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="tieneMarcaAgua">
+            <input type="checkbox" class="form-check-input" formControlName="tieneMarcaAgua" />
             <span class="form-check-label">Tiene marca de agua</span>
           </label>
           <label class="form-check">
-            <input type="checkbox" class="form-check-input" formControlName="procesada">
+            <input type="checkbox" class="form-check-input" formControlName="procesada" />
             <span class="form-check-label">Procesada</span>
           </label>
         </div>
       </div>
 
       <div class="col-12 app-actions">
-        <button type="button" class="btn btn-outline-primary rounded-pill px-4" [disabled]="generating" (click)="generarStorageKeys()">
-          <span *ngIf="generating" class="spinner-border spinner-border-sm me-2"></span>
+        <button
+          type="button"
+          class="btn btn-outline-primary rounded-pill px-4"
+          [disabled]="generating"
+          (click)="generarStorageKeys()"
+        >
+          @if (generating) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
           Generar storage keys bulk
         </button>
-        <button type="button" class="btn btn-primary rounded-pill px-4" [disabled]="creating || generatedItems.length === 0" (click)="crearMetadataBulk()">
-          <span *ngIf="creating" class="spinner-border spinner-border-sm me-2"></span>
+        <button
+          type="button"
+          class="btn btn-primary rounded-pill px-4"
+          [disabled]="creating || generatedItems.length === 0"
+          (click)="crearMetadataBulk()"
+        >
+          @if (creating) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
           Crear metadata bulk
         </button>
       </div>
     </form>
 
-    <div class="bulk-summary-grid mt-4" *ngIf="storageResponse || metadataResponse">
-      <article class="bulk-summary-card">
-        <span>Generadas</span>
-        <strong>{{ generatedItems.length }}</strong>
-      </article>
-      <article class="bulk-summary-card">
-        <span>Creadas</span>
-        <strong>{{ responseValue(metadataResponse, 'creadas') }}</strong>
-      </article>
-      <article class="bulk-summary-card">
-        <span>Omitidas</span>
-        <strong>{{ responseValue(metadataResponse, 'omitidas') }}</strong>
-      </article>
-      <article class="bulk-summary-card">
-        <span>Errores</span>
-        <strong>{{ errores(metadataResponse).length || errores(storageResponse).length }}</strong>
-      </article>
-    </div>
+    @if (storageResponse || metadataResponse) {
+      <div class="bulk-summary-grid mt-4">
+        <article class="bulk-summary-card">
+          <span>Generadas</span>
+          <strong>{{ generatedItems.length }}</strong>
+        </article>
+        <article class="bulk-summary-card">
+          <span>Creadas</span>
+          <strong>{{ responseValue(metadataResponse, 'creadas') }}</strong>
+        </article>
+        <article class="bulk-summary-card">
+          <span>Omitidas</span>
+          <strong>{{ responseValue(metadataResponse, 'omitidas') }}</strong>
+        </article>
+        <article class="bulk-summary-card">
+          <span>Errores</span>
+          <strong>{{ errores(metadataResponse).length || errores(storageResponse).length }}</strong>
+        </article>
+      </div>
+    }
 
-    <div class="table-responsive mt-4" *ngIf="generatedItems.length > 0">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Archivo</th>
-            <th>Referencia tecnica</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of generatedItems; trackBy: trackStorageItem">
-            <td class="text-break">{{ fileNameOf(item) || '-' }}</td>
-            <td class="text-break">{{ storageKeyPreview(item) }}</td>
-            <td>
-              <span class="badge bg-success" *ngIf="storageKeyOf(item)">OK</span>
-              <span class="badge bg-warning text-dark" *ngIf="!storageKeyOf(item)">Sin key</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (generatedItems.length > 0) {
+      <div class="table-responsive mt-4">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Archivo</th>
+              <th>Referencia tecnica</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of generatedItems; track trackStorageItem($index, item)) {
+              <tr>
+                <td class="text-break">{{ fileNameOf(item) || '-' }}</td>
+                <td class="text-break">{{ storageKeyPreview(item) }}</td>
+                <td>
+                  @if (storageKeyOf(item)) {
+                    <span class="badge bg-success">OK</span>
+                  }
+                  @if (!storageKeyOf(item)) {
+                    <span class="badge bg-warning text-dark">Sin key</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
 
-    <div class="alert alert-danger mt-4" *ngIf="errores(metadataResponse).length || errores(storageResponse).length">
-      <strong>Errores:</strong>
-      <ul class="mb-0">
-        <li *ngFor="let item of errores(metadataResponse).length ? errores(metadataResponse) : errores(storageResponse); trackBy: trackError">{{ errorText(item) }}</li>
-      </ul>
-    </div>
+    @if (errores(metadataResponse).length || errores(storageResponse).length) {
+      <div class="alert alert-danger mt-4">
+        <strong>Errores:</strong>
+        <ul class="mb-0">
+          @for (
+            item of errores(metadataResponse).length
+              ? errores(metadataResponse)
+              : errores(storageResponse);
+            track $index
+          ) {
+            <li>{{ errorText(item) }}</li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 </div>

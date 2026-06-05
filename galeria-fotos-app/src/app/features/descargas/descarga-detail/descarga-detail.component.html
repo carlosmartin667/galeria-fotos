@@ -6,48 +6,103 @@
     </div>
     <div class="app-actions">
       <a routerLink="/descargas" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
-      <button *ngIf="descarga" type="button" class="btn btn-primary rounded-pill px-4" [disabled]="regenerating" (click)="regenerar()">
-        <span *ngIf="regenerating" class="spinner-border spinner-border-sm me-2"></span>
-        Regenerar
-      </button>
+      @if (descarga) {
+        <button
+          type="button"
+          class="btn btn-primary rounded-pill px-4"
+          [disabled]="regenerating"
+          (click)="regenerar()"
+        >
+          @if (regenerating) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          Regenerar
+        </button>
+      }
     </div>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loading" text="Cargando descarga..."></app-loading>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loading) {
+      <app-loading text="Cargando descarga..."></app-loading>
+    }
 
-    <ng-container *ngIf="!loading && descarga as item">
+    @if (!loading && descarga; as item) {
       <div class="download-detail-head">
         <div>
           <small class="app-kicker">{{ tipo(item) }}</small>
           <h3 class="h4 mb-2 text-break">{{ item.nombreArchivo || 'Descarga' }}</h3>
           <p class="app-meta text-break mb-0">ID {{ item.id }}</p>
         </div>
-        <a *ngIf="item.url" [href]="item.url" target="_blank" rel="noopener" class="btn btn-primary rounded-pill px-4">Abrir link</a>
+        @if (item.url) {
+          <a
+            [href]="item.url"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary rounded-pill px-4"
+            >Abrir link</a
+          >
+        }
       </div>
-
       <div class="app-badge-row my-4">
-        <span *ngFor="let badge of statusBadges(item)" class="badge" [ngClass]="badge.className">{{ badge.label }}</span>
+        @for (badge of statusBadges(item); track badge) {
+          <span class="badge" [ngClass]="badge.className">{{ badge.label }}</span>
+        }
       </div>
-
       <div class="download-detail-grid">
-        <div><span>Pedido</span><strong class="text-break">{{ item.pedidoId }}</strong></div>
-        <div><span>Evento</span><strong class="text-break">{{ item.eventoId || '-' }}</strong></div>
-        <div><span>Foto evento</span><strong class="text-break">{{ item.fotoId || '-' }}</strong></div>
-        <div><span>Foto privada</span><strong class="text-break">{{ item.fotoPrivadaId || '-' }}</strong></div>
-        <div><span>Expira</span><strong>{{ expira(item) ? (expira(item) | date:'short') : '-' }}</strong></div>
-        <div><span>Max descargas</span><strong>{{ item.maxDescargas === null || item.maxDescargas === undefined ? 'Sin limite' : item.maxDescargas }}</strong></div>
-        <div><span>Realizadas</span><strong>{{ item.descargasRealizadas ?? 0 }}</strong></div>
-        <div><span>Ultima descarga</span><strong>{{ item.ultimaDescargaUtc ? (item.ultimaDescargaUtc | date:'short') : '-' }}</strong></div>
-        <div><span>Actualizada</span><strong>{{ item.fechaActualizacionUtc ? (item.fechaActualizacionUtc | date:'short') : '-' }}</strong></div>
+        <div>
+          <span>Pedido</span><strong class="text-break">{{ item.pedidoId }}</strong>
+        </div>
+        <div>
+          <span>Evento</span><strong class="text-break">{{ item.eventoId || '-' }}</strong>
+        </div>
+        <div>
+          <span>Foto evento</span><strong class="text-break">{{ item.fotoId || '-' }}</strong>
+        </div>
+        <div>
+          <span>Foto privada</span
+          ><strong class="text-break">{{ item.fotoPrivadaId || '-' }}</strong>
+        </div>
+        <div>
+          <span>Expira</span
+          ><strong>{{ expira(item) ? (expira(item) | date: 'short') : '-' }}</strong>
+        </div>
+        <div>
+          <span>Max descargas</span
+          ><strong>{{
+            item.maxDescargas === null || item.maxDescargas === undefined
+              ? 'Sin limite'
+              : item.maxDescargas
+          }}</strong>
+        </div>
+        <div>
+          <span>Realizadas</span><strong>{{ item.descargasRealizadas ?? 0 }}</strong>
+        </div>
+        <div>
+          <span>Ultima descarga</span
+          ><strong>{{
+            item.ultimaDescargaUtc ? (item.ultimaDescargaUtc | date: 'short') : '-'
+          }}</strong>
+        </div>
+        <div>
+          <span>Actualizada</span
+          ><strong>{{
+            item.fechaActualizacionUtc ? (item.fechaActualizacionUtc | date: 'short') : '-'
+          }}</strong>
+        </div>
       </div>
-
-      <div *ngIf="item.url" class="alert alert-light border mt-4">
-        <strong>Link vigente:</strong>
-        <span class="d-block mt-2">URL temporal disponible. Usá el botón Abrir link para acceder.</span>
-      </div>
-    </ng-container>
+      @if (item.url) {
+        <div class="alert alert-light border mt-4">
+          <strong>Link vigente:</strong>
+          <span class="d-block mt-2"
+            >URL temporal disponible. Usá el botón Abrir link para acceder.</span
+          >
+        </div>
+      }
+    }
   </div>
 </div>

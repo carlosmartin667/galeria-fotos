@@ -4,65 +4,93 @@
       <small class="app-kicker">Pedidos</small>
       <h2 class="h3 mb-0">Listado</h2>
     </div>
-    <a *ngIf="session.canWrite" routerLink="/pedidos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo pedido</a>
+    @if (session.canWrite) {
+      <a routerLink="/pedidos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo pedido</a>
+    }
   </div>
 
   <div class="app-panel-body">
     <div class="row g-3 align-items-end mb-4">
       <div class="col-lg-8">
         <label class="form-label" for="pedidosSearch">Buscar</label>
-        <input id="pedidosSearch" type="search" class="form-control" [(ngModel)]="searchTerm" placeholder="ID, evento, cliente, estado o moneda">
+        <input
+          id="pedidosSearch"
+          type="search"
+          class="form-control"
+          [(ngModel)]="searchTerm"
+          placeholder="ID, evento, cliente, estado o moneda"
+        />
       </div>
       <div class="col-lg-4">
         <label class="form-label" for="pedidosEstado">Estado</label>
         <select id="pedidosEstado" class="form-select" [(ngModel)]="estadoFilter">
-          <option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</option>
+          @for (estado of estadoOptions; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
         </select>
       </div>
     </div>
 
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading"></app-loading>
-    <app-empty-state *ngIf="!loading && filteredPedidos.length === 0" text="No hay pedidos para mostrar."></app-empty-state>
+    @if (loading) {
+      <app-loading></app-loading>
+    }
+    @if (!loading && filteredPedidos.length === 0) {
+      <app-empty-state text="No hay pedidos para mostrar."></app-empty-state>
+    }
 
-    <div *ngIf="!loading && filteredPedidos.length > 0" class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Evento</th>
-            <th>Cliente</th>
-            <th>Estado</th>
-            <th>Total</th>
-            <th>Creado</th>
-            <th>Detalle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let pedido of filteredPedidos; trackBy: trackById">
-            <td class="text-break">{{ pedido.id }}</td>
-            <td class="text-break">{{ pedido.eventoId }}</td>
-            <td class="text-break">{{ pedido.clienteId }}</td>
-            <td>{{ pedido.estado || '-' }}</td>
-            <td>{{ pedido.total ?? 0 | currency:(pedido.moneda || 'USD') }}</td>
-            <td>{{ pedido.fechaCreacionUtc ? (pedido.fechaCreacionUtc | date:'short') : '-' }}</td>
-            <td><a [routerLink]="['/pedidos', pedido.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (!loading && filteredPedidos.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Evento</th>
+              <th>Cliente</th>
+              <th>Estado</th>
+              <th>Total</th>
+              <th>Creado</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pedido of filteredPedidos; track trackById($index, pedido)) {
+              <tr>
+                <td class="text-break">{{ pedido.id }}</td>
+                <td class="text-break">{{ pedido.eventoId }}</td>
+                <td class="text-break">{{ pedido.clienteId }}</td>
+                <td>{{ pedido.estado || '-' }}</td>
+                <td>{{ pedido.total ?? 0 | currency: pedido.moneda || 'USD' }}</td>
+                <td>
+                  {{ pedido.fechaCreacionUtc ? (pedido.fechaCreacionUtc | date: 'short') : '-' }}
+                </td>
+                <td>
+                  <a
+                    [routerLink]="['/pedidos', pedido.id]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Ver detalle</a
+                  >
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
 
-    <app-pagination-controls
-      *ngIf="!loading && pedidos.length > 0"
-      [page]="pagination.page"
-      [pageSize]="pagination.pageSize"
-      [all]="pagination.all"
-      [totalItems]="totalItems"
-      [totalPages]="totalPages"
-      [hasPreviousPage]="hasPreviousPage"
-      [hasNextPage]="hasNextPage"
-      [disabled]="loading"
-      (paginationChange)="onPaginationChange($event)">
-    </app-pagination-controls>
+    @if (!loading && pedidos.length > 0) {
+      <app-pagination-controls
+        [page]="pagination.page"
+        [pageSize]="pagination.pageSize"
+        [all]="pagination.all"
+        [totalItems]="totalItems"
+        [totalPages]="totalPages"
+        [hasPreviousPage]="hasPreviousPage"
+        [hasNextPage]="hasNextPage"
+        [disabled]="loading"
+        (paginationChange)="onPaginationChange($event)"
+      >
+      </app-pagination-controls>
+    }
   </div>
 </div>

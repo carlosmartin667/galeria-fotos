@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 
 import { AdminPerfilPublico } from '../../../core/models/admin.models';
@@ -9,8 +8,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-perfil-publico-admin',
   standalone: true,
-  imports: [NgIf, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './perfil-publico.component.html'
+  imports: [ErrorAlertComponent, LoadingComponent],
+  templateUrl: './perfil-publico.component.html',
 })
 export class PerfilPublicoComponent implements OnInit {
   private readonly adminService = inject(AdminService);
@@ -30,10 +29,11 @@ export class PerfilPublicoComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el perfil publico.';
+        this.error =
+          error instanceof Error ? error.message : 'No se pudo cargar el perfil publico.';
         this.loading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 }

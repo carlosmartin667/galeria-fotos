@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -12,9 +12,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-promocion-detail',
   standalone: true,
-  imports: [DatePipe, NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './promocion-detail.component.html',
-  styleUrl: './promocion-detail.component.css'
+  styleUrl: './promocion-detail.component.css',
 })
 export class PromocionDetailComponent implements OnInit {
   private readonly promocionesService = inject(PromocionesService);
@@ -31,7 +31,7 @@ export class PromocionDetailComponent implements OnInit {
       title: 'Detalle de promocion',
       description: 'Detalle de una promocion fotografica disponible en GaleriaFotos.',
       type: 'article',
-      image: '/assets/caterserv/img/event-6.jpg'
+      image: '/assets/caterserv/img/event-6.jpg',
     });
     this.load();
   }
@@ -45,25 +45,30 @@ export class PromocionDetailComponent implements OnInit {
 
     this.loading = true;
     this.error = '';
-    this.promocionesService.getById(id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (item) => {
-        this.promocion = item;
-        this.seo.setPublicPage({
-          title: item.titulo || 'Promocion fotografica',
-          description: item.descripcion || 'Beneficio disponible para servicios fotograficos o compras de fotos.',
-          type: 'article',
-          image: item.imagenUrl
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar la promocion.';
-      }
-    });
+    this.promocionesService
+      .getById(id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (item) => {
+          this.promocion = item;
+          this.seo.setPublicPage({
+            title: item.titulo || 'Promocion fotografica',
+            description:
+              item.descripcion ||
+              'Beneficio disponible para servicios fotograficos o compras de fotos.',
+            type: 'article',
+            image: item.imagenUrl,
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar la promocion.';
+        },
+      });
   }
 
   ctaLink(item: Promocion): string {

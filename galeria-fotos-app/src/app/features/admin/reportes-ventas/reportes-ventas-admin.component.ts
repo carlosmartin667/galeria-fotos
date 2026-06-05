@@ -1,9 +1,16 @@
-import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
-import { CuponMasUsado, ReporteVentasResumen, TopProducto, VentaPorDia, VentaPorEstado, VentaPorTipoItem } from '../../../core/models/reporte-ventas.models';
+import {
+  CuponMasUsado,
+  ReporteVentasResumen,
+  TopProducto,
+  VentaPorDia,
+  VentaPorEstado,
+  VentaPorTipoItem,
+} from '../../../core/models/reporte-ventas.models';
 import { ReportesService } from '../../../core/services/reportes.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -17,9 +24,16 @@ interface TopProductGroup {
 @Component({
   selector: 'app-reportes-ventas-admin',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './reportes-ventas-admin.component.html',
-  styleUrl: './reportes-ventas-admin.component.css'
+  styleUrl: './reportes-ventas-admin.component.css',
 })
 export class ReportesVentasAdminComponent implements OnInit {
   private readonly reportesService = inject(ReportesService);
@@ -32,7 +46,7 @@ export class ReportesVentasAdminComponent implements OnInit {
 
   readonly filtros = this.fb.nonNullable.group({
     desde: [''],
-    hasta: ['']
+    hasta: [''],
   });
 
   ngOnInit(): void {
@@ -71,7 +85,7 @@ export class ReportesVentasAdminComponent implements OnInit {
     return [
       { title: 'Top eventos', items: this.topEventos },
       { title: 'Top fotos', items: this.topFotos },
-      { title: 'Top paquetes', items: this.topPaquetes }
+      { title: 'Top paquetes', items: this.topPaquetes },
     ];
   }
 
@@ -80,19 +94,23 @@ export class ReportesVentasAdminComponent implements OnInit {
     this.error = '';
     const raw = this.filtros.getRawValue();
 
-    this.reportesService.getVentasResumen(this.toIso(raw.desde), this.toIso(raw.hasta)).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (reporte) => {
-        this.reporte = reporte;
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el reporte de ventas.';
-      }
-    });
+    this.reportesService
+      .getVentasResumen(this.toIso(raw.desde), this.toIso(raw.hasta))
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (reporte) => {
+          this.reporte = reporte;
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar el reporte de ventas.';
+        },
+      });
   }
 
   clear(): void {

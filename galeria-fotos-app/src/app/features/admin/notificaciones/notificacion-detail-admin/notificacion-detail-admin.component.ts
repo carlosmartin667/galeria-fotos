@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -17,9 +17,9 @@ interface DetailEntry {
 @Component({
   selector: 'app-notificacion-detail-admin',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
+  imports: [NgClass, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './notificacion-detail-admin.component.html',
-  styleUrl: './notificacion-detail-admin.component.css'
+  styleUrl: './notificacion-detail-admin.component.css',
 })
 export class NotificacionDetailAdminComponent implements OnInit {
   private readonly notificacionesService = inject(NotificacionesService);
@@ -56,19 +56,23 @@ export class NotificacionDetailAdminComponent implements OnInit {
     this.loading = true;
     this.error = '';
     this.success = '';
-    this.notificacionesService.getAdminDetalle(id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (item) => {
-        this.item = item;
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar la notificacion.';
-      }
-    });
+    this.notificacionesService
+      .getAdminDetalle(id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (item) => {
+          this.item = item;
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar la notificacion.';
+        },
+      });
   }
 
   reenviar(): void {
@@ -77,20 +81,24 @@ export class NotificacionDetailAdminComponent implements OnInit {
     }
 
     this.actionLoading = true;
-    this.notificacionesService.reenviar(this.item.id).pipe(
-      finalize(() => {
-        this.actionLoading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Notificacion reenviada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo reenviar la notificacion.';
-      }
-    });
+    this.notificacionesService
+      .reenviar(this.item.id)
+      .pipe(
+        finalize(() => {
+          this.actionLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Notificacion reenviada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo reenviar la notificacion.';
+        },
+      });
   }
 
   cancelar(): void {
@@ -99,20 +107,24 @@ export class NotificacionDetailAdminComponent implements OnInit {
     }
 
     this.actionLoading = true;
-    this.notificacionesService.cancelar(this.item.id).pipe(
-      finalize(() => {
-        this.actionLoading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Notificacion cancelada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cancelar la notificacion.';
-      }
-    });
+    this.notificacionesService
+      .cancelar(this.item.id)
+      .pipe(
+        finalize(() => {
+          this.actionLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Notificacion cancelada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cancelar la notificacion.';
+        },
+      });
   }
 
   estadoClass(estado?: string | null): string {
@@ -137,6 +149,9 @@ export class NotificacionDetailAdminComponent implements OnInit {
   }
 
   private label(key: string): string {
-    return key.replace(/Utc$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (value) => value.toUpperCase());
+    return key
+      .replace(/Utc$/i, '')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/^./, (value) => value.toUpperCase());
   }
 }

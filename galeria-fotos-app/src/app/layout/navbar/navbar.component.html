@@ -13,92 +13,222 @@
         data-bs-target="#appNavbar"
         aria-controls="appNavbar"
         aria-expanded="false"
-        aria-label="Abrir menu">
+        aria-label="Abrir menu"
+      >
         <span class="fa fa-bars text-primary"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="appNavbar">
         <div class="navbar-nav mx-auto">
-          <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link">Dashboard</a>
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-item nav-link"
+            >Dashboard</a
+          >
           <div class="nav-item dropdown">
             <button
               class="nav-link dropdown-toggle app-nav-dropdown"
               type="button"
               data-bs-toggle="dropdown"
-              aria-expanded="false">
+              aria-expanded="false"
+            >
               Sitio
             </button>
             <div class="dropdown-menu app-admin-menu">
-              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="dropdown-item">Home</a>
-              <a routerLink="/portfolio" routerLinkActive="active" class="dropdown-item">Portfolio</a>
-              <a routerLink="/servicios" routerLinkActive="active" class="dropdown-item">Servicios</a>
-              <a routerLink="/promociones" routerLinkActive="active" class="dropdown-item">Promociones</a>
-              <a routerLink="/testimonios" routerLinkActive="active" class="dropdown-item">Testimonios</a>
-              <a routerLink="/presupuesto" routerLinkActive="active" class="dropdown-item">Solicitar presupuesto</a>
+              <a
+                routerLink="/"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="dropdown-item"
+                >Home</a
+              >
+              <a routerLink="/portfolio" routerLinkActive="active" class="dropdown-item"
+                >Portfolio</a
+              >
+              <a routerLink="/servicios" routerLinkActive="active" class="dropdown-item"
+                >Servicios</a
+              >
+              <a routerLink="/promociones" routerLinkActive="active" class="dropdown-item"
+                >Promociones</a
+              >
+              <a routerLink="/testimonios" routerLinkActive="active" class="dropdown-item"
+                >Testimonios</a
+              >
+              <a routerLink="/presupuesto" routerLinkActive="active" class="dropdown-item"
+                >Solicitar presupuesto</a
+              >
               <a routerLink="/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
               <a routerLink="/contacto" routerLinkActive="active" class="dropdown-item">Contacto</a>
             </div>
           </div>
           <a routerLink="/eventos" routerLinkActive="active" class="nav-item nav-link">Eventos</a>
-          <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link">Fotos</a>
-          <a *ngIf="session.isAdmin" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
-          <a *ngIf="session.isUser" routerLink="/carrito" routerLinkActive="active" class="nav-item nav-link">Carrito</a>
-          <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link">Mis pedidos</a>
-          <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link">Mis descargas</a>
-          <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link">Favoritos</a>
-          <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active" class="nav-item nav-link">Mi historial</a>
-          <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active" class="nav-item nav-link">Notificaciones</a>
-          <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link">Mi perfil</a>
-          <a *ngIf="!session.isAuthenticated" routerLink="/admin/perfil-publico" routerLinkActive="active" class="nav-item nav-link">Perfil publico</a>
+          <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-item nav-link"
+            >Fotos</a
+          >
+          @if (session.isAdmin) {
+            <a routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link"
+              >Favoritos</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/carrito" routerLinkActive="active" class="nav-item nav-link">Carrito</a>
+          }
+          @if (session.isUser) {
+            <a routerLink="/pedidos" routerLinkActive="active" class="nav-item nav-link"
+              >Mis pedidos</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/descargas" routerLinkActive="active" class="nav-item nav-link"
+              >Mis descargas</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/favoritos" routerLinkActive="active" class="nav-item nav-link"
+              >Favoritos</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/mi-historial" routerLinkActive="active" class="nav-item nav-link"
+              >Mi historial</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/notificaciones" routerLinkActive="active" class="nav-item nav-link"
+              >Notificaciones</a
+            >
+          }
+          @if (session.isUser) {
+            <a routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-item nav-link"
+              >Mi perfil</a
+            >
+          }
+          @if (!session.isAuthenticated) {
+            <a
+              routerLink="/admin/perfil-publico"
+              routerLinkActive="active"
+              class="nav-item nav-link"
+              >Perfil publico</a
+            >
+          }
 
-          <div *ngIf="session.isAdmin" class="nav-item dropdown">
-            <button
-              class="nav-link dropdown-toggle app-nav-dropdown"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Administracion
-            </button>
-            <div class="dropdown-menu app-admin-menu">
-              <a routerLink="/admin/dashboard" routerLinkActive="active" class="dropdown-item">Dashboard admin</a>
-              <a routerLink="/admin/operaciones" routerLinkActive="active" class="dropdown-item">Operaciones</a>
-              <a routerLink="/admin/bitacora" routerLinkActive="active" class="dropdown-item">Bitacora</a>
-              <a routerLink="/clientes" routerLinkActive="active" class="dropdown-item">Clientes</a>
-              <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
-              <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
-              <a routerLink="/admin/descargas" routerLinkActive="active" class="dropdown-item">Gestion de descargas</a>
-              <a routerLink="/admin/portfolio" routerLinkActive="active" class="dropdown-item">Portfolio</a>
-              <a routerLink="/admin/servicios" routerLinkActive="active" class="dropdown-item">Servicios</a>
-              <a routerLink="/admin/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
-              <a routerLink="/admin/presupuestos" routerLinkActive="active" class="dropdown-item">Presupuestos</a>
-              <a routerLink="/admin/agenda" routerLinkActive="active" class="dropdown-item">Agenda</a>
-              <a routerLink="/admin/sesiones-privadas" routerLinkActive="active" class="dropdown-item">Sesiones privadas</a>
-              <a routerLink="/admin/notificaciones" routerLinkActive="active" class="dropdown-item">Notificaciones</a>
-              <a routerLink="/admin/notificaciones/plantillas" routerLinkActive="active" class="dropdown-item">Plantillas de notificacion</a>
-              <a routerLink="/admin/fotos/bulk" routerLinkActive="active" class="dropdown-item">Carga masiva fotos</a>
-              <a routerLink="/admin/perfil-publico" routerLinkActive="active" class="dropdown-item">Perfil publico</a>
-              <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item">Mi perfil admin</a>
-              <a routerLink="/admin/pexels/importar-fotos" routerLinkActive="active" class="dropdown-item">Importar Pexels</a>
+          @if (session.isAdmin) {
+            <div class="nav-item dropdown">
+              <button
+                class="nav-link dropdown-toggle app-nav-dropdown"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Administracion
+              </button>
+              <div class="dropdown-menu app-admin-menu">
+                <a routerLink="/admin/dashboard" routerLinkActive="active" class="dropdown-item"
+                  >Dashboard admin</a
+                >
+                <a routerLink="/admin/operaciones" routerLinkActive="active" class="dropdown-item"
+                  >Operaciones</a
+                >
+                <a routerLink="/admin/bitacora" routerLinkActive="active" class="dropdown-item"
+                  >Bitacora</a
+                >
+                <a routerLink="/clientes" routerLinkActive="active" class="dropdown-item"
+                  >Clientes</a
+                >
+                <a routerLink="/pedidos" routerLinkActive="active" class="dropdown-item">Pedidos</a>
+                <a routerLink="/pagos" routerLinkActive="active" class="dropdown-item">Pagos</a>
+                <a routerLink="/admin/descargas" routerLinkActive="active" class="dropdown-item"
+                  >Gestion de descargas</a
+                >
+                <a routerLink="/admin/portfolio" routerLinkActive="active" class="dropdown-item"
+                  >Portfolio</a
+                >
+                <a routerLink="/admin/servicios" routerLinkActive="active" class="dropdown-item"
+                  >Servicios</a
+                >
+                <a routerLink="/admin/faq" routerLinkActive="active" class="dropdown-item">FAQ</a>
+                <a routerLink="/admin/presupuestos" routerLinkActive="active" class="dropdown-item"
+                  >Presupuestos</a
+                >
+                <a routerLink="/admin/agenda" routerLinkActive="active" class="dropdown-item"
+                  >Agenda</a
+                >
+                <a
+                  routerLink="/admin/sesiones-privadas"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Sesiones privadas</a
+                >
+                <a
+                  routerLink="/admin/notificaciones"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Notificaciones</a
+                >
+                <a
+                  routerLink="/admin/notificaciones/plantillas"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Plantillas de notificacion</a
+                >
+                <a routerLink="/admin/fotos/bulk" routerLinkActive="active" class="dropdown-item"
+                  >Carga masiva fotos</a
+                >
+                <a
+                  routerLink="/admin/perfil-publico"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Perfil publico</a
+                >
+                <a routerLink="/admin/mi-perfil" routerLinkActive="active" class="dropdown-item"
+                  >Mi perfil admin</a
+                >
+                <a
+                  routerLink="/admin/pexels/importar-fotos"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Importar Pexels</a
+                >
+              </div>
             </div>
-          </div>
+          }
 
-          <div *ngIf="session.isAdmin" class="nav-item dropdown">
-            <button
-              class="nav-link dropdown-toggle app-nav-dropdown"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Ventas
-            </button>
-            <div class="dropdown-menu app-admin-menu">
-              <a routerLink="/admin/ventas" routerLinkActive="active" class="dropdown-item">Resumen ventas</a>
-              <a routerLink="/admin/cupones" routerLinkActive="active" class="dropdown-item">Cupones</a>
-              <a routerLink="/admin/promociones" routerLinkActive="active" class="dropdown-item">Promociones</a>
-              <a routerLink="/admin/testimonios" routerLinkActive="active" class="dropdown-item">Testimonios</a>
-              <a routerLink="/admin/carritos-abandonados" routerLinkActive="active" class="dropdown-item">Carritos abandonados</a>
-              <a routerLink="/admin/reportes/ventas" routerLinkActive="active" class="dropdown-item">Reportes de ventas</a>
+          @if (session.isAdmin) {
+            <div class="nav-item dropdown">
+              <button
+                class="nav-link dropdown-toggle app-nav-dropdown"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Ventas
+              </button>
+              <div class="dropdown-menu app-admin-menu">
+                <a routerLink="/admin/ventas" routerLinkActive="active" class="dropdown-item"
+                  >Resumen ventas</a
+                >
+                <a routerLink="/admin/cupones" routerLinkActive="active" class="dropdown-item"
+                  >Cupones</a
+                >
+                <a routerLink="/admin/promociones" routerLinkActive="active" class="dropdown-item"
+                  >Promociones</a
+                >
+                <a routerLink="/admin/testimonios" routerLinkActive="active" class="dropdown-item"
+                  >Testimonios</a
+                >
+                <a
+                  routerLink="/admin/carritos-abandonados"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Carritos abandonados</a
+                >
+                <a
+                  routerLink="/admin/reportes/ventas"
+                  routerLinkActive="active"
+                  class="dropdown-item"
+                  >Reportes de ventas</a
+                >
+              </div>
             </div>
-          </div>
+          }
         </div>
 
         <div class="app-nav-user">
@@ -108,13 +238,22 @@
             type="button"
             class="btn app-theme-toggle rounded-pill"
             (click)="themeService.toggleTheme()"
-            [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+            [attr.aria-label]="
+              themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+            "
+          >
             <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
             <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
           </button>
           <span class="app-nav-name">{{ session.email || session.nombre || 'Invitado' }}</span>
-          <button *ngIf="session.isAuthenticated" type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">Cerrar sesion</button>
-          <a *ngIf="!session.isAuthenticated" routerLink="/login" class="btn btn-primary rounded-pill py-2 px-4">Iniciar sesion</a>
+          @if (session.isAuthenticated) {
+            <button type="button" class="btn btn-primary rounded-pill py-2 px-4" (click)="logout()">
+              Cerrar sesion
+            </button>
+          }
+          @if (!session.isAuthenticated) {
+            <a routerLink="/login" class="btn btn-primary rounded-pill py-2 px-4">Iniciar sesion</a>
+          }
         </div>
       </div>
     </nav>

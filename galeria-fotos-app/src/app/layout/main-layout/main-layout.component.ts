@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
@@ -9,9 +8,9 @@ import { SessionService } from '../../core/services/session.service';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [NgIf, RouterLink, RouterOutlet, InternalNavbarComponent, SidebarComponent],
+  imports: [RouterLink, RouterOutlet, InternalNavbarComponent, SidebarComponent],
   templateUrl: './main-layout.component.html',
-  styleUrl: './main-layout.component.css'
+  styleUrl: './main-layout.component.css',
 })
 export class MainLayoutComponent {
   readonly session = inject(SessionService);

@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -12,8 +11,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-evento-form',
   standalone: true,
-  imports: [NgFor, NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './evento-form.component.html'
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './evento-form.component.html',
 })
 export class EventoFormComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
@@ -38,7 +37,7 @@ export class EventoFormComponent implements OnInit {
     visibilidad: ['Publico', Validators.maxLength(64)],
     fechaLimiteCompraUtc: [''],
     activo: [true],
-    clientePrincipalId: ['']
+    clientePrincipalId: [''],
   });
 
   get isEdit(): boolean {
@@ -53,28 +52,33 @@ export class EventoFormComponent implements OnInit {
     }
 
     this.loading = true;
-    this.eventosService.get(this.id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (evento) => {
-        this.form.patchValue({
-          nombre: evento.nombre,
-          descripcion: evento.descripcion ?? '',
-          fechaEventoUtc: this.toLocalInput(evento.fechaEventoUtc),
-          estado: evento.estado ?? 'Borrador',
-          visibilidad: evento.visibilidad ?? 'Publico',
-          fechaLimiteCompraUtc: evento.fechaLimiteCompraUtc ? this.toLocalInput(evento.fechaLimiteCompraUtc) : '',
-          activo: evento.activo !== false,
-          clientePrincipalId: evento.clientePrincipalId ?? ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.eventosService
+      .get(this.id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (evento) => {
+          this.form.patchValue({
+            nombre: evento.nombre,
+            descripcion: evento.descripcion ?? '',
+            fechaEventoUtc: this.toLocalInput(evento.fechaEventoUtc),
+            estado: evento.estado ?? 'Borrador',
+            visibilidad: evento.visibilidad ?? 'Publico',
+            fechaLimiteCompraUtc: evento.fechaLimiteCompraUtc
+              ? this.toLocalInput(evento.fechaLimiteCompraUtc)
+              : '',
+            activo: evento.activo !== false,
+            clientePrincipalId: evento.clientePrincipalId ?? '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   submit(): void {
@@ -93,11 +97,17 @@ export class EventoFormComponent implements OnInit {
       fechaEventoUtc: new Date(raw.fechaEventoUtc).toISOString(),
       estado: raw.estado.trim() || undefined,
       visibilidad: raw.visibilidad.trim() || undefined,
-      fechaLimiteCompraUtc: raw.fechaLimiteCompraUtc ? new Date(raw.fechaLimiteCompraUtc).toISOString() : undefined,
-      clientePrincipalId: raw.clientePrincipalId.trim() || undefined
+      fechaLimiteCompraUtc: raw.fechaLimiteCompraUtc
+        ? new Date(raw.fechaLimiteCompraUtc).toISOString()
+        : undefined,
+      clientePrincipalId: raw.clientePrincipalId.trim() || undefined,
     };
     const request = this.id
-      ? this.eventosService.update(this.id, { ...basePayload, estado: raw.estado.trim(), activo: raw.activo } satisfies ActualizarEventoRequest)
+      ? this.eventosService.update(this.id, {
+          ...basePayload,
+          estado: raw.estado.trim(),
+          activo: raw.activo,
+        } satisfies ActualizarEventoRequest)
       : this.eventosService.create(basePayload);
 
     this.saving = true;
@@ -107,7 +117,7 @@ export class EventoFormComponent implements OnInit {
         this.error = this.message(error);
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

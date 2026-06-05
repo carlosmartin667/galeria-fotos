@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -16,8 +16,17 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 @Component({
   selector: 'app-pedidos-list',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
-  templateUrl: './pedidos-list.component.html'
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    FormsModule,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+    PaginationControlsComponent,
+  ],
+  templateUrl: './pedidos-list.component.html',
 })
 export class PedidosListComponent implements OnInit {
   private readonly pedidosService = inject(PedidosService);
@@ -44,28 +53,31 @@ export class PedidosListComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.pedidosService.getPedidosPaginados(this.pagination).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (response) => {
-        this.pedidos = response.items;
-        this.pagination = {
-          page: response.page,
-          pageSize: response.pageSize || this.pagination.pageSize,
-          all: response.all
-        };
-        this.totalItems = response.totalItems;
-        this.totalPages = response.totalPages;
-        this.hasPreviousPage = response.hasPreviousPage;
-        this.hasNextPage = response.hasNextPage;
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.pedidosService
+      .getPedidosPaginados(this.pagination)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.pedidos = response.items;
+          this.pagination = {
+            page: response.page,
+            pageSize: response.pageSize || this.pagination.pageSize,
+            all: response.all,
+          };
+          this.totalItems = response.totalItems;
+          this.totalPages = response.totalPages;
+          this.hasPreviousPage = response.hasPreviousPage;
+          this.hasNextPage = response.hasNextPage;
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   get filteredPedidos(): Pedido[] {
@@ -73,14 +85,13 @@ export class PedidosListComponent implements OnInit {
     const estado = this.normalize(this.estadoFilter);
 
     return this.pedidos.filter((pedido) => {
-      const matchesSearch = !term || [
-        pedido.id,
-        pedido.eventoId,
-        pedido.clienteId,
-        pedido.estado,
-        pedido.moneda
-      ].some((value) => this.normalize(value).includes(term));
-      const matchesEstado = this.estadoFilter === 'Todos' || this.normalize(pedido.estado) === estado;
+      const matchesSearch =
+        !term ||
+        [pedido.id, pedido.eventoId, pedido.clienteId, pedido.estado, pedido.moneda].some((value) =>
+          this.normalize(value).includes(term),
+        );
+      const matchesEstado =
+        this.estadoFilter === 'Todos' || this.normalize(pedido.estado) === estado;
       return matchesSearch && matchesEstado;
     });
   }
@@ -99,6 +110,8 @@ export class PedidosListComponent implements OnInit {
   }
 
   private normalize(value: unknown): string {
-    return String(value ?? '').trim().toLowerCase();
+    return String(value ?? '')
+      .trim()
+      .toLowerCase();
   }
 }

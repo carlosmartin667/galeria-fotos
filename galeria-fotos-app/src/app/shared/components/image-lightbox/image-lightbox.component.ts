@@ -1,13 +1,19 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-image-lightbox',
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   templateUrl: './image-lightbox.component.html',
   styleUrl: './image-lightbox.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageLightboxComponent {
   @Input() imageUrl = '';

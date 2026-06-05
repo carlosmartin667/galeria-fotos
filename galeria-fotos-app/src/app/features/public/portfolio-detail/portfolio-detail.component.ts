@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
@@ -14,9 +13,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-portfolio-detail',
   standalone: true,
-  imports: [NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
+  imports: [RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './portfolio-detail.component.html',
-  styleUrl: './portfolio-detail.component.css'
+  styleUrl: './portfolio-detail.component.css',
 })
 export class PortfolioDetailComponent implements OnInit {
   private readonly portfolioService = inject(PortfolioService);
@@ -35,7 +34,7 @@ export class PortfolioDetailComponent implements OnInit {
       title: 'Detalle de portfolio',
       description: 'Detalle de un trabajo fotografico publicado en GaleriaFotos.',
       type: 'article',
-      image: '/assets/caterserv/img/event-2.jpg'
+      image: '/assets/caterserv/img/event-2.jpg',
     });
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -47,27 +46,32 @@ export class PortfolioDetailComponent implements OnInit {
     this.loading = true;
     forkJoin({
       item: this.portfolioService.getById(id),
-      contacto: this.sitioService.getContacto()
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ item, contacto }) => {
-        this.item = item;
-        this.contacto = contacto;
-        this.seo.setPublicPage({
-          title: item.titulo || 'Detalle de portfolio',
-          description: item.descripcion || item.categoria || 'Trabajo fotografico publicado en GaleriaFotos.',
-          type: 'article',
-          image: item.imagenUrl
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el detalle.';
-      }
-    });
+      contacto: this.sitioService.getContacto(),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ item, contacto }) => {
+          this.item = item;
+          this.contacto = contacto;
+          this.seo.setPublicPage({
+            title: item.titulo || 'Detalle de portfolio',
+            description:
+              item.descripcion ||
+              item.categoria ||
+              'Trabajo fotografico publicado en GaleriaFotos.',
+            type: 'article',
+            image: item.imagenUrl,
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar el detalle.';
+        },
+      });
   }
 
   get whatsAppUrl(): string {

@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -13,9 +13,18 @@ import { NotasInternasComponent } from '../../../shared/components/notas-interna
 @Component({
   selector: 'app-sesiones-privadas-admin',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgClass, NgFor, NgIf, FormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    NgClass,
+    FormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+    NotasInternasComponent,
+  ],
   templateUrl: './sesiones-privadas-admin.component.html',
-  styleUrl: './sesiones-privadas-admin.component.css'
+  styleUrl: './sesiones-privadas-admin.component.css',
 })
 export class SesionesPrivadasAdminComponent implements OnInit {
   private readonly sesionesService = inject(SesionesPrivadasService);
@@ -40,25 +49,29 @@ export class SesionesPrivadasAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.sesionesService.list().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (sesiones) => {
-        this.sesiones = sesiones;
-        this.estadosPorSesion = sesiones.reduce<Record<string, string>>((acc, sesion) => {
-          if (sesion.id) {
-            acc[sesion.id] = sesion.estado || 'Borrador';
-          }
-          return acc;
-        }, {});
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar sesiones privadas.';
-      }
-    });
+    this.sesionesService
+      .list()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (sesiones) => {
+          this.sesiones = sesiones;
+          this.estadosPorSesion = sesiones.reduce<Record<string, string>>((acc, sesion) => {
+            if (sesion.id) {
+              acc[sesion.id] = sesion.estado || 'Borrador';
+            }
+            return acc;
+          }, {});
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar sesiones privadas.';
+        },
+      });
   }
 
   cambiarEstado(sesion: SesionPrivada): void {
@@ -72,21 +85,25 @@ export class SesionesPrivadasAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.sesionesService.cambiarEstadoSesionPrivada(sesion.id, { estado, comentario }).pipe(
-      finalize(() => {
-        this.savingId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Estado de sesion actualizado.';
-        this.comentariosPorSesion[sesion.id ?? ''] = '';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cambiar el estado de la sesion.';
-      }
-    });
+    this.sesionesService
+      .cambiarEstadoSesionPrivada(sesion.id, { estado, comentario })
+      .pipe(
+        finalize(() => {
+          this.savingId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Estado de sesion actualizado.';
+          this.comentariosPorSesion[sesion.id ?? ''] = '';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cambiar el estado de la sesion.';
+        },
+      });
   }
 
   selectSesion(sesion: SesionPrivada): void {
@@ -95,7 +112,11 @@ export class SesionesPrivadasAdminComponent implements OnInit {
 
   estadoClass(estado?: string | null): string {
     const normalized = (estado ?? '').toLowerCase();
-    if (normalized.includes('public') || normalized.includes('final') || normalized.includes('lista')) {
+    if (
+      normalized.includes('public') ||
+      normalized.includes('final') ||
+      normalized.includes('lista')
+    ) {
       return 'bg-success';
     }
     if (normalized.includes('cancel')) {

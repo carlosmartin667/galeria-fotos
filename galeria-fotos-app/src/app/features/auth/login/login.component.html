@@ -5,30 +5,58 @@
       <p class="text-muted mb-0">Acceso al panel fotografico</p>
     </div>
 
-    <div *ngIf="message" class="alert alert-warning">{{ message }}</div>
+    @if (message) {
+      <div class="alert alert-warning">{{ message }}</div>
+    }
     <app-error-alert [message]="error"></app-error-alert>
 
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <div class="mb-3">
         <label class="form-label" for="loginEmail">Email</label>
-        <input id="loginEmail" type="email" class="form-control" formControlName="email" autocomplete="username" [attr.aria-invalid]="showError('email')" [attr.aria-describedby]="showError('email') ? 'loginEmailError' : null">
-        <small *ngIf="showError('email')" id="loginEmailError" class="text-danger">Ingresa un email valido.</small>
+        <input
+          id="loginEmail"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          autocomplete="username"
+          [attr.aria-invalid]="showError('email')"
+          [attr.aria-describedby]="showError('email') ? 'loginEmailError' : null"
+        />
+        @if (showError('email')) {
+          <small id="loginEmailError" class="text-danger">Ingresa un email valido.</small>
+        }
       </div>
 
       <div class="mb-4">
         <label class="form-label" for="loginPassword">Password</label>
-        <input id="loginPassword" type="password" class="form-control" formControlName="password" autocomplete="current-password" [attr.aria-invalid]="showError('password')" [attr.aria-describedby]="showError('password') ? 'loginPasswordError' : null">
-        <small *ngIf="showError('password')" id="loginPasswordError" class="text-danger">La password debe tener al menos 8 caracteres.</small>
+        <input
+          id="loginPassword"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          autocomplete="current-password"
+          [attr.aria-invalid]="showError('password')"
+          [attr.aria-describedby]="showError('password') ? 'loginPasswordError' : null"
+        />
+        @if (showError('password')) {
+          <small id="loginPasswordError" class="text-danger"
+            >La password debe tener al menos 8 caracteres.</small
+          >
+        }
       </div>
 
       <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3" [disabled]="loading">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+        @if (loading) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        }
         Iniciar sesion
       </button>
 
       <div class="d-grid gap-2">
         <a routerLink="/register" class="btn btn-outline-primary rounded-pill">Registrarse</a>
-        <button type="button" class="btn btn-outline-dark rounded-pill" (click)="enterGuest()">Entrar como invitado</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" (click)="enterGuest()">
+          Entrar como invitado
+        </button>
       </div>
     </form>
   </div>

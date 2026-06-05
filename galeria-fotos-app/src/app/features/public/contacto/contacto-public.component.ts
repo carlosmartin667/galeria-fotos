@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -13,9 +12,14 @@ import { AgendaDisponibilidadPublicaComponent } from '../disponibilidad/agenda-d
 @Component({
   selector: 'app-contacto-public',
   standalone: true,
-  imports: [NgIf, RouterLink, ErrorAlertComponent, LoadingComponent, AgendaDisponibilidadPublicaComponent],
+  imports: [
+    RouterLink,
+    ErrorAlertComponent,
+    LoadingComponent,
+    AgendaDisponibilidadPublicaComponent,
+  ],
   templateUrl: './contacto-public.component.html',
-  styleUrl: './contacto-public.component.css'
+  styleUrl: './contacto-public.component.css',
 })
 export class ContactoPublicComponent implements OnInit {
   private readonly sitioService = inject(SitioPublicoService);
@@ -29,29 +33,33 @@ export class ContactoPublicComponent implements OnInit {
   ngOnInit(): void {
     this.seo.setPublicPage({
       title: 'Contacto',
-      description: 'Contacto de GaleriaFotos para coordinar servicios fotograficos, sesiones y presupuestos.',
-      image: '/assets/caterserv/img/background-site.jpg'
+      description:
+        'Contacto de GaleriaFotos para coordinar servicios fotograficos, sesiones y presupuestos.',
+      image: '/assets/caterserv/img/background-site.jpg',
     });
     this.loading = true;
 
-    this.sitioService.getContacto().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (contacto) => {
-        this.contacto = contacto;
-        this.seo.setPublicPage({
-          title: `Contacto ${this.nombre}`,
-          description: this.descripcion,
-          image: contacto.perfil?.bannerUrl || contacto.perfil?.fotoPerfilUrl
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el contacto.';
-      }
-    });
+    this.sitioService
+      .getContacto()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (contacto) => {
+          this.contacto = contacto;
+          this.seo.setPublicPage({
+            title: `Contacto ${this.nombre}`,
+            description: this.descripcion,
+            image: contacto.perfil?.bannerUrl || contacto.perfil?.fotoPerfilUrl,
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar el contacto.';
+        },
+      });
   }
 
   get nombre(): string {
@@ -59,10 +67,12 @@ export class ContactoPublicComponent implements OnInit {
   }
 
   get descripcion(): string {
-    return this.contacto?.textoBienvenida
-      || this.contacto?.perfil?.textoBienvenida
-      || this.contacto?.perfil?.descripcion
-      || 'Coordinemos tu sesion o cobertura fotografica.';
+    return (
+      this.contacto?.textoBienvenida ||
+      this.contacto?.perfil?.textoBienvenida ||
+      this.contacto?.perfil?.descripcion ||
+      'Coordinemos tu sesion o cobertura fotografica.'
+    );
   }
 
   get whatsAppUrl(): string {
@@ -78,7 +88,9 @@ export class ContactoPublicComponent implements OnInit {
       this.contacto?.direccion || this.contacto?.perfil?.direccion,
       this.contacto?.ciudad || this.contacto?.perfil?.ciudad,
       this.contacto?.provincia || this.contacto?.perfil?.provincia,
-      this.contacto?.pais || this.contacto?.perfil?.pais
-    ].filter(Boolean).join(', ');
+      this.contacto?.pais || this.contacto?.perfil?.pais,
+    ]
+      .filter(Boolean)
+      .join(', ');
   }
 }

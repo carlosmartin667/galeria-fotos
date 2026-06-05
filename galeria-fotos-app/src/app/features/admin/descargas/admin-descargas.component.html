@@ -4,54 +4,96 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Gestion de descargas</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loading" text="Cargando descargas..."></app-loading>
-    <app-empty-state *ngIf="!loading && descargas.length === 0" text="No hay descargas para gestionar."></app-empty-state>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loading) {
+      <app-loading text="Cargando descargas..."></app-loading>
+    }
+    @if (!loading && descargas.length === 0) {
+      <app-empty-state text="No hay descargas para gestionar."></app-empty-state>
+    }
 
-    <div *ngIf="!loading && descargas.length > 0" class="table-responsive">
-      <table class="table table-hover align-middle download-table">
-        <thead>
-          <tr>
-            <th>Cliente/usuario</th>
-            <th>Pedido</th>
-            <th>Archivo</th>
-            <th>Estado</th>
-            <th>Expira</th>
-            <th>Usos</th>
-            <th>Ultima</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let descarga of descargas; trackBy: trackById">
-            <td class="text-break">{{ owner(descarga) }}</td>
-            <td class="text-break">{{ descarga.pedidoId }}</td>
-            <td class="text-break">{{ descarga.nombreArchivo || descarga.fotoId || descarga.fotoPrivadaId || '-' }}</td>
-            <td>
-              <span class="badge" [ngClass]="badgeClass(descarga)">
-                {{ descarga.activa === false ? 'Inactiva' : (isExpired(descarga) ? 'Vencida' : 'Activa') }}
-              </span>
-            </td>
-            <td>{{ expira(descarga) ? (expira(descarga) | date:'short') : '-' }}</td>
-            <td>{{ descarga.descargasRealizadas ?? 0 }} / {{ descarga.maxDescargas === null || descarga.maxDescargas === undefined ? 'Sin limite' : descarga.maxDescargas }}</td>
-            <td>{{ descarga.ultimaDescargaUtc ? (descarga.ultimaDescargaUtc | date:'short') : '-' }}</td>
-            <td>
-              <div class="app-actions">
-                <a [routerLink]="['/descargas', descarga.id]" class="btn btn-sm btn-outline-dark rounded-pill">Detalle</a>
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="regeneratingId === descarga.id" (click)="regenerar(descarga)">
-                  <span *ngIf="regeneratingId === descarga.id" class="spinner-border spinner-border-sm me-2"></span>
-                  Regenerar
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (!loading && descargas.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle download-table">
+          <thead>
+            <tr>
+              <th>Cliente/usuario</th>
+              <th>Pedido</th>
+              <th>Archivo</th>
+              <th>Estado</th>
+              <th>Expira</th>
+              <th>Usos</th>
+              <th>Ultima</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (descarga of descargas; track trackById($index, descarga)) {
+              <tr>
+                <td class="text-break">{{ owner(descarga) }}</td>
+                <td class="text-break">{{ descarga.pedidoId }}</td>
+                <td class="text-break">
+                  {{ descarga.nombreArchivo || descarga.fotoId || descarga.fotoPrivadaId || '-' }}
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="badgeClass(descarga)">
+                    {{
+                      descarga.activa === false
+                        ? 'Inactiva'
+                        : isExpired(descarga)
+                          ? 'Vencida'
+                          : 'Activa'
+                    }}
+                  </span>
+                </td>
+                <td>{{ expira(descarga) ? (expira(descarga) | date: 'short') : '-' }}</td>
+                <td>
+                  {{ descarga.descargasRealizadas ?? 0 }} /
+                  {{
+                    descarga.maxDescargas === null || descarga.maxDescargas === undefined
+                      ? 'Sin limite'
+                      : descarga.maxDescargas
+                  }}
+                </td>
+                <td>
+                  {{
+                    descarga.ultimaDescargaUtc ? (descarga.ultimaDescargaUtc | date: 'short') : '-'
+                  }}
+                </td>
+                <td>
+                  <div class="app-actions">
+                    <a
+                      [routerLink]="['/descargas', descarga.id]"
+                      class="btn btn-sm btn-outline-dark rounded-pill"
+                      >Detalle</a
+                    >
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary rounded-pill"
+                      [disabled]="regeneratingId === descarga.id"
+                      (click)="regenerar(descarga)"
+                    >
+                      @if (regeneratingId === descarga.id) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                      }
+                      Regenerar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </div>

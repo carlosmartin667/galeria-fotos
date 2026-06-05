@@ -1,10 +1,21 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
-import { BitacoraItem, BitacoraListResponse, BitacoraSummaryCard } from '../../../core/models/bitacora.models';
+import {
+  BitacoraItem,
+  BitacoraListResponse,
+  BitacoraSummaryCard,
+} from '../../../core/models/bitacora.models';
 import { BitacoraService } from '../../../core/services/bitacora.service';
 import { redactSensitiveText, sanitizeMetadata } from '../../../core/utils/sensitive-text';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -14,10 +25,17 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-bitacora-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './bitacora-admin.component.html',
   styleUrl: './bitacora-admin.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BitacoraAdminComponent implements OnInit {
   private readonly bitacoraService = inject(BitacoraService);
@@ -42,7 +60,7 @@ export class BitacoraAdminComponent implements OnInit {
     entidadId: [''],
     severidad: [''],
     correlationId: [''],
-    pageSize: [20]
+    pageSize: [20],
   });
 
   ngOnInit(): void {
@@ -67,27 +85,29 @@ export class BitacoraAdminComponent implements OnInit {
         severidad: raw.severidad.trim() || null,
         correlationId: raw.correlationId.trim() || null,
         page,
-        pageSize
+        pageSize,
       }),
-      resumen: this.bitacoraService.getResumen().pipe(catchError(() => of(null)))
-    }).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ bitacora, resumen }) => {
-        this.bitacora = bitacora;
-        this.resumenCards = this.buildResumenCards(resumen);
-        this.selected = bitacora.items[0] ?? null;
-      },
-      error: (error: unknown) => {
-        this.bitacora = this.emptyResponse();
-        this.selected = null;
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar la bitacora.';
-      }
-    });
+      resumen: this.bitacoraService.getResumen().pipe(catchError(() => of(null))),
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ bitacora, resumen }) => {
+          this.bitacora = bitacora;
+          this.resumenCards = this.buildResumenCards(resumen);
+          this.selected = bitacora.items[0] ?? null;
+        },
+        error: (error: unknown) => {
+          this.bitacora = this.emptyResponse();
+          this.selected = null;
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar la bitacora.';
+        },
+      });
   }
 
   applyFilters(): void {
@@ -104,7 +124,7 @@ export class BitacoraAdminComponent implements OnInit {
       entidadId: '',
       severidad: '',
       correlationId: '',
-      pageSize: 20
+      pageSize: 20,
     });
     this.load(1);
   }
@@ -131,24 +151,34 @@ export class BitacoraAdminComponent implements OnInit {
     this.detailError = '';
     this.selected = item;
 
-    this.bitacoraService.getDetalle(item.id).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => {
-        this.detailLoading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (detail) => {
-        this.selected = detail;
-      },
-      error: (error: unknown) => {
-        this.detailError = error instanceof Error ? error.message : 'No se pudo cargar el detalle.';
-      }
-    });
+    this.bitacoraService
+      .getDetalle(item.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.detailLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (detail) => {
+          this.selected = detail;
+        },
+        error: (error: unknown) => {
+          this.detailError =
+            error instanceof Error ? error.message : 'No se pudo cargar el detalle.';
+        },
+      });
   }
 
   fecha(item: BitacoraItem | null): string | null {
-    return this.textValue(item, ['fechaUtc', 'fechaCreacionUtc', 'fechaActualizacionUtc', 'fecha', 'timestamp']);
+    return this.textValue(item, [
+      'fechaUtc',
+      'fechaCreacionUtc',
+      'fechaActualizacionUtc',
+      'fecha',
+      'timestamp',
+    ]);
   }
 
   usuario(item: BitacoraItem | null): string {
@@ -236,7 +266,10 @@ export class BitacoraAdminComponent implements OnInit {
 
       if (value && typeof value === 'object') {
         Object.entries(value as Record<string, unknown>).forEach(([innerKey, innerValue]) => {
-          if (cards.length < 8 && (typeof innerValue === 'number' || typeof innerValue === 'string')) {
+          if (
+            cards.length < 8 &&
+            (typeof innerValue === 'number' || typeof innerValue === 'string')
+          ) {
             cards.push({ label: `${this.label(key)} ${this.label(innerKey)}`, value: innerValue });
           }
         });
@@ -289,7 +322,7 @@ export class BitacoraAdminComponent implements OnInit {
       totalPages: 1,
       hasPreviousPage: false,
       hasNextPage: false,
-      all: false
+      all: false,
     };
   }
 }

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -28,8 +27,8 @@ type FotoFormValue = {
 @Component({
   selector: 'app-foto-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './foto-form.component.html'
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './foto-form.component.html',
 })
 export class FotoFormComponent implements OnInit {
   private readonly fotosService = inject(FotosService);
@@ -60,7 +59,7 @@ export class FotoFormComponent implements OnInit {
     precioUnitario: [0, Validators.required],
     activa: [true],
     tieneMarcaAgua: [false],
-    procesada: [false]
+    procesada: [false],
   });
 
   get isEdit(): boolean {
@@ -84,33 +83,36 @@ export class FotoFormComponent implements OnInit {
     this.form.controls.storageKey.disable();
     this.loading = true;
 
-    this.fotosService.get(this.id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (foto) => {
-        this.form.patchValue({
-          eventoId: foto.eventoId,
-          nombreArchivo: foto.nombreArchivo,
-          contentType: foto.contentType ?? '',
-          storageKey: foto.storageKey ?? '',
-          previewUrl: foto.previewUrl ?? '',
-          marcaAguaStorageKey: foto.marcaAguaStorageKey ?? '',
-          sizeInBytes: foto.sizeInBytes ?? 0,
-          width: foto.width ?? 0,
-          height: foto.height ?? 0,
-          precioUnitario: foto.precioUnitario ?? 0,
-          activa: foto.activa !== false,
-          tieneMarcaAgua: foto.tieneMarcaAgua === true,
-          procesada: foto.procesada === true
-        });
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.fotosService
+      .get(this.id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (foto) => {
+          this.form.patchValue({
+            eventoId: foto.eventoId,
+            nombreArchivo: foto.nombreArchivo,
+            contentType: foto.contentType ?? '',
+            storageKey: foto.storageKey ?? '',
+            previewUrl: foto.previewUrl ?? '',
+            marcaAguaStorageKey: foto.marcaAguaStorageKey ?? '',
+            sizeInBytes: foto.sizeInBytes ?? 0,
+            width: foto.width ?? 0,
+            height: foto.height ?? 0,
+            precioUnitario: foto.precioUnitario ?? 0,
+            activa: foto.activa !== false,
+            tieneMarcaAgua: foto.tieneMarcaAgua === true,
+            procesada: foto.procesada === true,
+          });
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   generateStorageKey(): void {
@@ -135,7 +137,7 @@ export class FotoFormComponent implements OnInit {
         this.error = this.message(error);
         this.generatingKey = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -160,11 +162,13 @@ export class FotoFormComponent implements OnInit {
         this.error = this.message(error);
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
-  showError(controlName: 'eventoId' | 'nombreArchivo' | 'contentType' | 'storageKey' | 'precioUnitario'): boolean {
+  showError(
+    controlName: 'eventoId' | 'nombreArchivo' | 'contentType' | 'storageKey' | 'precioUnitario',
+  ): boolean {
     const control = this.form.controls[controlName];
     return control.invalid && (control.touched || this.submitted);
   }
@@ -190,7 +194,7 @@ export class FotoFormComponent implements OnInit {
       height: raw.height ? Number(raw.height) : undefined,
       precioUnitario: Number(raw.precioUnitario),
       tieneMarcaAgua: raw.tieneMarcaAgua,
-      procesada: raw.procesada
+      procesada: raw.procesada,
     };
   }
 
@@ -202,7 +206,7 @@ export class FotoFormComponent implements OnInit {
       precioUnitario: Number(raw.precioUnitario),
       activa: raw.activa,
       tieneMarcaAgua: raw.tieneMarcaAgua,
-      procesada: raw.procesada
+      procesada: raw.procesada,
     };
   }
 

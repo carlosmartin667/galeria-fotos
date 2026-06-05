@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,9 +17,18 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 @Component({
   selector: 'app-favoritos-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent, PaginationControlsComponent],
+  imports: [
+    DatePipe,
+    FormsModule,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    ImageLightboxComponent,
+    LoadingComponent,
+    PaginationControlsComponent,
+  ],
   templateUrl: './favoritos-list.component.html',
-  styleUrl: './favoritos-list.component.css'
+  styleUrl: './favoritos-list.component.css',
 })
 export class FavoritosListComponent implements OnInit {
   private readonly favoritosService = inject(FavoritosService);
@@ -64,78 +73,88 @@ export class FavoritosListComponent implements OnInit {
     this.eventosLoading = true;
     this.eventosError = '';
 
-    this.favoritosService.getEventosFavoritosPaginados(this.eventosPagination).pipe(
-      finalize(() => {
-        this.eventosLoading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (response) => {
-        this.eventos = response.items;
-        this.eventosPagination = {
-          page: response.page,
-          pageSize: response.pageSize || this.eventosPagination.pageSize,
-          all: response.all
-        };
-        this.eventosTotalItems = response.totalItems;
-        this.eventosTotalPages = response.totalPages;
-        this.eventosHasPreviousPage = response.hasPreviousPage;
-        this.eventosHasNextPage = response.hasNextPage;
-      },
-      error: (error: unknown) => {
-        this.eventosError = error instanceof Error ? error.message : 'No se pudieron cargar los eventos favoritos.';
-      }
-    });
+    this.favoritosService
+      .getEventosFavoritosPaginados(this.eventosPagination)
+      .pipe(
+        finalize(() => {
+          this.eventosLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.eventos = response.items;
+          this.eventosPagination = {
+            page: response.page,
+            pageSize: response.pageSize || this.eventosPagination.pageSize,
+            all: response.all,
+          };
+          this.eventosTotalItems = response.totalItems;
+          this.eventosTotalPages = response.totalPages;
+          this.eventosHasPreviousPage = response.hasPreviousPage;
+          this.eventosHasNextPage = response.hasNextPage;
+        },
+        error: (error: unknown) => {
+          this.eventosError =
+            error instanceof Error ? error.message : 'No se pudieron cargar los eventos favoritos.';
+        },
+      });
   }
 
   loadFotos(): void {
     this.fotosLoading = true;
     this.fotosError = '';
 
-    this.favoritosService.getFotosFavoritasPaginadas(this.fotosPagination).pipe(
-      finalize(() => {
-        this.fotosLoading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (response) => {
-        this.fotos = response.items;
-        this.fotosPagination = {
-          page: response.page,
-          pageSize: response.pageSize || this.fotosPagination.pageSize,
-          all: response.all
-        };
-        this.fotosTotalItems = response.totalItems;
-        this.fotosTotalPages = response.totalPages;
-        this.fotosHasPreviousPage = response.hasPreviousPage;
-        this.fotosHasNextPage = response.hasNextPage;
-      },
-      error: (error: unknown) => {
-        this.fotosError = error instanceof Error ? error.message : 'No se pudieron cargar las fotos favoritas.';
-      }
-    });
+    this.favoritosService
+      .getFotosFavoritasPaginadas(this.fotosPagination)
+      .pipe(
+        finalize(() => {
+          this.fotosLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.fotos = response.items;
+          this.fotosPagination = {
+            page: response.page,
+            pageSize: response.pageSize || this.fotosPagination.pageSize,
+            all: response.all,
+          };
+          this.fotosTotalItems = response.totalItems;
+          this.fotosTotalPages = response.totalPages;
+          this.fotosHasPreviousPage = response.hasPreviousPage;
+          this.fotosHasNextPage = response.hasNextPage;
+        },
+        error: (error: unknown) => {
+          this.fotosError =
+            error instanceof Error ? error.message : 'No se pudieron cargar las fotos favoritas.';
+        },
+      });
   }
 
   get filteredEventos(): FavoritoEventoResponse[] {
     const term = this.normalize(this.eventosSearch);
 
-    return this.eventos.filter((item) => !term || [
-      item.id,
-      item.eventoId,
-      item.nombreEvento,
-      item.fechaEventoUtc
-    ].some((value) => this.normalize(value).includes(term)));
+    return this.eventos.filter(
+      (item) =>
+        !term ||
+        [item.id, item.eventoId, item.nombreEvento, item.fechaEventoUtc].some((value) =>
+          this.normalize(value).includes(term),
+        ),
+    );
   }
 
   get filteredFotos(): FavoritoFotoResponse[] {
     const term = this.normalize(this.fotosSearch);
 
-    return this.fotos.filter((item) => !term || [
-      item.id,
-      item.fotoId,
-      item.eventoId,
-      item.nombreArchivo
-    ].some((value) => this.normalize(value).includes(term)));
+    return this.fotos.filter(
+      (item) =>
+        !term ||
+        [item.id, item.fotoId, item.eventoId, item.nombreArchivo].some((value) =>
+          this.normalize(value).includes(term),
+        ),
+    );
   }
 
   onEventosPaginationChange(query: PaginationQuery): void {
@@ -157,7 +176,7 @@ export class FavoritosListComponent implements OnInit {
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo quitar el favorito.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -170,7 +189,7 @@ export class FavoritosListComponent implements OnInit {
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo quitar el favorito.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -197,6 +216,8 @@ export class FavoritosListComponent implements OnInit {
   }
 
   private normalize(value: unknown): string {
-    return String(value ?? '').trim().toLowerCase();
+    return String(value ?? '')
+      .trim()
+      .toLowerCase();
   }
 }

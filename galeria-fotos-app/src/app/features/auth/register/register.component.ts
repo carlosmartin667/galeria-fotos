@@ -1,6 +1,11 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,9 +14,9 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent],
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
   templateUrl: './register.component.html',
-  styleUrl: '../login/login.component.css'
+  styleUrl: '../login/login.component.css',
 })
 export class RegisterComponent {
   private readonly authService = inject(AuthService);
@@ -28,9 +33,9 @@ export class RegisterComponent {
       nombre: ['', [Validators.required, Validators.maxLength(160)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
     },
-    { validators: this.passwordsMatch }
+    { validators: this.passwordsMatch },
   );
 
   submit(): void {
@@ -45,22 +50,26 @@ export class RegisterComponent {
     const raw = this.form.getRawValue();
     this.loading = true;
 
-    this.authService.register({
-      nombre: raw.nombre.trim(),
-      email: raw.email.trim(),
-      password: raw.password
-    }).subscribe({
-      next: () => {
-        this.loading = false;
-        this.cdr.markForCheck();
-        void this.router.navigate(['/login'], { queryParams: { message: 'Cuenta creada. Ya podes iniciar sesion.' } });
-      },
-      error: (error: unknown) => {
-        this.loading = false;
-        this.error = error instanceof Error ? error.message : 'No se pudo crear la cuenta.';
-        this.cdr.markForCheck();
-      }
-    });
+    this.authService
+      .register({
+        nombre: raw.nombre.trim(),
+        email: raw.email.trim(),
+        password: raw.password,
+      })
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          void this.router.navigate(['/login'], {
+            queryParams: { message: 'Cuenta creada. Ya podes iniciar sesion.' },
+          });
+        },
+        error: (error: unknown) => {
+          this.loading = false;
+          this.error = error instanceof Error ? error.message : 'No se pudo crear la cuenta.';
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   showError(controlName: 'nombre' | 'email' | 'password' | 'confirmPassword'): boolean {

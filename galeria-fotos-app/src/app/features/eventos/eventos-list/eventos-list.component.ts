@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,9 +17,18 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 @Component({
   selector: 'app-eventos-list',
   standalone: true,
-  imports: [DatePipe, FormsModule, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, PaginationControlsComponent],
+  imports: [
+    DatePipe,
+    FormsModule,
+    NgClass,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+    PaginationControlsComponent,
+  ],
   templateUrl: './eventos-list.component.html',
-  styleUrl: './eventos-list.component.css'
+  styleUrl: './eventos-list.component.css',
 })
 export class EventosListComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
@@ -49,30 +58,33 @@ export class EventosListComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.eventosService.getEventosPaginados(this.pagination).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (response) => {
-        this.eventos = response.items;
-        this.pagination = {
-          page: response.page,
-          pageSize: response.pageSize || this.pagination.pageSize,
-          all: response.all
-        };
-        this.totalItems = response.totalItems;
-        this.totalPages = response.totalPages;
-        this.hasPreviousPage = response.hasPreviousPage;
-        this.hasNextPage = response.hasNextPage;
-        this.loadEventPreviews(response.items);
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-        this.cdr.markForCheck();
-      }
-    });
+    this.eventosService
+      .getEventosPaginados(this.pagination)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.eventos = response.items;
+          this.pagination = {
+            page: response.page,
+            pageSize: response.pageSize || this.pagination.pageSize,
+            all: response.all,
+          };
+          this.totalItems = response.totalItems;
+          this.totalPages = response.totalPages;
+          this.hasPreviousPage = response.hasPreviousPage;
+          this.hasNextPage = response.hasNextPage;
+          this.loadEventPreviews(response.items);
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   get filteredEventos(): Evento[] {
@@ -80,13 +92,13 @@ export class EventosListComponent implements OnInit {
     const estado = this.normalize(this.estadoFilter);
 
     return this.eventos.filter((evento) => {
-      const matchesSearch = !term || [
-        evento.nombre,
-        evento.descripcion,
-        evento.estado,
-        evento.clientePrincipalId
-      ].some((value) => this.normalize(value).includes(term));
-      const matchesEstado = this.estadoFilter === 'Todos' || this.normalize(evento.estado) === estado;
+      const matchesSearch =
+        !term ||
+        [evento.nombre, evento.descripcion, evento.estado, evento.clientePrincipalId].some(
+          (value) => this.normalize(value).includes(term),
+        );
+      const matchesEstado =
+        this.estadoFilter === 'Todos' || this.normalize(evento.estado) === estado;
       return matchesSearch && matchesEstado;
     });
   }
@@ -110,7 +122,7 @@ export class EventosListComponent implements OnInit {
       next: () => this.load(),
       error: (error: unknown) => {
         this.error = this.message(error);
-      }
+      },
     });
   }
 
@@ -122,7 +134,10 @@ export class EventosListComponent implements OnInit {
     return eventoId in this.eventPreviewUrls;
   }
 
-  badgeClass(value: string | undefined, kind: 'estado' | 'visibilidad' | 'activo' = 'estado'): string {
+  badgeClass(
+    value: string | undefined,
+    kind: 'estado' | 'visibilidad' | 'activo' = 'estado',
+  ): string {
     const normalized = this.normalize(value);
 
     if (kind === 'activo') {
@@ -153,7 +168,9 @@ export class EventosListComponent implements OnInit {
   }
 
   private normalize(value: unknown): string {
-    return String(value ?? '').trim().toLowerCase();
+    return String(value ?? '')
+      .trim()
+      .toLowerCase();
   }
 
   private loadEventPreviews(eventos: Evento[]): void {
@@ -179,21 +196,24 @@ export class EventosListComponent implements OnInit {
           error: () => {
             this.eventPreviewUrls[evento.id] = null;
             this.finishEventPreview(evento.id);
-          }
+          },
         });
         return;
       }
 
-      this.fotosService.getFotosPorEventoPaginado(evento.id, { page: 1, pageSize: 5, all: false }).subscribe({
-        next: (response) => {
-          this.eventPreviewUrls[evento.id] = response.items.find((foto) => Boolean(foto.previewUrl))?.previewUrl ?? null;
-          this.finishEventPreview(evento.id);
-        },
-        error: () => {
-          this.eventPreviewUrls[evento.id] = null;
-          this.finishEventPreview(evento.id);
-        }
-      });
+      this.fotosService
+        .getFotosPorEventoPaginado(evento.id, { page: 1, pageSize: 5, all: false })
+        .subscribe({
+          next: (response) => {
+            this.eventPreviewUrls[evento.id] =
+              response.items.find((foto) => Boolean(foto.previewUrl))?.previewUrl ?? null;
+            this.finishEventPreview(evento.id);
+          },
+          error: () => {
+            this.eventPreviewUrls[evento.id] = null;
+            this.finishEventPreview(evento.id);
+          },
+        });
     });
   }
 

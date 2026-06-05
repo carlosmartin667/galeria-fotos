@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -12,9 +12,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-portfolio-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './portfolio-admin.component.html',
-  styleUrl: './portfolio-admin.component.css'
+  styleUrl: './portfolio-admin.component.css',
 })
 export class PortfolioAdminComponent implements OnInit {
   private readonly portfolioService = inject(PortfolioService);
@@ -36,7 +43,7 @@ export class PortfolioAdminComponent implements OnInit {
     categoria: ['', Validators.maxLength(120)],
     orden: [0],
     destacado: [false],
-    activo: [true]
+    activo: [true],
   });
 
   ngOnInit(): void {
@@ -48,19 +55,23 @@ export class PortfolioAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.portfolioService.getAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.items = [...items].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar Portfolio admin.';
-      }
-    });
+    this.portfolioService
+      .getAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.items = [...items].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar Portfolio admin.';
+        },
+      });
   }
 
   edit(item: PortfolioItem): void {
@@ -75,7 +86,7 @@ export class PortfolioAdminComponent implements OnInit {
       categoria: item.categoria ?? '',
       orden: item.orden ?? 0,
       destacado: item.destacado === true,
-      activo: item.activo !== false
+      activo: item.activo !== false,
     });
   }
 
@@ -89,7 +100,7 @@ export class PortfolioAdminComponent implements OnInit {
       categoria: '',
       orden: 0,
       destacado: false,
-      activo: true
+      activo: true,
     });
   }
 
@@ -120,7 +131,7 @@ export class PortfolioAdminComponent implements OnInit {
         this.error = error instanceof Error ? error.message : 'No se pudo guardar Portfolio.';
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -133,7 +144,7 @@ export class PortfolioAdminComponent implements OnInit {
       next: () => this.load(),
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo eliminar Portfolio.';
-      }
+      },
     });
   }
 
@@ -155,7 +166,7 @@ export class PortfolioAdminComponent implements OnInit {
       categoria: raw.categoria.trim() || null,
       orden: Number(raw.orden || 0),
       destacado: raw.destacado,
-      activo: raw.activo
+      activo: raw.activo,
     };
   }
 }

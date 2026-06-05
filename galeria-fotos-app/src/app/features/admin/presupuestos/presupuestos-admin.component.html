@@ -4,17 +4,26 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Solicitudes de presupuesto</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
 
     <form [formGroup]="filterForm" class="row g-3 mb-4">
       <div class="col-md-4">
         <label class="form-label" for="presupuestosActiva">Estado activo</label>
-        <select id="presupuestosActiva" class="form-select" formControlName="activa" (change)="load()">
+        <select
+          id="presupuestosActiva"
+          class="form-select"
+          formControlName="activa"
+          (change)="load()"
+        >
           <option value="all">Todas</option>
           <option value="true">Activas</option>
           <option value="false">Inactivas</option>
@@ -22,119 +31,219 @@
       </div>
       <div class="col-md-8">
         <label class="form-label" for="presupuestosSearch">Buscar</label>
-        <input id="presupuestosSearch" type="search" class="form-control" formControlName="search" placeholder="Nombre, email, WhatsApp, tipo o estado">
+        <input
+          id="presupuestosSearch"
+          type="search"
+          class="form-control"
+          formControlName="search"
+          placeholder="Nombre, email, WhatsApp, tipo o estado"
+        />
       </div>
     </form>
 
-    <form *ngIf="editingId" [formGroup]="form" (ngSubmit)="submit()" class="admin-inline-form row g-3 mb-4" novalidate>
-      <div class="col-12">
-        <small class="app-kicker">Editar solicitud</small>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresNombre">Nombre</label>
-        <input id="adminPresNombre" type="text" class="form-control" formControlName="nombre">
-        <small *ngIf="showError('nombre')" class="text-danger">El nombre es requerido.</small>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresEmail">Email</label>
-        <input id="adminPresEmail" type="email" class="form-control" formControlName="email">
-        <small *ngIf="showError('email')" class="text-danger">Ingresá un email válido.</small>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresWhatsapp">WhatsApp</label>
-        <input id="adminPresWhatsapp" type="tel" class="form-control" formControlName="whatsApp">
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresTipo">Tipo evento</label>
-        <input id="adminPresTipo" type="text" class="form-control" formControlName="tipoEvento">
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresFecha">Fecha tentativa</label>
-        <input id="adminPresFecha" type="date" class="form-control" formControlName="fechaTentativa">
-      </div>
-      <div class="col-md-4">
-        <label class="form-label" for="adminPresInvitados">Invitados</label>
-        <input id="adminPresInvitados" type="number" min="1" class="form-control" formControlName="cantidadInvitados">
-        <small *ngIf="showError('cantidadInvitados')" class="text-danger">Debe ser mayor a 0.</small>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label" for="adminPresLugar">Lugar</label>
-        <input id="adminPresLugar" type="text" class="form-control" formControlName="lugar">
-      </div>
-      <div class="col-md-3">
-        <label class="form-label" for="adminPresEstado">Estado</label>
-        <select id="adminPresEstado" class="form-select" formControlName="estado">
-          <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-        </select>
-      </div>
-      <div class="col-md-3 d-flex align-items-end">
-        <label class="form-check mb-2">
-          <input type="checkbox" class="form-check-input" formControlName="activa">
-          <span class="form-check-label">Activa</span>
-        </label>
-      </div>
-      <div class="col-12">
-        <label class="form-label" for="adminPresMensaje">Mensaje</label>
-        <textarea id="adminPresMensaje" rows="3" class="form-control" formControlName="mensaje"></textarea>
-        <small *ngIf="showError('mensaje')" class="text-danger">El mensaje es requerido.</small>
-      </div>
-      <div class="col-12 app-actions">
-        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
-          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
-          Guardar cambios
-        </button>
-        <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">Cancelar</button>
-      </div>
-    </form>
+    @if (editingId) {
+      <form
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+        class="admin-inline-form row g-3 mb-4"
+        novalidate
+      >
+        <div class="col-12">
+          <small class="app-kicker">Editar solicitud</small>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresNombre">Nombre</label>
+          <input id="adminPresNombre" type="text" class="form-control" formControlName="nombre" />
+          @if (showError('nombre')) {
+            <small class="text-danger">El nombre es requerido.</small>
+          }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresEmail">Email</label>
+          <input id="adminPresEmail" type="email" class="form-control" formControlName="email" />
+          @if (showError('email')) {
+            <small class="text-danger">Ingresá un email válido.</small>
+          }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresWhatsapp">WhatsApp</label>
+          <input
+            id="adminPresWhatsapp"
+            type="tel"
+            class="form-control"
+            formControlName="whatsApp"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresTipo">Tipo evento</label>
+          <input id="adminPresTipo" type="text" class="form-control" formControlName="tipoEvento" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresFecha">Fecha tentativa</label>
+          <input
+            id="adminPresFecha"
+            type="date"
+            class="form-control"
+            formControlName="fechaTentativa"
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="adminPresInvitados">Invitados</label>
+          <input
+            id="adminPresInvitados"
+            type="number"
+            min="1"
+            class="form-control"
+            formControlName="cantidadInvitados"
+          />
+          @if (showError('cantidadInvitados')) {
+            <small class="text-danger">Debe ser mayor a 0.</small>
+          }
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="adminPresLugar">Lugar</label>
+          <input id="adminPresLugar" type="text" class="form-control" formControlName="lugar" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label" for="adminPresEstado">Estado</label>
+          <select id="adminPresEstado" class="form-select" formControlName="estado">
+            @for (estado of estados; track estado) {
+              <option [value]="estado">{{ estado }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <label class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" formControlName="activa" />
+            <span class="form-check-label">Activa</span>
+          </label>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="adminPresMensaje">Mensaje</label>
+          <textarea
+            id="adminPresMensaje"
+            rows="3"
+            class="form-control"
+            formControlName="mensaje"
+          ></textarea>
+          @if (showError('mensaje')) {
+            <small class="text-danger">El mensaje es requerido.</small>
+          }
+        </div>
+        <div class="col-12 app-actions">
+          <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+            @if (saving) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Guardar cambios
+          </button>
+          <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    }
 
-    <app-loading *ngIf="loading" text="Cargando presupuestos..."></app-loading>
-    <app-empty-state *ngIf="!loading && filteredSolicitudes.length === 0" text="No hay solicitudes para mostrar."></app-empty-state>
+    @if (loading) {
+      <app-loading text="Cargando presupuestos..."></app-loading>
+    }
+    @if (!loading && filteredSolicitudes.length === 0) {
+      <app-empty-state text="No hay solicitudes para mostrar."></app-empty-state>
+    }
 
-    <div class="table-responsive" *ngIf="!loading && filteredSolicitudes.length > 0">
-      <table class="table table-hover align-middle admin-wide-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>WhatsApp</th>
-            <th>Tipo</th>
-            <th>Servicio</th>
-            <th>Fecha</th>
-            <th>Lugar</th>
-            <th>Invitados</th>
-            <th>Estado</th>
-            <th>Activa</th>
-            <th>Creacion</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of filteredSolicitudes; trackBy: trackById">
-            <td class="text-break">{{ item.nombre }}</td>
-            <td class="text-break">{{ item.email }}</td>
-            <td>{{ item.whatsApp || '-' }}</td>
-            <td>{{ item.tipoEvento || '-' }}</td>
-            <td>{{ item.servicioNombre || '-' }}</td>
-            <td>{{ item.fechaTentativaUtc ? (item.fechaTentativaUtc | date:'shortDate') : '-' }}</td>
-            <td class="text-break">{{ item.lugar || '-' }}</td>
-            <td>{{ item.cantidadInvitados ?? '-' }}</td>
-            <td><span class="badge" [ngClass]="estadoClass(item.estado)">{{ item.estado || 'Nuevo' }}</span></td>
-            <td><span class="badge" [ngClass]="item.activa === false ? 'bg-secondary' : 'bg-success'">{{ item.activa === false ? 'Inactiva' : 'Activa' }}</span></td>
-            <td>{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date:'short') : '-' }}</td>
-            <td>
-              <div class="app-actions">
-                <a *ngIf="item.id" [routerLink]="['/admin/presupuestos', item.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver</a>
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="edit(item)">Editar</button>
-                <select class="form-select form-select-sm admin-status-select" [value]="item.estado || 'Nuevo'" (change)="cambiarEstado(item, $event)">
-                  <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-                </select>
-                <a *ngIf="whatsAppLink(item.whatsApp)" [href]="whatsAppLink(item.whatsApp)" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success rounded-pill">WhatsApp</a>
-                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="desactivar(item)">Cerrar</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (!loading && filteredSolicitudes.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle admin-wide-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>WhatsApp</th>
+              <th>Tipo</th>
+              <th>Servicio</th>
+              <th>Fecha</th>
+              <th>Lugar</th>
+              <th>Invitados</th>
+              <th>Estado</th>
+              <th>Activa</th>
+              <th>Creacion</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredSolicitudes; track trackById($index, item)) {
+              <tr>
+                <td class="text-break">{{ item.nombre }}</td>
+                <td class="text-break">{{ item.email }}</td>
+                <td>{{ item.whatsApp || '-' }}</td>
+                <td>{{ item.tipoEvento || '-' }}</td>
+                <td>{{ item.servicioNombre || '-' }}</td>
+                <td>
+                  {{ item.fechaTentativaUtc ? (item.fechaTentativaUtc | date: 'shortDate') : '-' }}
+                </td>
+                <td class="text-break">{{ item.lugar || '-' }}</td>
+                <td>{{ item.cantidadInvitados ?? '-' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="estadoClass(item.estado)">{{
+                    item.estado || 'Nuevo'
+                  }}</span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="item.activa === false ? 'bg-secondary' : 'bg-success'"
+                    >{{ item.activa === false ? 'Inactiva' : 'Activa' }}</span
+                  >
+                </td>
+                <td>{{ item.fechaCreacionUtc ? (item.fechaCreacionUtc | date: 'short') : '-' }}</td>
+                <td>
+                  <div class="app-actions">
+                    @if (item.id) {
+                      <a
+                        [routerLink]="['/admin/presupuestos', item.id]"
+                        class="btn btn-sm btn-outline-primary rounded-pill"
+                        >Ver</a
+                      >
+                    }
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary rounded-pill"
+                      (click)="edit(item)"
+                    >
+                      Editar
+                    </button>
+                    <select
+                      class="form-select form-select-sm admin-status-select"
+                      [value]="item.estado || 'Nuevo'"
+                      (change)="cambiarEstado(item, $event)"
+                    >
+                      @for (estado of estados; track estado) {
+                        <option [value]="estado">{{ estado }}</option>
+                      }
+                    </select>
+                    @if (whatsAppLink(item.whatsApp)) {
+                      <a
+                        [href]="whatsAppLink(item.whatsApp)"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn-sm btn-outline-success rounded-pill"
+                        >WhatsApp</a
+                      >
+                    }
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger rounded-pill"
+                      (click)="desactivar(item)"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </div>
