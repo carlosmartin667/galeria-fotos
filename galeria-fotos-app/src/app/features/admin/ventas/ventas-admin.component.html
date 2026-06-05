@@ -4,43 +4,70 @@
       <small class="app-kicker">Ventas</small>
       <h2 class="h3 mb-0">Resumen comercial</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando resumen comercial..."></app-loading>
+    @if (loading) {
+      <app-loading text="Cargando resumen comercial..."></app-loading>
+    }
 
-    <ng-container *ngIf="!loading">
+    @if (!loading) {
       <div class="app-actions mb-4">
-        <a routerLink="/admin/reportes/ventas" class="btn btn-outline-primary rounded-pill px-4">Reportes de ventas</a>
+        <a routerLink="/admin/reportes/ventas" class="btn btn-outline-primary rounded-pill px-4"
+          >Reportes de ventas</a
+        >
         <a routerLink="/admin/cupones" class="btn btn-outline-primary rounded-pill px-4">Cupones</a>
-        <a routerLink="/admin/promociones" class="btn btn-outline-primary rounded-pill px-4">Promociones</a>
-        <a routerLink="/admin/carritos-abandonados" class="btn btn-outline-primary rounded-pill px-4">Carritos abandonados</a>
+        <a routerLink="/admin/promociones" class="btn btn-outline-primary rounded-pill px-4"
+          >Promociones</a
+        >
+        <a
+          routerLink="/admin/carritos-abandonados"
+          class="btn btn-outline-primary rounded-pill px-4"
+          >Carritos abandonados</a
+        >
       </div>
-
       <div class="admin-metrics-grid mb-4">
-        <article class="dashboard-card admin-dashboard-card" *ngFor="let metric of metrics; trackBy: trackByLabel">
-          <i [class]="metric.icon"></i>
-          <span>{{ metric.label }}</span>
-          <strong *ngIf="metric.currency">{{ metric.value | currency:'USD' }}</strong>
-          <strong *ngIf="metric.percent">{{ metric.value / 100 | percent:'1.0-2' }}</strong>
-          <strong *ngIf="!metric.currency && !metric.percent">{{ metric.value }}</strong>
-        </article>
+        @for (metric of metrics; track trackByLabel($index, metric)) {
+          <article class="dashboard-card admin-dashboard-card">
+            <i [class]="metric.icon"></i>
+            <span>{{ metric.label }}</span>
+            @if (metric.currency) {
+              <strong>{{ metric.value | currency: 'USD' }}</strong>
+            }
+            @if (metric.percent) {
+              <strong>{{ metric.value / 100 | percent: '1.0-2' }}</strong>
+            }
+            @if (!metric.currency && !metric.percent) {
+              <strong>{{ metric.value }}</strong>
+            }
+          </article>
+        }
       </div>
-
       <div class="row g-4">
-        <section class="col-xl-3 col-md-6" *ngFor="let group of topGroups; trackBy: trackByTitle">
-          <div class="historial-section h-100">
-            <h3 class="h5 mb-3">{{ group.title }}</h3>
-            <article class="historial-item" *ngFor="let item of group.items; trackBy: trackByProduct">
-              <strong>{{ productName(item) }}</strong>
-              <span>{{ item.cantidad ?? 0 }} ventas - {{ productTotal(item) | currency:'USD' }}</span>
-            </article>
-            <app-empty-state *ngIf="group.items.length === 0" text="Sin registros."></app-empty-state>
-          </div>
-        </section>
+        @for (group of topGroups; track trackByTitle($index, group)) {
+          <section class="col-xl-3 col-md-6">
+            <div class="historial-section h-100">
+              <h3 class="h5 mb-3">{{ group.title }}</h3>
+              @for (item of group.items; track trackByProduct($index, item)) {
+                <article class="historial-item">
+                  <strong>{{ productName(item) }}</strong>
+                  <span
+                    >{{ item.cantidad ?? 0 }} ventas -
+                    {{ productTotal(item) | currency: 'USD' }}</span
+                  >
+                </article>
+              }
+              @if (group.items.length === 0) {
+                <app-empty-state text="Sin registros."></app-empty-state>
+              }
+            </div>
+          </section>
+        }
       </div>
-    </ng-container>
+    }
   </div>
 </div>

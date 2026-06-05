@@ -4,22 +4,30 @@
       <small class="app-kicker">Agenda</small>
       <h2 class="h4 mb-0">{{ title }}</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" aria-label="Actualizar disponibilidad publica" (click)="load()">Actualizar</button>
   </div>
 
   <app-error-alert [message]="error"></app-error-alert>
-  <app-loading *ngIf="loading" text="Cargando disponibilidad..."></app-loading>
+  @if (loading) {
+    <app-loading text="Cargando disponibilidad..."></app-loading>
+  }
 
-  <app-empty-state *ngIf="!loading && items.length === 0" text="No hay fechas ocupadas proximas publicadas."></app-empty-state>
+  @if (!loading && items.length === 0) {
+    <app-empty-state text="No hay fechas ocupadas proximas publicadas."></app-empty-state>
+  }
 
-  <div class="public-availability-list" *ngIf="!loading && items.length > 0">
-    <article class="public-availability-item" *ngFor="let item of items; trackBy: trackByDate">
-      <i class="fas fa-calendar-check"></i>
-      <div>
-        <strong>{{ item.fechaInicioUtc | date:'mediumDate' }}</strong>
-        <span>{{ item.fechaInicioUtc | date:'shortTime' }} - {{ item.fechaFinUtc | date:'shortTime' }}</span>
-      </div>
-      <span class="badge bg-warning text-dark">{{ item.tipo || 'Ocupado' }}</span>
-    </article>
-  </div>
+  @if (!loading && items.length > 0) {
+    <div class="public-availability-list">
+      @for (item of items; track trackByDate($index, item)) {
+        <article class="public-availability-item">
+          <i class="fas fa-calendar-check" aria-hidden="true"></i>
+          <div>
+            <strong>{{ item.fechaInicioUtc | date:'mediumDate' }}</strong>
+            <span>{{ item.fechaInicioUtc | date:'shortTime' }} - {{ item.fechaFinUtc | date:'shortTime' }}</span>
+          </div>
+          <span class="badge bg-warning text-dark">{{ item.tipo || 'Ocupado' }}</span>
+        </article>
+      }
+    </div>
+  }
 </div>

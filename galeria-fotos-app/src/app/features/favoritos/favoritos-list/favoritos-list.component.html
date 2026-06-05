@@ -4,91 +4,165 @@
       <small class="app-kicker">Favoritos</small>
       <h2 class="h3 mb-0">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
 
     <div class="row g-4">
       <section class="col-lg-6" id="eventos-favoritos">
         <h3 class="h5 mb-3">Eventos favoritos</h3>
         <div class="mb-3">
           <label class="form-label" for="favoritosEventosSearch">Buscar eventos</label>
-          <input id="favoritosEventosSearch" type="search" class="form-control" [(ngModel)]="eventosSearch" placeholder="Evento, ID o fecha">
+          <input
+            id="favoritosEventosSearch"
+            type="search"
+            class="form-control"
+            [(ngModel)]="eventosSearch"
+            placeholder="Evento, ID o fecha"
+          />
         </div>
         <app-error-alert [message]="eventosError"></app-error-alert>
-        <app-loading *ngIf="eventosLoading"></app-loading>
-        <app-empty-state *ngIf="!eventosLoading && filteredEventos.length === 0" text="No hay eventos favoritos."></app-empty-state>
+        @if (eventosLoading) {
+          <app-loading></app-loading>
+        }
+        @if (!eventosLoading && filteredEventos.length === 0) {
+          <app-empty-state text="No hay eventos favoritos."></app-empty-state>
+        }
 
-        <div *ngIf="!eventosLoading && filteredEventos.length > 0" class="favorite-list">
-          <article *ngFor="let item of filteredEventos; trackBy: trackEvento" class="favorite-item">
-            <div>
-              <h4 class="h6 mb-1">{{ item.nombreEvento || item.eventoId }}</h4>
-              <p class="app-meta mb-0">{{ item.fechaEventoUtc ? (item.fechaEventoUtc | date:'short') : 'Sin fecha' }}</p>
-            </div>
-            <div class="app-actions">
-              <a [routerLink]="['/eventos', item.eventoId]" class="btn btn-sm btn-outline-primary rounded-pill">Ver</a>
-              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="removeEvento(item.eventoId)">Quitar</button>
-            </div>
-          </article>
-        </div>
+        @if (!eventosLoading && filteredEventos.length > 0) {
+          <div class="favorite-list">
+            @for (item of filteredEventos; track trackEvento($index, item)) {
+              <article class="favorite-item">
+                <div>
+                  <h4 class="h6 mb-1">{{ item.nombreEvento || item.eventoId }}</h4>
+                  <p class="app-meta mb-0">
+                    {{ item.fechaEventoUtc ? (item.fechaEventoUtc | date: 'short') : 'Sin fecha' }}
+                  </p>
+                </div>
+                <div class="app-actions">
+                  <a
+                    [routerLink]="['/eventos', item.eventoId]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Ver</a
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger rounded-pill"
+                    (click)="removeEvento(item.eventoId)"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              </article>
+            }
+          </div>
+        }
 
-        <app-pagination-controls
-          *ngIf="!eventosLoading && eventos.length > 0"
-          [page]="eventosPagination.page"
-          [pageSize]="eventosPagination.pageSize"
-          [all]="eventosPagination.all"
-          [totalItems]="eventosTotalItems"
-          [totalPages]="eventosTotalPages"
-          [hasPreviousPage]="eventosHasPreviousPage"
-          [hasNextPage]="eventosHasNextPage"
-          [disabled]="eventosLoading"
-          (paginationChange)="onEventosPaginationChange($event)">
-        </app-pagination-controls>
+        @if (!eventosLoading && eventos.length > 0) {
+          <app-pagination-controls
+            [page]="eventosPagination.page"
+            [pageSize]="eventosPagination.pageSize"
+            [all]="eventosPagination.all"
+            [totalItems]="eventosTotalItems"
+            [totalPages]="eventosTotalPages"
+            [hasPreviousPage]="eventosHasPreviousPage"
+            [hasNextPage]="eventosHasNextPage"
+            [disabled]="eventosLoading"
+            (paginationChange)="onEventosPaginationChange($event)"
+          >
+          </app-pagination-controls>
+        }
       </section>
 
       <section class="col-lg-6" id="fotos-favoritas">
         <h3 class="h5 mb-3">Fotos favoritas</h3>
         <div class="mb-3">
           <label class="form-label" for="favoritosFotosSearch">Buscar fotos</label>
-          <input id="favoritosFotosSearch" type="search" class="form-control" [(ngModel)]="fotosSearch" placeholder="Archivo, foto ID o evento ID">
+          <input
+            id="favoritosFotosSearch"
+            type="search"
+            class="form-control"
+            [(ngModel)]="fotosSearch"
+            placeholder="Archivo, foto ID o evento ID"
+          />
         </div>
         <app-error-alert [message]="fotosError"></app-error-alert>
-        <app-loading *ngIf="fotosLoading"></app-loading>
-        <app-empty-state *ngIf="!fotosLoading && filteredFotos.length === 0" text="No hay fotos favoritas."></app-empty-state>
+        @if (fotosLoading) {
+          <app-loading></app-loading>
+        }
+        @if (!fotosLoading && filteredFotos.length === 0) {
+          <app-empty-state text="No hay fotos favoritas."></app-empty-state>
+        }
 
-        <div *ngIf="!fotosLoading && filteredFotos.length > 0" class="favorite-list">
-          <article *ngFor="let item of filteredFotos; trackBy: trackFoto" class="favorite-item">
-            <button *ngIf="item.previewUrl" type="button" class="favorite-thumb-button" (click)="openLightbox(item)" [attr.aria-label]="'Ampliar ' + (item.nombreArchivo || item.fotoId)">
-              <img [src]="item.previewUrl" [alt]="item.nombreArchivo || item.fotoId" class="favorite-thumb" loading="lazy">
-              <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
-            </button>
-            <div *ngIf="!item.previewUrl" class="favorite-thumb favorite-thumb-empty"><i class="fas fa-image"></i></div>
-            <div class="flex-grow-1">
-              <h4 class="h6 mb-1 text-break">{{ item.nombreArchivo || item.fotoId }}</h4>
-              <p class="app-meta mb-0">Agregado: {{ item.fechaCreacionUtc | date:'short' }}</p>
-            </div>
-            <div class="app-actions">
-              <a [routerLink]="['/fotos', item.fotoId]" class="btn btn-sm btn-outline-primary rounded-pill">Ver</a>
-              <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="removeFoto(item.fotoId)">Quitar</button>
-            </div>
-          </article>
-        </div>
+        @if (!fotosLoading && filteredFotos.length > 0) {
+          <div class="favorite-list">
+            @for (item of filteredFotos; track trackFoto($index, item)) {
+              <article class="favorite-item">
+                @if (item.previewUrl) {
+                  <button
+                    type="button"
+                    class="favorite-thumb-button"
+                    (click)="openLightbox(item)"
+                    [attr.aria-label]="'Ampliar ' + (item.nombreArchivo || item.fotoId)"
+                  >
+                    <img
+                      [src]="item.previewUrl"
+                      [alt]="item.nombreArchivo || item.fotoId"
+                      class="favorite-thumb"
+                      loading="lazy"
+                    />
+                    <span class="photo-media-overlay"><i class="fas fa-search-plus"></i></span>
+                  </button>
+                }
+                @if (!item.previewUrl) {
+                  <div class="favorite-thumb favorite-thumb-empty">
+                    <i class="fas fa-image"></i>
+                  </div>
+                }
+                <div class="flex-grow-1">
+                  <h4 class="h6 mb-1 text-break">{{ item.nombreArchivo || item.fotoId }}</h4>
+                  <p class="app-meta mb-0">Agregado: {{ item.fechaCreacionUtc | date: 'short' }}</p>
+                </div>
+                <div class="app-actions">
+                  <a
+                    [routerLink]="['/fotos', item.fotoId]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Ver</a
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger rounded-pill"
+                    (click)="removeFoto(item.fotoId)"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              </article>
+            }
+          </div>
+        }
 
-        <app-pagination-controls
-          *ngIf="!fotosLoading && fotos.length > 0"
-          [page]="fotosPagination.page"
-          [pageSize]="fotosPagination.pageSize"
-          [all]="fotosPagination.all"
-          [totalItems]="fotosTotalItems"
-          [totalPages]="fotosTotalPages"
-          [hasPreviousPage]="fotosHasPreviousPage"
-          [hasNextPage]="fotosHasNextPage"
-          [disabled]="fotosLoading"
-          (paginationChange)="onFotosPaginationChange($event)">
-        </app-pagination-controls>
+        @if (!fotosLoading && fotos.length > 0) {
+          <app-pagination-controls
+            [page]="fotosPagination.page"
+            [pageSize]="fotosPagination.pageSize"
+            [all]="fotosPagination.all"
+            [totalItems]="fotosTotalItems"
+            [totalPages]="fotosTotalPages"
+            [hasPreviousPage]="fotosHasPreviousPage"
+            [hasNextPage]="fotosHasNextPage"
+            [disabled]="fotosLoading"
+            (paginationChange)="onFotosPaginationChange($event)"
+          >
+          </app-pagination-controls>
+        }
       </section>
     </div>
   </div>
@@ -98,5 +172,6 @@
   [open]="lightboxOpen"
   [imageUrl]="lightboxImageUrl"
   [title]="lightboxTitle"
-  (closed)="closeLightbox()">
+  (closed)="closeLightbox()"
+>
 </app-image-lightbox>

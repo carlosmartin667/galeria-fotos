@@ -50,6 +50,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'disponibilidad',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'clientes/editar/:id',
     renderMode: RenderMode.Server
   },
@@ -63,6 +67,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'admin/operaciones',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/bitacora',
     renderMode: RenderMode.Server
   },
   {

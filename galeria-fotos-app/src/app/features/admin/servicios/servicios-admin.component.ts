@@ -1,9 +1,12 @@
-import { CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
-import { CrearServicioFotografiaRequest, ServicioFotografia } from '../../../core/models/servicio.models';
+import {
+  CrearServicioFotografiaRequest,
+  ServicioFotografia,
+} from '../../../core/models/servicio.models';
 import { ServiciosService } from '../../../core/services/servicios.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -12,9 +15,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-servicios-admin',
   standalone: true,
-  imports: [CurrencyPipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './servicios-admin.component.html',
-  styleUrl: './servicios-admin.component.css'
+  styleUrl: './servicios-admin.component.css',
 })
 export class ServiciosAdminComponent implements OnInit {
   private readonly serviciosService = inject(ServiciosService);
@@ -37,7 +47,7 @@ export class ServiciosAdminComponent implements OnInit {
     cantidadFotosIncluidas: [0, Validators.min(0)],
     imagenUrl: ['', Validators.maxLength(1000)],
     activo: [true],
-    orden: [0]
+    orden: [0],
   });
 
   ngOnInit(): void {
@@ -49,19 +59,25 @@ export class ServiciosAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.serviciosService.getAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (servicios) => {
-        this.servicios = [...servicios].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar servicios admin.';
-      }
-    });
+    this.serviciosService
+      .getAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (servicios) => {
+          this.servicios = [...servicios].sort(
+            (a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar servicios admin.';
+        },
+      });
   }
 
   edit(item: ServicioFotografia): void {
@@ -77,7 +93,7 @@ export class ServiciosAdminComponent implements OnInit {
       cantidadFotosIncluidas: item.cantidadFotosIncluidas ?? 0,
       imagenUrl: item.imagenUrl ?? '',
       activo: item.activo !== false,
-      orden: item.orden ?? 0
+      orden: item.orden ?? 0,
     });
   }
 
@@ -92,7 +108,7 @@ export class ServiciosAdminComponent implements OnInit {
       cantidadFotosIncluidas: 0,
       imagenUrl: '',
       activo: true,
-      orden: 0
+      orden: 0,
     });
   }
 
@@ -123,7 +139,7 @@ export class ServiciosAdminComponent implements OnInit {
         this.error = error instanceof Error ? error.message : 'No se pudo guardar el servicio.';
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -136,7 +152,7 @@ export class ServiciosAdminComponent implements OnInit {
       next: () => this.load(),
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo eliminar el servicio.';
-      }
+      },
     });
   }
 
@@ -154,12 +170,16 @@ export class ServiciosAdminComponent implements OnInit {
     return {
       nombre: raw.nombre.trim(),
       descripcion: raw.descripcion.trim() || null,
-      precioDesde: raw.precioDesde === null || raw.precioDesde === undefined ? null : Number(raw.precioDesde),
+      precioDesde:
+        raw.precioDesde === null || raw.precioDesde === undefined ? null : Number(raw.precioDesde),
       duracionEstimada: raw.duracionEstimada.trim() || null,
-      cantidadFotosIncluidas: raw.cantidadFotosIncluidas === null || raw.cantidadFotosIncluidas === undefined ? null : Number(raw.cantidadFotosIncluidas),
+      cantidadFotosIncluidas:
+        raw.cantidadFotosIncluidas === null || raw.cantidadFotosIncluidas === undefined
+          ? null
+          : Number(raw.cantidadFotosIncluidas),
       imagenUrl: raw.imagenUrl.trim() || null,
       activo: raw.activo,
-      orden: Number(raw.orden || 0)
+      orden: Number(raw.orden || 0),
     };
   }
 }

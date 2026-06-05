@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -14,9 +14,16 @@ type PromocionControl = 'titulo' | 'tipo' | 'fechaInicio' | 'fechaFin';
 @Component({
   selector: 'app-promociones-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './promociones-admin.component.html',
-  styleUrl: './promociones-admin.component.css'
+  styleUrl: './promociones-admin.component.css',
 })
 export class PromocionesAdminComponent implements OnInit {
   private readonly promocionesService = inject(PromocionesService);
@@ -45,7 +52,7 @@ export class PromocionesAdminComponent implements OnInit {
     orden: [0],
     cuponDescuentoId: [''],
     servicioFotografiaId: [''],
-    eventoId: ['']
+    eventoId: [''],
   });
 
   ngOnInit(): void {
@@ -57,19 +64,23 @@ export class PromocionesAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.promocionesService.getAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.promociones = [...items].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar promociones admin.';
-      }
-    });
+    this.promocionesService
+      .getAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.promociones = [...items].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar promociones admin.';
+        },
+      });
   }
 
   edit(item: Promocion): void {
@@ -90,7 +101,7 @@ export class PromocionesAdminComponent implements OnInit {
       orden: item.orden ?? 0,
       cuponDescuentoId: item.cuponDescuentoId ?? '',
       servicioFotografiaId: item.servicioFotografiaId ?? '',
-      eventoId: item.eventoId ?? ''
+      eventoId: item.eventoId ?? '',
     });
   }
 
@@ -110,7 +121,7 @@ export class PromocionesAdminComponent implements OnInit {
       orden: 0,
       cuponDescuentoId: '',
       servicioFotografiaId: '',
-      eventoId: ''
+      eventoId: '',
     });
   }
 
@@ -131,21 +142,23 @@ export class PromocionesAdminComponent implements OnInit {
       : this.promocionesService.crear(payload);
 
     this.saving = true;
-    request.pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = this.editingId ? 'Promocion actualizada.' : 'Promocion creada.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo guardar la promocion.';
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = this.editingId ? 'Promocion actualizada.' : 'Promocion creada.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo guardar la promocion.';
+        },
+      });
   }
 
   cambiarActivo(item: Promocion): void {
@@ -154,21 +167,29 @@ export class PromocionesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    const request = item.activa === false ? this.promocionesService.activar(item.id) : this.promocionesService.desactivar(item.id);
-    request.pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = item.activa === false ? 'Promocion activada.' : 'Promocion desactivada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cambiar el estado de la promocion.';
-      }
-    });
+    const request =
+      item.activa === false
+        ? this.promocionesService.activar(item.id)
+        : this.promocionesService.desactivar(item.id);
+    request
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = item.activa === false ? 'Promocion activada.' : 'Promocion desactivada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error
+              ? error.message
+              : 'No se pudo cambiar el estado de la promocion.';
+        },
+      });
   }
 
   eliminar(item: Promocion): void {
@@ -177,20 +198,23 @@ export class PromocionesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    this.promocionesService.eliminar(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Promocion eliminada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo eliminar la promocion.';
-      }
-    });
+    this.promocionesService
+      .eliminar(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Promocion eliminada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo eliminar la promocion.';
+        },
+      });
   }
 
   showError(controlName: PromocionControl): boolean {
@@ -216,13 +240,17 @@ export class PromocionesAdminComponent implements OnInit {
       orden: Number(raw.orden || 0),
       cuponDescuentoId: raw.cuponDescuentoId.trim() || null,
       servicioFotografiaId: raw.servicioFotografiaId.trim() || null,
-      eventoId: raw.eventoId.trim() || null
+      eventoId: raw.eventoId.trim() || null,
     };
   }
 
   private validateDates(): string {
     const raw = this.form.getRawValue();
-    if (raw.fechaInicio && raw.fechaFin && new Date(raw.fechaFin).getTime() <= new Date(raw.fechaInicio).getTime()) {
+    if (
+      raw.fechaInicio &&
+      raw.fechaFin &&
+      new Date(raw.fechaFin).getTime() <= new Date(raw.fechaInicio).getTime()
+    ) {
       return 'La fecha fin debe ser mayor a la fecha inicio.';
     }
     return '';

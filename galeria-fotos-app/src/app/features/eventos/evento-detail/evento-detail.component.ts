@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -17,8 +17,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-evento-detail',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './evento-detail.component.html'
+  imports: [
+    DatePipe,
+    NgClass,
+    FormsModule,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
+  templateUrl: './evento-detail.component.html',
 })
 export class EventoDetailComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
@@ -57,22 +65,24 @@ export class EventoDetailComponent implements OnInit {
 
     forkJoin({
       evento: this.eventosService.get(id),
-      comentarios: this.comentariosService.listEvento(id)
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ evento, comentarios }) => {
-        this.evento = evento;
-        this.comentarios = comentarios;
-        this.loadFavoriteState(evento.id);
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+      comentarios: this.comentariosService.listEvento(id),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ evento, comentarios }) => {
+          this.evento = evento;
+          this.comentarios = comentarios;
+          this.loadFavoriteState(evento.id);
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   addComment(): void {
@@ -101,7 +111,7 @@ export class EventoDetailComponent implements OnInit {
         this.error = this.message(error);
         this.savingComment = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -131,7 +141,7 @@ export class EventoDetailComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -145,7 +155,7 @@ export class EventoDetailComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -164,23 +174,33 @@ export class EventoDetailComponent implements OnInit {
       next: () => {
         this.isFavorite = !this.isFavorite;
         this.favoriteLoading = false;
-        this.success = this.isFavorite ? 'Evento guardado en favoritos.' : 'Evento quitado de favoritos.';
+        this.success = this.isFavorite
+          ? 'Evento guardado en favoritos.'
+          : 'Evento quitado de favoritos.';
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         this.error = this.message(error);
         this.favoriteLoading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
   canManageComment(comment: ComentarioResponse): boolean {
-    return this.session.isAdmin || Boolean(this.session.userId && comment.usuarioId === this.session.userId);
+    return (
+      this.session.isAdmin ||
+      Boolean(this.session.userId && comment.usuarioId === this.session.userId)
+    );
   }
 
-  badgeClass(value: string | undefined, kind: 'estado' | 'visibilidad' | 'activo' = 'estado'): string {
-    const normalized = String(value ?? '').trim().toLowerCase();
+  badgeClass(
+    value: string | undefined,
+    kind: 'estado' | 'visibilidad' | 'activo' = 'estado',
+  ): string {
+    const normalized = String(value ?? '')
+      .trim()
+      .toLowerCase();
 
     if (kind === 'activo') {
       return normalized === 'true' ? 'bg-success' : 'bg-secondary';
@@ -222,7 +242,7 @@ export class EventoDetailComponent implements OnInit {
       },
       error: () => {
         this.isFavorite = false;
-      }
+      },
     });
   }
 

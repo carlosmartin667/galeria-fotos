@@ -1,5 +1,12 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -13,9 +20,15 @@ import { LoadingComponent } from '../loading/loading.component';
 @Component({
   selector: 'app-notas-internas',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './notas-internas.component.html',
-  styleUrl: './notas-internas.component.css'
+  styleUrl: './notas-internas.component.css',
 })
 export class NotasInternasComponent implements OnChanges {
   private readonly notasService = inject(NotasInternasService);
@@ -36,7 +49,7 @@ export class NotasInternasComponent implements OnChanges {
 
   readonly form = this.fb.nonNullable.group({
     texto: ['', [Validators.required, Validators.maxLength(2000)]],
-    activa: [true]
+    activa: [true],
   });
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,19 +67,23 @@ export class NotasInternasComponent implements OnChanges {
     this.error = '';
     this.success = '';
 
-    this.notasService.getNotas(this.entidadTipo, this.entidadId).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (notas) => {
-        this.notas = notas;
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar las notas internas.';
-      }
-    });
+    this.notasService
+      .getNotas(this.entidadTipo, this.entidadId)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (notas) => {
+          this.notas = notas;
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar las notas internas.';
+        },
+      });
   }
 
   edit(nota: NotaInterna): void {
@@ -74,7 +91,7 @@ export class NotasInternasComponent implements OnChanges {
     this.submitted = false;
     this.form.patchValue({
       texto: nota.texto,
-      activa: nota.activa !== false
+      activa: nota.activa !== false,
     });
   }
 
@@ -83,7 +100,7 @@ export class NotasInternasComponent implements OnChanges {
     this.submitted = false;
     this.form.reset({
       texto: '',
-      activa: true
+      activa: true,
     });
   }
 
@@ -109,21 +126,24 @@ export class NotasInternasComponent implements OnChanges {
       : this.notasService.crearNota(this.entidadTipo, this.entidadId, { texto });
 
     this.saving = true;
-    request.pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = this.editingId ? 'Nota actualizada.' : 'Nota creada.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo guardar la nota interna.';
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = this.editingId ? 'Nota actualizada.' : 'Nota creada.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo guardar la nota interna.';
+        },
+      });
   }
 
   eliminar(nota: NotaInterna): void {
@@ -137,9 +157,10 @@ export class NotasInternasComponent implements OnChanges {
         this.load();
       },
       error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo eliminar la nota interna.';
+        this.error =
+          error instanceof Error ? error.message : 'No se pudo eliminar la nota interna.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

@@ -12,7 +12,10 @@
       type="button"
       class="app-sidebar-theme"
       (click)="themeService.toggleTheme()"
-      [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      [attr.aria-label]="
+        themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+      "
+    >
       <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
       <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
     </button>
@@ -20,7 +23,9 @@
 
   <nav class="app-menu">
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home publico</a>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Home publico</a
+    >
     <a routerLink="/portfolio" routerLinkActive="active">Portfolio</a>
     <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
     <a routerLink="/promociones" routerLinkActive="active">Promociones</a>
@@ -28,40 +33,117 @@
     <a routerLink="/presupuesto" routerLinkActive="active">Solicitar presupuesto</a>
     <a routerLink="/faq" routerLinkActive="active">FAQ</a>
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/operaciones" routerLinkActive="active">Operaciones</a>
-    <a *ngIf="session.isAdmin" routerLink="/clientes" routerLinkActive="active">Clientes</a>
+    @if (session.isAdmin) {
+      <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/operaciones" routerLinkActive="active">Operaciones</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/bitacora" routerLinkActive="active">Bitacora</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
+    }
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/fotos/bulk" routerLinkActive="active">Carga masiva fotos</a>
-    <a *ngIf="session.isAuthenticated" routerLink="/pedidos" routerLinkActive="active">{{ session.isAdmin ? 'Pedidos' : 'Mis pedidos' }}</a>
-    <a *ngIf="session.isUser" routerLink="/carrito" routerLinkActive="active">Carrito</a>
-    <a *ngIf="session.isAuthenticated" routerLink="/favoritos" routerLinkActive="active">{{ session.isAdmin ? 'Favoritos' : 'Mis favoritos' }}</a>
-    <a *ngIf="session.isAuthenticated" routerLink="/pagos" routerLinkActive="active">Pagos</a>
-    <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/descargas" routerLinkActive="active">Gestion descargas</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/portfolio" routerLinkActive="active">Admin portfolio</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/servicios" routerLinkActive="active">Admin servicios</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/faq" routerLinkActive="active">Admin FAQ</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos" routerLinkActive="active">Presupuestos</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/agenda" routerLinkActive="active">Agenda</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas" routerLinkActive="active">Sesiones privadas</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones" routerLinkActive="active">Notificaciones</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas" routerLinkActive="active">Plantillas notif.</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/ventas" routerLinkActive="active">Resumen ventas</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/cupones" routerLinkActive="active">Cupones</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/promociones" routerLinkActive="active">Admin promociones</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/testimonios" routerLinkActive="active">Admin testimonios</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/carritos-abandonados" routerLinkActive="active">Carritos abandonados</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/reportes/ventas" routerLinkActive="active">Reportes ventas</a>
+    @if (session.isAdmin) {
+      <a routerLink="/admin/fotos/bulk" routerLinkActive="active">Carga masiva fotos</a>
+    }
+    @if (session.isAuthenticated) {
+      <a routerLink="/pedidos" routerLinkActive="active">{{
+        session.isAdmin ? 'Pedidos' : 'Mis pedidos'
+      }}</a>
+    }
+    @if (session.isUser) {
+      <a routerLink="/carrito" routerLinkActive="active">Carrito</a>
+    }
+    @if (session.isAuthenticated) {
+      <a routerLink="/favoritos" routerLinkActive="active">{{
+        session.isAdmin ? 'Favoritos' : 'Mis favoritos'
+      }}</a>
+    }
+    @if (session.isAuthenticated) {
+      <a routerLink="/pagos" routerLinkActive="active">Pagos</a>
+    }
+    @if (session.isUser) {
+      <a routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/descargas" routerLinkActive="active">Gestion descargas</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/portfolio" routerLinkActive="active">Admin portfolio</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/servicios" routerLinkActive="active">Admin servicios</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/faq" routerLinkActive="active">Admin FAQ</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/presupuestos" routerLinkActive="active">Presupuestos</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/agenda" routerLinkActive="active">Agenda</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/sesiones-privadas" routerLinkActive="active">Sesiones privadas</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/notificaciones" routerLinkActive="active">Notificaciones</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/notificaciones/plantillas" routerLinkActive="active"
+        >Plantillas notif.</a
+      >
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/ventas" routerLinkActive="active">Resumen ventas</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/cupones" routerLinkActive="active">Cupones</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/promociones" routerLinkActive="active">Admin promociones</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/testimonios" routerLinkActive="active">Admin testimonios</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/carritos-abandonados" routerLinkActive="active">Carritos abandonados</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/reportes/ventas" routerLinkActive="active">Reportes ventas</a>
+    }
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
-    <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
-    <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
-    <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active">Mi historial</a>
-    <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active">Notificaciones</a>
-    <a *ngIf="!session.isAuthenticated" routerLink="/login" routerLinkActive="active">Iniciar sesion</a>
+    @if (session.isAdmin) {
+      <a routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
+    }
+    @if (session.isAdmin) {
+      <a routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
+    }
+    @if (session.isUser) {
+      <a routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
+    }
+    @if (session.isUser) {
+      <a routerLink="/mi-historial" routerLinkActive="active">Mi historial</a>
+    }
+    @if (session.isUser) {
+      <a routerLink="/notificaciones" routerLinkActive="active">Notificaciones</a>
+    }
+    @if (!session.isAuthenticated) {
+      <a routerLink="/login" routerLinkActive="active">Iniciar sesion</a>
+    }
   </nav>
 
-  <button *ngIf="session.isAuthenticated" type="button" class="btn btn-outline-light rounded-pill mx-4 mt-auto" (click)="logout()">Cerrar sesion</button>
+  @if (session.isAuthenticated) {
+    <button
+      type="button"
+      class="btn btn-outline-light rounded-pill mx-4 mt-auto"
+      (click)="logout()"
+    >
+      Cerrar sesion
+    </button>
+  }
 </aside>

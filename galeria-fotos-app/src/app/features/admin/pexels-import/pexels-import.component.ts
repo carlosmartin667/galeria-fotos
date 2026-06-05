@@ -1,11 +1,14 @@
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Evento } from '../../../core/models/evento.models';
-import { ImportarFotosPexelsRequest, ImportarFotosPexelsResponse } from '../../../core/models/pexels.models';
+import {
+  ImportarFotosPexelsRequest,
+  ImportarFotosPexelsResponse,
+} from '../../../core/models/pexels.models';
 import { AdminService } from '../../../core/services/admin.service';
 import { EventosService } from '../../../core/services/eventos.service';
 import { technicalReference } from '../../../core/utils/sensitive-text';
@@ -16,9 +19,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-pexels-import',
   standalone: true,
-  imports: [CurrencyPipe, NgFor, NgIf, ReactiveFormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    ReactiveFormsModule,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './pexels-import.component.html',
-  styleUrl: './pexels-import.component.css'
+  styleUrl: './pexels-import.component.css',
 })
 export class PexelsImportComponent implements OnInit {
   private readonly adminService = inject(AdminService);
@@ -39,7 +49,7 @@ export class PexelsImportComponent implements OnInit {
     eventoId: ['', Validators.required],
     query: ['', [Validators.required, Validators.maxLength(120)]],
     cantidad: [30, [Validators.required, Validators.min(1), Validators.max(200)]],
-    precioUnitario: [1500, [Validators.required, Validators.min(0)]]
+    precioUnitario: [1500, [Validators.required, Validators.min(0)]],
   });
 
   get selectedEventoId(): string {
@@ -64,19 +74,22 @@ export class PexelsImportComponent implements OnInit {
     this.loadingEventos = true;
     this.error = '';
 
-    this.eventosService.list().pipe(
-      finalize(() => {
-        this.loadingEventos = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (eventos) => {
-        this.eventos = eventos;
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.eventosService
+      .list()
+      .pipe(
+        finalize(() => {
+          this.loadingEventos = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (eventos) => {
+          this.eventos = eventos;
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   submit(): void {
@@ -94,11 +107,12 @@ export class PexelsImportComponent implements OnInit {
       eventoId: this.form.value.eventoId?.trim() ?? '',
       query: this.form.value.query?.trim() ?? '',
       cantidad: Number(this.form.value.cantidad),
-      precioUnitario: Number(this.form.value.precioUnitario)
+      precioUnitario: Number(this.form.value.precioUnitario),
     };
 
     if (!this.isValidRequest(request)) {
-      this.error = 'Revisa los datos: evento y tematica son requeridos, cantidad debe estar entre 1 y 200 y precio unitario debe ser mayor o igual a 0.';
+      this.error =
+        'Revisa los datos: evento y tematica son requeridos, cantidad debe estar entre 1 y 200 y precio unitario debe ser mayor o igual a 0.';
       this.form.markAllAsTouched();
       return;
     }
@@ -111,7 +125,7 @@ export class PexelsImportComponent implements OnInit {
           ...result,
           eventoId: result.eventoId || request.eventoId,
           query: result.query || request.query,
-          cantidadSolicitada: result.cantidadSolicitada ?? request.cantidad
+          cantidadSolicitada: result.cantidadSolicitada ?? request.cantidad,
         };
         this.success = 'Importacion finalizada.';
         this.importing = false;
@@ -121,7 +135,7 @@ export class PexelsImportComponent implements OnInit {
         this.error = this.message(error);
         this.importing = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -134,7 +148,7 @@ export class PexelsImportComponent implements OnInit {
       eventoId: '',
       query: '',
       cantidad: 30,
-      precioUnitario: 1500
+      precioUnitario: 1500,
     });
   }
 
@@ -161,12 +175,14 @@ export class PexelsImportComponent implements OnInit {
   }
 
   private isValidRequest(request: ImportarFotosPexelsRequest): boolean {
-    return Boolean(request.eventoId)
-      && Boolean(request.query)
-      && Number.isFinite(request.cantidad)
-      && request.cantidad >= 1
-      && request.cantidad <= 200
-      && Number.isFinite(request.precioUnitario)
-      && request.precioUnitario >= 0;
+    return (
+      Boolean(request.eventoId) &&
+      Boolean(request.query) &&
+      Number.isFinite(request.cantidad) &&
+      request.cantidad >= 1 &&
+      request.cantidad <= 200 &&
+      Number.isFinite(request.precioUnitario) &&
+      request.precioUnitario >= 0
+    );
   }
 }

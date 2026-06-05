@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -10,9 +9,9 @@ import { NotificationBellComponent } from '../../shared/components/notification-
 @Component({
   selector: 'app-internal-navbar',
   standalone: true,
-  imports: [NgIf, RouterLink, RouterLinkActive, GuestBadgeComponent, NotificationBellComponent],
+  imports: [RouterLink, RouterLinkActive, GuestBadgeComponent, NotificationBellComponent],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class InternalNavbarComponent {
   readonly session = inject(SessionService);

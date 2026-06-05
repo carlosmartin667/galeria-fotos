@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -11,9 +11,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-descarga-detail',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, NgClass, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './descarga-detail.component.html',
-  styleUrl: './descarga-detail.component.css'
+  styleUrl: './descarga-detail.component.css',
 })
 export class DescargaDetailComponent implements OnInit {
   private readonly descargasService = inject(DescargasService);
@@ -46,19 +46,22 @@ export class DescargaDetailComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.descargasService.getDescarga(id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (descarga) => {
-        this.descarga = descarga;
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.descargasService
+      .getDescarga(id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (descarga) => {
+          this.descarga = descarga;
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   regenerar(): void {
@@ -82,7 +85,7 @@ export class DescargaDetailComponent implements OnInit {
         this.error = this.message(error);
         this.regenerating = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -108,21 +111,23 @@ export class DescargaDetailComponent implements OnInit {
   }
 
   limitReached(descarga: Descarga): boolean {
-    return descarga.maxDescargas !== null
-      && descarga.maxDescargas !== undefined
-      && Number(descarga.descargasRealizadas ?? 0) >= Number(descarga.maxDescargas);
+    return (
+      descarga.maxDescargas !== null &&
+      descarga.maxDescargas !== undefined &&
+      Number(descarga.descargasRealizadas ?? 0) >= Number(descarga.maxDescargas)
+    );
   }
 
   statusBadges(descarga: Descarga): Array<{ label: string; className: string }> {
     const badges = [
       {
         label: descarga.activa === false ? 'Inactiva' : 'Activa',
-        className: descarga.activa === false ? 'bg-secondary' : 'bg-success'
+        className: descarga.activa === false ? 'bg-secondary' : 'bg-success',
       },
       {
         label: this.isExpired(descarga) ? 'Vencida' : 'Vigente',
-        className: this.isExpired(descarga) ? 'bg-danger' : 'bg-primary'
-      }
+        className: this.isExpired(descarga) ? 'bg-danger' : 'bg-primary',
+      },
     ];
 
     if (descarga.maxDescargas === null || descarga.maxDescargas === undefined) {
@@ -142,7 +147,7 @@ export class DescargaDetailComponent implements OnInit {
       maxDescargas: response.maxDescargas ?? descarga.maxDescargas,
       descargasRealizadas: response.descargasRealizadas ?? descarga.descargasRealizadas,
       ultimaDescargaUtc: response.ultimaDescargaUtc ?? descarga.ultimaDescargaUtc,
-      activa: true
+      activa: true,
     };
   }
 
@@ -154,7 +159,11 @@ export class DescargaDetailComponent implements OnInit {
       return 'El pedido todavia no esta pagado. Solo se pueden descargar fotos de pedidos pagados.';
     }
 
-    if (normalized.includes('limite') || normalized.includes('limit') || normalized.includes('max')) {
+    if (
+      normalized.includes('limite') ||
+      normalized.includes('limit') ||
+      normalized.includes('max')
+    ) {
       return 'Se alcanzo el limite de descargas permitido para este link.';
     }
 
@@ -162,7 +171,11 @@ export class DescargaDetailComponent implements OnInit {
       return 'El link de descarga esta vencido. Regenera el link para continuar.';
     }
 
-    if (normalized.includes('permiso') || normalized.includes('forbidden') || normalized.includes('403')) {
+    if (
+      normalized.includes('permiso') ||
+      normalized.includes('forbidden') ||
+      normalized.includes('403')
+    ) {
       return 'No tenes permisos para acceder a esta descarga.';
     }
 

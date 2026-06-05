@@ -4,14 +4,20 @@
       <small class="app-kicker">{{ isMiHistorial ? 'Cliente' : 'Admin' }}</small>
       <h2 class="h3 mb-0">{{ isMiHistorial ? 'Mi historial' : 'Historial del cliente' }}</h2>
     </div>
-    <a [routerLink]="session.isAdmin ? '/clientes' : '/dashboard'" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+    <a
+      [routerLink]="session.isAdmin ? '/clientes' : '/dashboard'"
+      class="btn btn-outline-primary rounded-pill px-4"
+      >Volver</a
+    >
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando historial..."></app-loading>
+    @if (loading) {
+      <app-loading text="Cargando historial..."></app-loading>
+    }
 
-    <ng-container *ngIf="!loading && historial as item">
+    @if (!loading && historial; as item) {
       <div class="admin-detail-summary mb-4">
         <div>
           <span>Cliente</span>
@@ -27,7 +33,7 @@
         </div>
         <div>
           <span>Total gastado</span>
-          <strong>{{ totalNumber(['totalGastado']) | currency:'USD' }}</strong>
+          <strong>{{ totalNumber(['totalGastado']) | currency: 'USD' }}</strong>
         </div>
         <div>
           <span>Total descargas</span>
@@ -54,39 +60,50 @@
           <strong>{{ totalText(['ultimaActividadUtc']) }}</strong>
         </div>
       </div>
-
       <div class="historial-tabs mb-4">
-        <button
-          *ngFor="let tab of tabs; trackBy: trackByKey"
-          type="button"
-          class="btn rounded-pill"
-          [class.btn-primary]="activeTab === tab.key"
-          [class.btn-outline-primary]="activeTab !== tab.key"
-          (click)="activeTab = tab.key">
-          {{ tab.label }}
-          <span class="badge bg-light text-dark ms-1">{{ sectionItems(tab.key).length }}</span>
-        </button>
+        @for (tab of tabs; track trackByKey($index, tab)) {
+          <button
+            type="button"
+            class="btn rounded-pill"
+            [class.btn-primary]="activeTab === tab.key"
+            [class.btn-outline-primary]="activeTab !== tab.key"
+            (click)="activeTab = tab.key"
+          >
+            {{ tab.label }}
+            <span class="badge bg-light text-dark ms-1">{{ sectionItems(tab.key).length }}</span>
+          </button>
+        }
       </div>
-
-      <ng-container *ngFor="let tab of tabs; trackBy: trackByKey">
-        <section *ngIf="activeTab === tab.key" class="historial-section">
-          <h3 class="h5 mb-3">{{ tab.label }}</h3>
-          <app-empty-state *ngIf="sectionItems(tab.key).length === 0" text="No hay registros en esta seccion."></app-empty-state>
-          <div class="historial-list" *ngIf="sectionItems(tab.key).length > 0">
-            <article class="historial-item" *ngFor="let row of sectionItems(tab.key); trackBy: trackByIndex">
-              <strong>{{ itemTitle(row) }}</strong>
-              <div class="historial-entry-grid">
-                <div *ngFor="let entry of safeEntries(row)">
-                  <span>{{ entry.key }}</span>
-                  <p>{{ entry.value }}</p>
-                </div>
+      @for (tab of tabs; track trackByKey($index, tab)) {
+        @if (activeTab === tab.key) {
+          <section class="historial-section">
+            <h3 class="h5 mb-3">{{ tab.label }}</h3>
+            @if (sectionItems(tab.key).length === 0) {
+              <app-empty-state text="No hay registros en esta seccion."></app-empty-state>
+            }
+            @if (sectionItems(tab.key).length > 0) {
+              <div class="historial-list">
+                @for (row of sectionItems(tab.key); track row['id'] || row['pedidoId'] || row['eventoId'] || row['fotoId'] || $index) {
+                  <article class="historial-item">
+                    <strong>{{ itemTitle(row) }}</strong>
+                    <div class="historial-entry-grid">
+                      @for (entry of safeEntries(row); track entry) {
+                        <div>
+                          <span>{{ entry.key }}</span>
+                          <p>{{ entry.value }}</p>
+                        </div>
+                      }
+                    </div>
+                  </article>
+                }
               </div>
-            </article>
-          </div>
-        </section>
-      </ng-container>
-
-      <app-notas-internas *ngIf="session.isAdmin && clienteId()" entidadTipo="Cliente" [entidadId]="clienteId()"></app-notas-internas>
-    </ng-container>
+            }
+          </section>
+        }
+      }
+      @if (session.isAdmin && clienteId()) {
+        <app-notas-internas entidadTipo="Cliente" [entidadId]="clienteId()"></app-notas-internas>
+      }
+    }
   </div>
 </div>

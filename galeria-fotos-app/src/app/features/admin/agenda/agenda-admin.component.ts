@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -15,9 +15,17 @@ type AgendaControl = 'titulo' | 'tipo' | 'fechaInicio' | 'fechaFin' | 'estado';
 @Component({
   selector: 'app-agenda-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+    NotasInternasComponent,
+  ],
   templateUrl: './agenda-admin.component.html',
-  styleUrl: './agenda-admin.component.css'
+  styleUrl: './agenda-admin.component.css',
 })
 export class AgendaAdminComponent implements OnInit {
   private readonly agendaService = inject(AgendaService);
@@ -40,7 +48,7 @@ export class AgendaAdminComponent implements OnInit {
     hasta: [''],
     tipo: [''],
     estado: [''],
-    activo: ['all']
+    activo: ['all'],
   });
 
   readonly form = this.fb.group({
@@ -55,7 +63,7 @@ export class AgendaAdminComponent implements OnInit {
     sesionPrivadaId: [''],
     clienteId: [''],
     solicitudPresupuestoId: [''],
-    activo: [true]
+    activo: [true],
   });
 
   ngOnInit(): void {
@@ -68,25 +76,30 @@ export class AgendaAdminComponent implements OnInit {
     this.success = '';
 
     const filters = this.filterForm.getRawValue();
-    this.agendaService.getAgenda({
-      desde: this.toFilterIso(filters.desde, false),
-      hasta: this.toFilterIso(filters.hasta, true),
-      tipo: filters.tipo || null,
-      estado: filters.estado || null,
-      activo: this.activoParam(filters.activo)
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
+    this.agendaService
+      .getAgenda({
+        desde: this.toFilterIso(filters.desde, false),
+        hasta: this.toFilterIso(filters.hasta, true),
+        tipo: filters.tipo || null,
+        estado: filters.estado || null,
+        activo: this.activoParam(filters.activo),
       })
-    ).subscribe({
-      next: (items) => {
-        this.items = [...items].sort((a, b) => new Date(a.fechaInicioUtc).getTime() - new Date(b.fechaInicioUtc).getTime());
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar la agenda.';
-      }
-    });
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.items = [...items].sort(
+            (a, b) => new Date(a.fechaInicioUtc).getTime() - new Date(b.fechaInicioUtc).getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar la agenda.';
+        },
+      });
   }
 
   edit(item: AgendaItem): void {
@@ -107,7 +120,7 @@ export class AgendaAdminComponent implements OnInit {
       sesionPrivadaId: item.sesionPrivadaId ?? '',
       clienteId: item.clienteId ?? '',
       solicitudPresupuestoId: item.solicitudPresupuestoId ?? '',
-      activo: item.activo !== false
+      activo: item.activo !== false,
     });
   }
 
@@ -127,7 +140,7 @@ export class AgendaAdminComponent implements OnInit {
       sesionPrivadaId: '',
       clienteId: '',
       solicitudPresupuestoId: '',
-      activo: true
+      activo: true,
     });
   }
 
@@ -152,21 +165,23 @@ export class AgendaAdminComponent implements OnInit {
       : this.agendaService.crearAgendaItem(payload);
 
     this.saving = true;
-    request.pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = this.editingId ? 'Item de agenda actualizado.' : 'Item de agenda creado.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = this.toAgendaError(error);
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = this.editingId ? 'Item de agenda actualizado.' : 'Item de agenda creado.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = this.toAgendaError(error);
+        },
+      });
   }
 
   desactivar(item: AgendaItem): void {
@@ -182,7 +197,7 @@ export class AgendaAdminComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.toAgendaError(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -192,7 +207,7 @@ export class AgendaAdminComponent implements OnInit {
       hasta: '',
       tipo: '',
       estado: '',
-      activo: 'all'
+      activo: 'all',
     });
     this.load();
   }
@@ -248,7 +263,7 @@ export class AgendaAdminComponent implements OnInit {
       sesionPrivadaId: this.optional(raw.sesionPrivadaId),
       clienteId: this.optional(raw.clienteId),
       solicitudPresupuestoId: this.optional(raw.solicitudPresupuestoId),
-      activo: raw.activo === true
+      activo: raw.activo === true,
     };
   }
 

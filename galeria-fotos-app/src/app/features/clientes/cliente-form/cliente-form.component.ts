@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -12,8 +11,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './cliente-form.component.html'
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './cliente-form.component.html',
 })
 export class ClienteFormComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
@@ -32,7 +31,7 @@ export class ClienteFormComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.maxLength(160)]],
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', Validators.maxLength(64)],
-    documento: ['', Validators.maxLength(64)]
+    documento: ['', Validators.maxLength(64)],
   });
 
   get isEdit(): boolean {
@@ -47,24 +46,27 @@ export class ClienteFormComponent implements OnInit {
     }
 
     this.loading = true;
-    this.clientesService.get(this.id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (cliente) => {
-        this.form.patchValue({
-          nombre: cliente.nombre,
-          email: cliente.email,
-          telefono: cliente.telefono ?? '',
-          documento: cliente.documento ?? ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+    this.clientesService
+      .get(this.id)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (cliente) => {
+          this.form.patchValue({
+            nombre: cliente.nombre,
+            email: cliente.email,
+            telefono: cliente.telefono ?? '',
+            documento: cliente.documento ?? '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   submit(): void {
@@ -81,7 +83,7 @@ export class ClienteFormComponent implements OnInit {
       nombre: raw.nombre.trim(),
       email: raw.email.trim(),
       telefono: raw.telefono.trim() || undefined,
-      documento: raw.documento.trim() || undefined
+      documento: raw.documento.trim() || undefined,
     };
     const request = this.id
       ? this.clientesService.update(this.id, payload)
@@ -94,7 +96,7 @@ export class ClienteFormComponent implements OnInit {
         this.error = this.message(error);
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

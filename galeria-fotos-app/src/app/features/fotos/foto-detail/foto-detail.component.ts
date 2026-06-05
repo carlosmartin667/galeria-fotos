@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -20,8 +20,18 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-foto-detail',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, FormsModule, NgClass, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, ImageLightboxComponent, LoadingComponent],
-  templateUrl: './foto-detail.component.html'
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    FormsModule,
+    NgClass,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    ImageLightboxComponent,
+    LoadingComponent,
+  ],
+  templateUrl: './foto-detail.component.html',
 })
 export class FotoDetailComponent implements OnInit {
   private readonly fotosService = inject(FotosService);
@@ -64,23 +74,25 @@ export class FotoDetailComponent implements OnInit {
 
     forkJoin({
       foto: this.fotosService.get(id),
-      comentarios: this.comentariosService.listFoto(id)
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ foto, comentarios }) => {
-        this.foto = foto;
-        this.comentarios = comentarios;
-        this.loadFavoriteState(foto.id);
-        this.loadEvento(foto.eventoId);
-      },
-      error: (error: unknown) => {
-        this.error = this.message(error);
-      }
-    });
+      comentarios: this.comentariosService.listFoto(id),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ foto, comentarios }) => {
+          this.foto = foto;
+          this.comentarios = comentarios;
+          this.loadFavoriteState(foto.id);
+          this.loadEvento(foto.eventoId);
+        },
+        error: (error: unknown) => {
+          this.error = this.message(error);
+        },
+      });
   }
 
   addComment(): void {
@@ -107,7 +119,7 @@ export class FotoDetailComponent implements OnInit {
         this.error = this.message(error);
         this.savingComment = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -137,7 +149,7 @@ export class FotoDetailComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -151,7 +163,7 @@ export class FotoDetailComponent implements OnInit {
       error: (error: unknown) => {
         this.error = this.message(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -170,14 +182,16 @@ export class FotoDetailComponent implements OnInit {
       next: () => {
         this.isFavorite = !this.isFavorite;
         this.favoriteLoading = false;
-        this.success = this.isFavorite ? 'Foto guardada en favoritos.' : 'Foto quitada de favoritos.';
+        this.success = this.isFavorite
+          ? 'Foto guardada en favoritos.'
+          : 'Foto quitada de favoritos.';
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         this.error = this.message(error);
         this.favoriteLoading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -213,7 +227,7 @@ export class FotoDetailComponent implements OnInit {
         this.error = this.message(error);
         this.coverLoading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -222,7 +236,10 @@ export class FotoDetailComponent implements OnInit {
   }
 
   canManageComment(comment: ComentarioResponse): boolean {
-    return this.session.isAdmin || Boolean(this.session.userId && comment.usuarioId === this.session.userId);
+    return (
+      this.session.isAdmin ||
+      Boolean(this.session.userId && comment.usuarioId === this.session.userId)
+    );
   }
 
   trackByComment(_: number, comment: ComentarioResponse): string {
@@ -242,7 +259,7 @@ export class FotoDetailComponent implements OnInit {
       },
       error: () => {
         this.isFavorite = false;
-      }
+      },
     });
   }
 
@@ -259,7 +276,7 @@ export class FotoDetailComponent implements OnInit {
       },
       error: () => {
         this.evento = null;
-      }
+      },
     });
   }
 

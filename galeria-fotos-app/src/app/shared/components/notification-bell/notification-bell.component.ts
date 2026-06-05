@@ -1,5 +1,6 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -11,13 +12,15 @@ import { redactSensitiveText } from '../../../core/utils/sensitive-text';
 @Component({
   selector: 'app-notification-bell',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink],
+  imports: [DatePipe, NgClass, RouterLink],
   templateUrl: './notification-bell.component.html',
-  styleUrl: './notification-bell.component.css'
+  styleUrl: './notification-bell.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationBellComponent implements OnInit {
   private readonly notificacionesService = inject(NotificacionesService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
   readonly session = inject(SessionService);
 
   notificaciones: Notificacion[] = [];
@@ -48,6 +51,7 @@ export class NotificationBellComponent implements OnInit {
     this.error = '';
 
     this.notificacionesService.getMisNotificaciones().pipe(
+      takeUntilDestroyed(this.destroyRef),
       finalize(() => {
         this.loading = false;
         this.cdr.markForCheck();
@@ -71,7 +75,9 @@ export class NotificationBellComponent implements OnInit {
       return;
     }
 
-    this.notificacionesService.marcarLeida(item.id).subscribe({
+    this.notificacionesService.marcarLeida(item.id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
         this.notificaciones = this.notificaciones.map((current) =>
           current.id === item.id ? { ...current, leida: true, fechaLecturaUtc: new Date().toISOString() } : current
@@ -86,7 +92,9 @@ export class NotificationBellComponent implements OnInit {
   }
 
   marcarTodas(): void {
-    this.notificacionesService.marcarTodasLeidas().subscribe({
+    this.notificacionesService.marcarTodasLeidas().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
         const now = new Date().toISOString();
         this.notificaciones = this.notificaciones.map((item) => ({ ...item, leida: true, fechaLecturaUtc: item.fechaLecturaUtc ?? now }));

@@ -62,6 +62,19 @@ body {
   color: var(--app-text);
 }
 
+:focus-visible {
+  outline: 3px solid var(--app-primary);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+.nav-link:focus-visible,
+.dropdown-item:focus-visible {
+  box-shadow: 0 0 0 .2rem rgba(216, 170, 88, .28);
+}
+
 .dark-theme,
 .dark-theme body {
   color: var(--app-text);

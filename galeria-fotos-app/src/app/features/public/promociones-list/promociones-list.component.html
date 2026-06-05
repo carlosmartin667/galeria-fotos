@@ -3,39 +3,69 @@
     <div class="public-section-head">
       <small class="app-kicker">Promociones</small>
       <h1 class="h2 mb-0">Beneficios vigentes</h1>
-      <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
+      <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4"
+        >Solicitar presupuesto</a
+      >
     </div>
 
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando promociones..."></app-loading>
-    <app-empty-state *ngIf="!loading && promociones.length === 0" text="No hay promociones publicadas."></app-empty-state>
+    @if (loading) {
+      <app-loading text="Cargando promociones..."></app-loading>
+    }
+    @if (!loading && promociones.length === 0) {
+      <app-empty-state text="No hay promociones publicadas."></app-empty-state>
+    }
 
-    <div class="public-card-grid public-card-grid-3" *ngIf="!loading && promociones.length > 0">
-      <article class="public-card animated fadeIn" *ngFor="let promo of promociones; trackBy: trackById">
-        <img *ngIf="promo.imagenUrl" [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy">
-        <div *ngIf="!promo.imagenUrl" class="public-card-placeholder"><i class="fas fa-tags"></i></div>
-        <div class="public-card-body">
-          <div class="app-badge-row mb-2">
-            <span class="badge bg-primary">{{ promo.tipo || 'Promo' }}</span>
-            <span *ngIf="promo.destacada || promo.destacado" class="badge bg-warning text-dark">Destacada</span>
-          </div>
-          <h2 class="h5">{{ promo.titulo || 'Promocion' }}</h2>
-          <p>{{ promo.descripcion || 'Beneficio disponible por tiempo limitado.' }}</p>
-          <p class="app-meta mb-2">
-            <span *ngIf="promo.fechaInicioUtc">{{ promo.fechaInicioUtc | date:'shortDate' }}</span>
-            <span *ngIf="promo.fechaInicioUtc || promo.fechaFinUtc"> - </span>
-            <span *ngIf="promo.fechaFinUtc">{{ promo.fechaFinUtc | date:'shortDate' }}</span>
-          </p>
-          <div *ngIf="couponCode(promo)" class="promo-code mb-3">
-            <span>Codigo</span>
-            <strong>{{ couponCode(promo) }}</strong>
-          </div>
-          <div class="app-actions">
-            <a [routerLink]="['/promociones', promo.id]" class="btn btn-sm btn-outline-primary rounded-pill">Ver detalle</a>
-            <a [routerLink]="ctaLink(promo)" class="btn btn-sm btn-primary rounded-pill">Quiero esto</a>
-          </div>
-        </div>
-      </article>
-    </div>
+    @if (!loading && promociones.length > 0) {
+      <div class="public-card-grid public-card-grid-3">
+        @for (promo of promociones; track trackById($index, promo)) {
+          <article class="public-card animated fadeIn">
+            @if (promo.imagenUrl) {
+              <img [src]="promo.imagenUrl" [alt]="promo.titulo || 'Promocion'" loading="lazy" />
+            }
+            @if (!promo.imagenUrl) {
+              <div class="public-card-placeholder"><i class="fas fa-tags"></i></div>
+            }
+            <div class="public-card-body">
+              <div class="app-badge-row mb-2">
+                <span class="badge bg-primary">{{ promo.tipo || 'Promo' }}</span>
+                @if (promo.destacada || promo.destacado) {
+                  <span class="badge bg-warning text-dark">Destacada</span>
+                }
+              </div>
+              <h2 class="h5">{{ promo.titulo || 'Promocion' }}</h2>
+              <p>{{ promo.descripcion || 'Beneficio disponible por tiempo limitado.' }}</p>
+              <p class="app-meta mb-2">
+                @if (promo.fechaInicioUtc) {
+                  <span>{{ promo.fechaInicioUtc | date: 'shortDate' }}</span>
+                }
+                @if (promo.fechaInicioUtc || promo.fechaFinUtc) {
+                  <span> - </span>
+                }
+                @if (promo.fechaFinUtc) {
+                  <span>{{ promo.fechaFinUtc | date: 'shortDate' }}</span>
+                }
+              </p>
+              @if (couponCode(promo)) {
+                <div class="promo-code mb-3">
+                  <span>Codigo</span>
+                  <strong>{{ couponCode(promo) }}</strong>
+                </div>
+              }
+              <div class="app-actions">
+                <a
+                  [routerLink]="['/promociones', promo.id]"
+                  class="btn btn-sm btn-outline-primary rounded-pill"
+                  >Ver detalle</a
+                >
+                <a [routerLink]="ctaLink(promo)" class="btn btn-sm btn-primary rounded-pill"
+                  >Quiero esto</a
+                >
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
   </div>
 </section>

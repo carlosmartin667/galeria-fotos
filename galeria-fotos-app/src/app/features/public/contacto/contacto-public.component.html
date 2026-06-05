@@ -1,38 +1,87 @@
 <section class="public-section">
   <div class="container-fluid public-wide-container">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando contacto..."></app-loading>
+    @if (loading) {
+      <app-loading text="Cargando contacto..."></app-loading>
+    }
 
-    <div *ngIf="!loading && contacto as item" class="public-detail-layout">
-      <div>
-        <img *ngIf="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl" [src]="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl || ''" [alt]="nombre" class="public-detail-image" loading="lazy">
-        <div *ngIf="!item.perfil?.bannerUrl && !item.perfil?.fotoPerfilUrl" class="public-detail-placeholder"><i class="fas fa-address-card"></i></div>
+    @if (!loading && contacto; as item) {
+      <div class="public-detail-layout">
+        <div>
+          @if (item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl) {
+            <img
+              [src]="item.perfil?.bannerUrl || item.perfil?.fotoPerfilUrl || ''"
+              [alt]="nombre"
+              class="public-detail-image"
+              loading="lazy"
+            />
+          }
+          @if (!item.perfil?.bannerUrl && !item.perfil?.fotoPerfilUrl) {
+            <div class="public-detail-placeholder"><i class="fas fa-address-card"></i></div>
+          }
+        </div>
+        <div class="public-detail-content">
+          <small class="app-kicker">Contacto</small>
+          <h1 class="display-5">{{ nombre }}</h1>
+          <p class="lead">{{ descripcion }}</p>
+          <div class="public-contact-list">
+            @if (whatsAppUrl) {
+              <a [href]="whatsAppUrl" target="_blank" rel="noopener"
+                ><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a
+              >
+            }
+            @if (email) {
+              <a [href]="'mailto:' + email"
+                ><i class="fas fa-envelope"></i><span>{{ email }}</span></a
+              >
+            }
+            @if (item.instagram || item.perfil?.instagram) {
+              <a
+                [href]="item.instagram || item.perfil?.instagram || ''"
+                target="_blank"
+                rel="noopener"
+                ><i class="fab fa-instagram"></i><span>Instagram</span></a
+              >
+            }
+            @if (item.facebook || item.perfil?.facebook) {
+              <a
+                [href]="item.facebook || item.perfil?.facebook || ''"
+                target="_blank"
+                rel="noopener"
+                ><i class="fab fa-facebook"></i><span>Facebook</span></a
+              >
+            }
+            @if (item.tikTok || item.perfil?.tikTok) {
+              <a [href]="item.tikTok || item.perfil?.tikTok || ''" target="_blank" rel="noopener"
+                ><i class="fab fa-tiktok"></i><span>TikTok</span></a
+              >
+            }
+            @if (item.sitioWeb || item.perfil?.sitioWeb) {
+              <a
+                [href]="item.sitioWeb || item.perfil?.sitioWeb || ''"
+                target="_blank"
+                rel="noopener"
+                ><i class="fas fa-globe"></i><span>Sitio web</span></a
+              >
+            }
+          </div>
+          <div class="app-actions mt-4">
+            <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4"
+              >Solicitar presupuesto</a
+            >
+            <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4"
+              >Ver servicios</a
+            >
+          </div>
+          @if (direccion) {
+            <div class="alert alert-light border mt-4">
+              <strong>Direccion:</strong>
+              <span class="d-block mt-1">{{ direccion }}</span>
+            </div>
+          }
+        </div>
       </div>
-      <div class="public-detail-content">
-        <small class="app-kicker">Contacto</small>
-        <h1 class="display-5">{{ nombre }}</h1>
-        <p class="lead">{{ descripcion }}</p>
-
-        <div class="public-contact-list">
-          <a *ngIf="whatsAppUrl" [href]="whatsAppUrl" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
-          <a *ngIf="email" [href]="'mailto:' + email"><i class="fas fa-envelope"></i><span>{{ email }}</span></a>
-          <a *ngIf="item.instagram || item.perfil?.instagram" [href]="item.instagram || item.perfil?.instagram || ''" target="_blank" rel="noopener"><i class="fab fa-instagram"></i><span>Instagram</span></a>
-          <a *ngIf="item.facebook || item.perfil?.facebook" [href]="item.facebook || item.perfil?.facebook || ''" target="_blank" rel="noopener"><i class="fab fa-facebook"></i><span>Facebook</span></a>
-          <a *ngIf="item.tikTok || item.perfil?.tikTok" [href]="item.tikTok || item.perfil?.tikTok || ''" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i><span>TikTok</span></a>
-          <a *ngIf="item.sitioWeb || item.perfil?.sitioWeb" [href]="item.sitioWeb || item.perfil?.sitioWeb || ''" target="_blank" rel="noopener"><i class="fas fa-globe"></i><span>Sitio web</span></a>
-        </div>
-
-        <div class="app-actions mt-4">
-          <a routerLink="/presupuesto" class="btn btn-primary rounded-pill px-4">Solicitar presupuesto</a>
-          <a routerLink="/servicios" class="btn btn-outline-primary rounded-pill px-4">Ver servicios</a>
-        </div>
-
-        <div *ngIf="direccion" class="alert alert-light border mt-4">
-          <strong>Direccion:</strong>
-          <span class="d-block mt-1">{{ direccion }}</span>
-        </div>
-      </div>
-    </div>
+    }
 
     <div class="mt-5">
       <app-agenda-disponibilidad-publica></app-agenda-disponibilidad-publica>

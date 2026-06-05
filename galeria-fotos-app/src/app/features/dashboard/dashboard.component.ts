@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
@@ -20,8 +19,8 @@ interface SummaryCard {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgFor, NgIf, RouterLink, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './dashboard.component.html'
+  imports: [RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
@@ -48,13 +47,28 @@ export class DashboardComponent implements OnInit {
         { label: 'Operaciones', value: '', link: '/admin/operaciones', icon: 'fas fa-tasks' },
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
-        { label: 'Presupuestos', value: '', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' },
+        {
+          label: 'Presupuestos',
+          value: '',
+          link: '/admin/presupuestos',
+          icon: 'fas fa-file-invoice-dollar',
+        },
         { label: 'Agenda', value: '', link: '/admin/agenda', icon: 'fas fa-calendar-check' },
-        { label: 'Sesiones privadas', value: '', link: '/admin/sesiones-privadas', icon: 'fas fa-camera-retro' },
+        {
+          label: 'Sesiones privadas',
+          value: '',
+          link: '/admin/sesiones-privadas',
+          icon: 'fas fa-camera-retro',
+        },
         { label: 'Notificaciones', value: '', link: '/admin/notificaciones', icon: 'fas fa-bell' },
         { label: 'Ventas', value: '', link: '/admin/ventas', icon: 'fas fa-chart-line' },
-        { label: 'Gestion descargas', value: '', link: '/admin/descargas', icon: 'fas fa-download' },
-        { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' }
+        {
+          label: 'Gestion descargas',
+          value: '',
+          link: '/admin/descargas',
+          icon: 'fas fa-download',
+        },
+        { label: 'Perfil admin', value: '', link: '/admin/mi-perfil', icon: 'fas fa-id-card' },
       ];
     }
 
@@ -63,22 +77,37 @@ export class DashboardComponent implements OnInit {
         { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
         { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
         { label: 'Promociones', value: '', link: '/promociones', icon: 'fas fa-tags' },
-        { label: 'Solicitar presupuesto', value: '', link: '/presupuesto', icon: 'fas fa-file-signature' },
+        {
+          label: 'Solicitar presupuesto',
+          value: '',
+          link: '/presupuesto',
+          icon: 'fas fa-file-signature',
+        },
         { label: 'Carrito', value: '', link: '/carrito', icon: 'fas fa-shopping-cart' },
         { label: 'Mis pedidos', value: '', link: '/pedidos', icon: 'fas fa-shopping-cart' },
         { label: 'Mis descargas', value: '', link: '/descargas', icon: 'fas fa-download' },
         { label: 'Mi historial', value: '', link: '/mi-historial', icon: 'fas fa-history' },
         { label: 'Notificaciones', value: '', link: '/notificaciones', icon: 'fas fa-bell' },
-        { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' }
+        { label: 'Mis favoritos', value: '', link: '/favoritos', icon: 'fas fa-heart' },
       ];
     }
 
     return [
       { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
       { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
-      { label: 'Solicitar presupuesto', value: '', link: '/presupuesto', icon: 'fas fa-file-signature' },
-      { label: 'Perfil publico', value: '', link: '/admin/perfil-publico', icon: 'fas fa-address-card' },
-      { label: 'Iniciar sesion', value: '', link: '/login', icon: 'fas fa-sign-in-alt' }
+      {
+        label: 'Solicitar presupuesto',
+        value: '',
+        link: '/presupuesto',
+        icon: 'fas fa-file-signature',
+      },
+      {
+        label: 'Perfil publico',
+        value: '',
+        link: '/admin/perfil-publico',
+        icon: 'fas fa-address-card',
+      },
+      { label: 'Iniciar sesion', value: '', link: '/login', icon: 'fas fa-sign-in-alt' },
     ];
   }
 
@@ -87,19 +116,27 @@ export class DashboardComponent implements OnInit {
     this.error = '';
 
     forkJoin({
-      clientes: this.session.isAdmin ? this.clientesService.list().pipe(catchError((error: unknown) => this.fallback(error))) : of([]),
-      eventos: this.eventosService.list().pipe(catchError((error: unknown) => this.fallback(error))),
-      pedidos: this.session.isAuthenticated ? this.pedidosService.list().pipe(catchError((error: unknown) => this.fallback(error))) : of([])
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ clientes, eventos, pedidos }) => {
-        this.cards = this.buildCards(clientes.length, eventos.length, pedidos.length);
-      }
-    });
+      clientes: this.session.isAdmin
+        ? this.clientesService.list().pipe(catchError((error: unknown) => this.fallback(error)))
+        : of([]),
+      eventos: this.eventosService
+        .list()
+        .pipe(catchError((error: unknown) => this.fallback(error))),
+      pedidos: this.session.isAuthenticated
+        ? this.pedidosService.list().pipe(catchError((error: unknown) => this.fallback(error)))
+        : of([]),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ clientes, eventos, pedidos }) => {
+          this.cards = this.buildCards(clientes.length, eventos.length, pedidos.length);
+        },
+      });
   }
 
   trackByLabel(_: number, item: SummaryCard): string {
@@ -111,29 +148,79 @@ export class DashboardComponent implements OnInit {
       { label: 'Eventos', value: eventos, link: '/eventos', icon: 'fas fa-calendar-alt' },
       { label: 'Fotos', value: 'Por evento', link: '/fotos/evento', icon: 'fas fa-images' },
       { label: 'Promociones', value: 'Ver', link: '/promociones', icon: 'fas fa-tags' },
-      { label: 'Perfil publico', value: 'Visible', link: '/admin/perfil-publico', icon: 'fas fa-address-card' }
+      {
+        label: 'Perfil publico',
+        value: 'Visible',
+        link: '/admin/perfil-publico',
+        icon: 'fas fa-address-card',
+      },
     ];
 
     if (this.session.isAuthenticated) {
-      cards.push({ label: this.session.isAdmin ? 'Pedidos' : 'Mis pedidos', value: pedidos, link: '/pedidos', icon: 'fas fa-shopping-cart' });
+      cards.push({
+        label: this.session.isAdmin ? 'Pedidos' : 'Mis pedidos',
+        value: pedidos,
+        link: '/pedidos',
+        icon: 'fas fa-shopping-cart',
+      });
       cards.push({
         label: this.session.isAdmin ? 'Gestion descargas' : 'Mis descargas',
         value: 'Ver',
         link: this.session.isAdmin ? '/admin/descargas' : '/descargas',
-        icon: 'fas fa-download'
+        icon: 'fas fa-download',
       });
-      cards.push({ label: this.session.isAdmin ? 'Favoritos' : 'Mis favoritos', value: 'Ver', link: '/favoritos', icon: 'fas fa-heart' });
+      cards.push({
+        label: this.session.isAdmin ? 'Favoritos' : 'Mis favoritos',
+        value: 'Ver',
+        link: '/favoritos',
+        icon: 'fas fa-heart',
+      });
     }
 
     if (this.session.isAdmin) {
-      cards.unshift({ label: 'Clientes', value: clientes, link: '/clientes', icon: 'fas fa-users' });
-      cards.push({ label: 'Operaciones', value: 'Admin', link: '/admin/operaciones', icon: 'fas fa-tasks' });
-      cards.push({ label: 'Presupuestos', value: 'Admin', link: '/admin/presupuestos', icon: 'fas fa-file-invoice-dollar' });
-      cards.push({ label: 'Agenda', value: 'Admin', link: '/admin/agenda', icon: 'fas fa-calendar-check' });
-      cards.push({ label: 'Notificaciones', value: 'Admin', link: '/admin/notificaciones', icon: 'fas fa-bell' });
-      cards.push({ label: 'Ventas', value: 'Admin', link: '/admin/ventas', icon: 'fas fa-chart-line' });
+      cards.unshift({
+        label: 'Clientes',
+        value: clientes,
+        link: '/clientes',
+        icon: 'fas fa-users',
+      });
+      cards.push({
+        label: 'Operaciones',
+        value: 'Admin',
+        link: '/admin/operaciones',
+        icon: 'fas fa-tasks',
+      });
+      cards.push({
+        label: 'Presupuestos',
+        value: 'Admin',
+        link: '/admin/presupuestos',
+        icon: 'fas fa-file-invoice-dollar',
+      });
+      cards.push({
+        label: 'Agenda',
+        value: 'Admin',
+        link: '/admin/agenda',
+        icon: 'fas fa-calendar-check',
+      });
+      cards.push({
+        label: 'Notificaciones',
+        value: 'Admin',
+        link: '/admin/notificaciones',
+        icon: 'fas fa-bell',
+      });
+      cards.push({
+        label: 'Ventas',
+        value: 'Admin',
+        link: '/admin/ventas',
+        icon: 'fas fa-chart-line',
+      });
     } else {
-      cards.push({ label: 'Solicitar presupuesto', value: 'Publico', link: '/presupuesto', icon: 'fas fa-file-signature' });
+      cards.push({
+        label: 'Solicitar presupuesto',
+        value: 'Publico',
+        link: '/presupuesto',
+        icon: 'fas fa-file-signature',
+      });
     }
 
     return cards;

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -9,9 +8,9 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent],
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
   private readonly authService = inject(AuthService);
@@ -27,7 +26,7 @@ export class LoginComponent implements OnInit {
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]]
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   ngOnInit(): void {
@@ -55,7 +54,7 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.error = this.toMessage(error);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

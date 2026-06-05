@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -9,8 +8,8 @@ import { ErrorAlertComponent } from '../../shared/components/error-alert/error-a
 @Component({
   selector: 'app-pagos',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, ErrorAlertComponent],
-  templateUrl: './pagos.component.html'
+  imports: [ReactiveFormsModule, ErrorAlertComponent],
+  templateUrl: './pagos.component.html',
 })
 export class PagosComponent {
   private readonly pagosService = inject(PagosService);
@@ -23,7 +22,7 @@ export class PagosComponent {
   preference: PreferenciaPagoResponse | null = null;
 
   readonly form = this.fb.nonNullable.group({
-    pedidoId: ['', Validators.required]
+    pedidoId: ['', Validators.required],
   });
 
   get checkoutUrl(): string {
@@ -41,17 +40,19 @@ export class PagosComponent {
     }
 
     this.loading = true;
-    this.pagosService.createPreference({ pedidoId: this.form.controls.pedidoId.getRawValue().trim() }).subscribe({
-      next: (preference) => {
-        this.preference = preference;
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo crear la preferencia.';
-        this.loading = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.pagosService
+      .createPreference({ pedidoId: this.form.controls.pedidoId.getRawValue().trim() })
+      .subscribe({
+        next: (preference) => {
+          this.preference = preference;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo crear la preferencia.';
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 }

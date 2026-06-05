@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -14,9 +14,17 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 @Component({
   selector: 'app-notificaciones-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    RouterLink,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './notificaciones-admin.component.html',
-  styleUrl: './notificaciones-admin.component.css'
+  styleUrl: './notificaciones-admin.component.css',
 })
 export class NotificacionesAdminComponent implements OnInit {
   private readonly notificacionesService = inject(NotificacionesService);
@@ -34,7 +42,7 @@ export class NotificacionesAdminComponent implements OnInit {
     canal: [''],
     tipo: [''],
     activa: ['all'],
-    take: [50]
+    take: [50],
   });
 
   ngOnInit(): void {
@@ -47,25 +55,33 @@ export class NotificacionesAdminComponent implements OnInit {
     this.success = '';
     const raw = this.filtros.getRawValue();
 
-    this.notificacionesService.getAdmin({
-      estado: raw.estado || null,
-      canal: raw.canal || null,
-      tipo: raw.tipo || null,
-      activa: this.activaParam(raw.activa),
-      take: Number(raw.take || 50)
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
+    this.notificacionesService
+      .getAdmin({
+        estado: raw.estado || null,
+        canal: raw.canal || null,
+        tipo: raw.tipo || null,
+        activa: this.activaParam(raw.activa),
+        take: Number(raw.take || 50),
       })
-    ).subscribe({
-      next: (items) => {
-        this.notificaciones = [...items].sort((a, b) => new Date(b.fechaCreacionUtc ?? '').getTime() - new Date(a.fechaCreacionUtc ?? '').getTime());
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar notificaciones admin.';
-      }
-    });
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.notificaciones = [...items].sort(
+            (a, b) =>
+              new Date(b.fechaCreacionUtc ?? '').getTime() -
+              new Date(a.fechaCreacionUtc ?? '').getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar notificaciones admin.';
+        },
+      });
   }
 
   reenviar(item: Notificacion): void {
@@ -74,20 +90,24 @@ export class NotificacionesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    this.notificacionesService.reenviar(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Notificacion reenviada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo reenviar la notificacion.';
-      }
-    });
+    this.notificacionesService
+      .reenviar(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Notificacion reenviada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo reenviar la notificacion.';
+        },
+      });
   }
 
   cancelar(item: Notificacion): void {
@@ -96,20 +116,24 @@ export class NotificacionesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    this.notificacionesService.cancelar(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Notificacion cancelada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cancelar la notificacion.';
-      }
-    });
+    this.notificacionesService
+      .cancelar(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Notificacion cancelada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cancelar la notificacion.';
+        },
+      });
   }
 
   text(value: unknown): string {

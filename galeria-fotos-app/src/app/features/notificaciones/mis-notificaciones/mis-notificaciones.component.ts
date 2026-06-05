@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -13,9 +13,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-mis-notificaciones',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './mis-notificaciones.component.html',
-  styleUrl: './mis-notificaciones.component.css'
+  styleUrl: './mis-notificaciones.component.css',
 })
 export class MisNotificacionesComponent implements OnInit {
   private readonly notificacionesService = inject(NotificacionesService);
@@ -31,7 +38,7 @@ export class MisNotificacionesComponent implements OnInit {
     lectura: ['all'],
     canal: [''],
     estado: [''],
-    tipo: ['']
+    tipo: [''],
   });
 
   ngOnInit(): void {
@@ -41,13 +48,16 @@ export class MisNotificacionesComponent implements OnInit {
   get filtered(): Notificacion[] {
     const filtros = this.filtros.getRawValue();
     return this.notificaciones.filter((item) => {
-      const lecturaOk = filtros.lectura === 'all'
-        || (filtros.lectura === 'read' && item.leida === true)
-        || (filtros.lectura === 'unread' && item.leida !== true);
-      return lecturaOk
-        && this.matches(item.canal, filtros.canal)
-        && this.matches(item.estado, filtros.estado)
-        && this.matches(item.tipo, filtros.tipo);
+      const lecturaOk =
+        filtros.lectura === 'all' ||
+        (filtros.lectura === 'read' && item.leida === true) ||
+        (filtros.lectura === 'unread' && item.leida !== true);
+      return (
+        lecturaOk &&
+        this.matches(item.canal, filtros.canal) &&
+        this.matches(item.estado, filtros.estado) &&
+        this.matches(item.tipo, filtros.tipo)
+      );
     });
   }
 
@@ -56,19 +66,27 @@ export class MisNotificacionesComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.notificacionesService.getMisNotificaciones().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.notificaciones = [...items].sort((a, b) => new Date(b.fechaCreacionUtc ?? '').getTime() - new Date(a.fechaCreacionUtc ?? '').getTime());
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar tus notificaciones.';
-      }
-    });
+    this.notificacionesService
+      .getMisNotificaciones()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.notificaciones = [...items].sort(
+            (a, b) =>
+              new Date(b.fechaCreacionUtc ?? '').getTime() -
+              new Date(a.fechaCreacionUtc ?? '').getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar tus notificaciones.';
+        },
+      });
   }
 
   marcarLeida(item: Notificacion): void {
@@ -79,13 +97,15 @@ export class MisNotificacionesComponent implements OnInit {
     this.notificacionesService.marcarLeida(item.id).subscribe({
       next: () => {
         this.success = 'Notificacion marcada como leida.';
-        this.notificaciones = this.notificaciones.map((current) => current.id === item.id ? { ...current, leida: true } : current);
+        this.notificaciones = this.notificaciones.map((current) =>
+          current.id === item.id ? { ...current, leida: true } : current,
+        );
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo marcar como leida.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -97,9 +117,10 @@ export class MisNotificacionesComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron marcar todas como leidas.';
+        this.error =
+          error instanceof Error ? error.message : 'No se pudieron marcar todas como leidas.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

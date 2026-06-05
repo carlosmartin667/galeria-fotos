@@ -6,27 +6,51 @@
     </div>
 
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
 
     <div class="public-form-layout">
       <div>
-        <app-loading *ngIf="loading" text="Cargando testimonios..."></app-loading>
-        <app-empty-state *ngIf="!loading && testimonios.length === 0" text="Todavia no hay testimonios publicados."></app-empty-state>
+        @if (loading) {
+          <app-loading text="Cargando testimonios..."></app-loading>
+        }
+        @if (!loading && testimonios.length === 0) {
+          <app-empty-state text="Todavia no hay testimonios publicados."></app-empty-state>
+        }
 
-        <div class="public-card-grid public-card-grid-3" *ngIf="!loading && testimonios.length > 0">
-          <article class="public-card testimonial-card" *ngFor="let item of testimonios; trackBy: trackById">
-            <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" [alt]="item.nombreCliente || 'Cliente'" loading="lazy">
-            <div *ngIf="!item.imagenUrl" class="public-card-placeholder"><i class="fas fa-user"></i></div>
-            <div class="public-card-body">
-              <div class="testimonial-stars" aria-label="Calificacion">
-                <i *ngFor="let star of stars(item.calificacion); trackBy: trackByStar" class="fas fa-star"></i>
-              </div>
-              <h2 class="h5">{{ item.nombreCliente || 'Cliente' }}</h2>
-              <p>{{ item.texto }}</p>
-              <p class="app-meta mb-0">{{ item.fechaPublicacionUtc ? (item.fechaPublicacionUtc | date:'shortDate') : '' }}</p>
-            </div>
-          </article>
-        </div>
+        @if (!loading && testimonios.length > 0) {
+          <div class="public-card-grid public-card-grid-3">
+            @for (item of testimonios; track trackById($index, item)) {
+              <article class="public-card testimonial-card">
+                @if (item.imagenUrl) {
+                  <img
+                    [src]="item.imagenUrl"
+                    [alt]="item.nombreCliente || 'Cliente'"
+                    loading="lazy"
+                  />
+                }
+                @if (!item.imagenUrl) {
+                  <div class="public-card-placeholder"><i class="fas fa-user"></i></div>
+                }
+                <div class="public-card-body">
+                  <div class="testimonial-stars" aria-label="Calificacion">
+                    @for (star of stars(item.calificacion); track trackByStar($index, star)) {
+                      <i class="fas fa-star"></i>
+                    }
+                  </div>
+                  <h2 class="h5">{{ item.nombreCliente || 'Cliente' }}</h2>
+                  <p>{{ item.texto }}</p>
+                  <p class="app-meta mb-0">
+                    {{
+                      item.fechaPublicacionUtc ? (item.fechaPublicacionUtc | date: 'shortDate') : ''
+                    }}
+                  </p>
+                </div>
+              </article>
+            }
+          </div>
+        }
       </div>
 
       <aside class="app-panel">
@@ -40,31 +64,75 @@
           <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
             <div class="col-12">
               <label class="form-label" for="testNombre">Nombre</label>
-              <input id="testNombre" type="text" class="form-control" formControlName="nombreCliente">
-              <small *ngIf="showError('nombreCliente')" class="text-danger">El nombre es requerido.</small>
+              <input
+                id="testNombre"
+                type="text"
+                class="form-control"
+                formControlName="nombreCliente"
+                autocomplete="name"
+                [attr.aria-invalid]="showError('nombreCliente')"
+                [attr.aria-describedby]="showError('nombreCliente') ? 'testNombreError' : null"
+              />
+              @if (showError('nombreCliente')) {
+                <small id="testNombreError" class="text-danger">El nombre es requerido.</small>
+              }
             </div>
             <div class="col-12">
               <label class="form-label" for="testEmail">Email opcional</label>
-              <input id="testEmail" type="email" class="form-control" formControlName="emailCliente">
-              <small *ngIf="showError('emailCliente')" class="text-danger">Ingresa un email valido.</small>
+              <input
+                id="testEmail"
+                type="email"
+                class="form-control"
+                formControlName="emailCliente"
+                autocomplete="email"
+                [attr.aria-invalid]="showError('emailCliente')"
+                [attr.aria-describedby]="showError('emailCliente') ? 'testEmailError' : null"
+              />
+              @if (showError('emailCliente')) {
+                <small id="testEmailError" class="text-danger">Ingresa un email valido.</small>
+              }
             </div>
             <div class="col-12">
               <label class="form-label" for="testCalificacion">Calificacion</label>
-              <input id="testCalificacion" type="number" min="1" max="5" class="form-control" formControlName="calificacion">
-              <small *ngIf="showError('calificacion')" class="text-danger">La calificacion debe estar entre 1 y 5.</small>
+              <input
+                id="testCalificacion"
+                type="number"
+                min="1"
+                max="5"
+                class="form-control"
+                formControlName="calificacion"
+                [attr.aria-invalid]="showError('calificacion')"
+                [attr.aria-describedby]="showError('calificacion') ? 'testCalificacionError' : null"
+              />
+              @if (showError('calificacion')) {
+                <small id="testCalificacionError" class="text-danger"
+                  >La calificacion debe estar entre 1 y 5.</small
+                >
+              }
             </div>
             <div class="col-12">
               <label class="form-label" for="testImagen">Imagen URL opcional</label>
-              <input id="testImagen" type="url" class="form-control" formControlName="imagenUrl">
+              <input id="testImagen" type="url" class="form-control" formControlName="imagenUrl" />
             </div>
             <div class="col-12">
               <label class="form-label" for="testTexto">Texto</label>
-              <textarea id="testTexto" rows="5" class="form-control" formControlName="texto"></textarea>
-              <small *ngIf="showError('texto')" class="text-danger">El texto es requerido.</small>
+              <textarea
+                id="testTexto"
+                rows="5"
+                class="form-control"
+                formControlName="texto"
+                [attr.aria-invalid]="showError('texto')"
+                [attr.aria-describedby]="showError('texto') ? 'testTextoError' : null"
+              ></textarea>
+              @if (showError('texto')) {
+                <small id="testTextoError" class="text-danger">El texto es requerido.</small>
+              }
             </div>
             <div class="col-12">
               <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="saving">
-                <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                @if (saving) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                }
                 Enviar para aprobacion
               </button>
             </div>

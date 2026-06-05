@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.bitacora-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bitacora-summary-card {
+  min-height: 130px;
+}
+
+.bitacora-table {
+  min-width: 1080px;
+}
+
+.bitacora-row-active {
+  --bs-table-bg: var(--app-soft);
+}
+
+.bitacora-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  color: var(--app-text);
+}
+
+.bitacora-pagination > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--app-muted);
+}
+
+.bitacora-pagination strong {
+  color: var(--app-heading);
+}
+
+.bitacora-detail {
+  position: sticky;
+  top: 18px;
+  padding: 18px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-card);
+  color: var(--app-text);
+  box-shadow: var(--app-card-shadow);
+}
+
+.bitacora-detail-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.bitacora-detail-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.bitacora-detail-grid > div {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.bitacora-detail-grid span,
+.bitacora-metadata-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--app-muted);
+  font-size: .82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.bitacora-detail-grid strong,
+.bitacora-detail-grid p {
+  color: var(--app-heading);
+}
+
+.bitacora-metadata {
+  max-height: 360px;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: var(--app-soft);
+  color: var(--app-text);
+  font-size: .86rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (min-width: 768px) {
+  .bitacora-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .bitacora-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767.98px) {
+  .bitacora-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .bitacora-pagination .app-actions,
+  .bitacora-pagination .btn {
+    width: 100%;
+  }
+
+  .bitacora-detail {
+    position: static;
+  }
+}

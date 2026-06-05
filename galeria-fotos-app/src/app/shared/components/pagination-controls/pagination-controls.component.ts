@@ -1,5 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { PaginationQuery } from '../../../core/models/pagination.models';
@@ -7,9 +6,10 @@ import { PaginationQuery } from '../../../core/models/pagination.models';
 @Component({
   selector: 'app-pagination-controls',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf],
+  imports: [FormsModule],
   templateUrl: './pagination-controls.component.html',
-  styleUrl: './pagination-controls.component.css'
+  styleUrl: './pagination-controls.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationControlsComponent {
   @Input() page = 1;

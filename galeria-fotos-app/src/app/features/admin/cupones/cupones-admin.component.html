@@ -4,152 +4,293 @@
       <small class="app-kicker">Ventas</small>
       <h2 class="h3 mb-0">Cupones</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error || formError"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="admin-inline-form row g-3 mb-4" novalidate>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="admin-inline-form row g-3 mb-4"
+      novalidate
+    >
       <div class="col-md-3">
         <label class="form-label" for="cuponCodigo">Codigo</label>
-        <input id="cuponCodigo" type="text" class="form-control" formControlName="codigo">
-        <small *ngIf="showError('codigo')" class="text-danger">El codigo es requerido.</small>
+        <input id="cuponCodigo" type="text" class="form-control" formControlName="codigo" />
+        @if (showError('codigo')) {
+          <small class="text-danger">El codigo es requerido.</small>
+        }
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponTipo">Tipo</label>
         <select id="cuponTipo" class="form-select" formControlName="tipoDescuento">
-          <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
+          @for (tipo of tipos; track tipo) {
+            <option [value]="tipo">{{ tipo }}</option>
+          }
         </select>
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponValor">Valor</label>
-        <input id="cuponValor" type="number" step="0.01" class="form-control" formControlName="valorDescuento">
+        <input
+          id="cuponValor"
+          type="number"
+          step="0.01"
+          class="form-control"
+          formControlName="valorDescuento"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponMinimo">Minimo compra</label>
-        <input id="cuponMinimo" type="number" step="0.01" class="form-control" formControlName="montoMinimoCompra">
+        <input
+          id="cuponMinimo"
+          type="number"
+          step="0.01"
+          class="form-control"
+          formControlName="montoMinimoCompra"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponMaximo">Max descuento</label>
-        <input id="cuponMaximo" type="number" step="0.01" class="form-control" formControlName="montoMaximoDescuento">
+        <input
+          id="cuponMaximo"
+          type="number"
+          step="0.01"
+          class="form-control"
+          formControlName="montoMaximoDescuento"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponInicio">Fecha inicio</label>
-        <input id="cuponInicio" type="datetime-local" class="form-control" formControlName="fechaInicio">
+        <input
+          id="cuponInicio"
+          type="datetime-local"
+          class="form-control"
+          formControlName="fechaInicio"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponFin">Fecha fin</label>
-        <input id="cuponFin" type="datetime-local" class="form-control" formControlName="fechaFin">
+        <input
+          id="cuponFin"
+          type="datetime-local"
+          class="form-control"
+          formControlName="fechaFin"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponUsos">Usos maximos</label>
-        <input id="cuponUsos" type="number" min="0" class="form-control" formControlName="usosMaximos">
+        <input
+          id="cuponUsos"
+          type="number"
+          min="0"
+          class="form-control"
+          formControlName="usosMaximos"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-label" for="cuponUsosUsuario">Usos por usuario</label>
-        <input id="cuponUsosUsuario" type="number" min="0" class="form-control" formControlName="usosMaximosPorUsuario">
+        <input
+          id="cuponUsosUsuario"
+          type="number"
+          min="0"
+          class="form-control"
+          formControlName="usosMaximosPorUsuario"
+        />
       </div>
       <div class="col-md-9">
         <label class="form-label" for="cuponDescripcion">Descripcion</label>
-        <input id="cuponDescripcion" type="text" class="form-control" formControlName="descripcion">
+        <input
+          id="cuponDescripcion"
+          type="text"
+          class="form-control"
+          formControlName="descripcion"
+        />
       </div>
       <div class="col-md-3">
         <label class="form-check mt-4">
-          <input type="checkbox" class="form-check-input" formControlName="soloPrimerCompra">
+          <input type="checkbox" class="form-check-input" formControlName="soloPrimerCompra" />
           <span class="form-check-label">Solo primera compra</span>
         </label>
       </div>
       <div class="col-md-3">
         <label class="form-check mt-4">
-          <input type="checkbox" class="form-check-input" formControlName="activo">
+          <input type="checkbox" class="form-check-input" formControlName="activo" />
           <span class="form-check-label">Activo</span>
         </label>
       </div>
       <div class="col-12 app-actions">
         <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
-          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          @if (saving) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
           {{ editingId ? 'Guardar cambios' : 'Crear cupon' }}
         </button>
-        <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">Limpiar</button>
+        <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">
+          Limpiar
+        </button>
       </div>
     </form>
 
-    <app-loading *ngIf="loading" text="Cargando cupones..."></app-loading>
-    <app-empty-state *ngIf="!loading && cupones.length === 0" text="No hay cupones."></app-empty-state>
+    @if (loading) {
+      <app-loading text="Cargando cupones..."></app-loading>
+    }
+    @if (!loading && cupones.length === 0) {
+      <app-empty-state text="No hay cupones."></app-empty-state>
+    }
 
-    <div class="table-responsive" *ngIf="!loading && cupones.length > 0">
-      <table class="table table-hover align-middle admin-wide-table">
-        <thead>
-          <tr>
-            <th>Codigo</th>
-            <th>Tipo</th>
-            <th>Valor</th>
-            <th>Minimo</th>
-            <th>Max descuento</th>
-            <th>Vigencia</th>
-            <th>Usos</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of cupones; trackBy: trackById">
-            <td><strong>{{ item.codigo || '-' }}</strong></td>
-            <td><span class="badge" [ngClass]="tipoClass(item.tipoDescuento)">{{ item.tipoDescuento || '-' }}</span></td>
-            <td>{{ item.valorDescuento ?? 0 }}</td>
-            <td>{{ item.montoMinimoCompra !== null && item.montoMinimoCompra !== undefined ? (item.montoMinimoCompra | currency:'USD') : '-' }}</td>
-            <td>{{ item.montoMaximoDescuento !== null && item.montoMaximoDescuento !== undefined ? (item.montoMaximoDescuento | currency:'USD') : '-' }}</td>
-            <td>
-              {{ item.fechaInicioUtc ? (item.fechaInicioUtc | date:'shortDate') : '-' }}
-              /
-              {{ item.fechaFinUtc ? (item.fechaFinUtc | date:'shortDate') : '-' }}
-            </td>
-            <td>{{ item.usosActuales ?? item.usosRealizados ?? 0 }} / {{ item.usosMaximos ?? 'Sin limite' }}</td>
-            <td><span class="badge" [ngClass]="item.activo === false ? 'bg-secondary' : 'bg-success'">{{ item.activo === false ? 'Inactivo' : 'Activo' }}</span></td>
-            <td>
-              <div class="app-actions">
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="edit(item)">Editar</button>
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="actionId === item.id" (click)="verUsos(item)">Usos</button>
-                <button type="button" class="btn btn-sm rounded-pill" [ngClass]="item.activo === false ? 'btn-outline-success' : 'btn-outline-warning'" [disabled]="actionId === item.id" (click)="cambiarActivo(item)">
-                  {{ item.activo === false ? 'Activar' : 'Desactivar' }}
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" [disabled]="actionId === item.id" (click)="eliminar(item)">Eliminar</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <section *ngIf="usosCupon" class="historial-section mt-4">
-      <h3 class="h5 mb-3">Usos de {{ usosCupon.codigo }}</h3>
-      <app-empty-state *ngIf="usos.length === 0" text="Este cupon no tiene usos registrados."></app-empty-state>
-      <div class="table-responsive" *ngIf="usos.length > 0">
-        <table class="table table-hover align-middle">
+    @if (!loading && cupones.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle admin-wide-table">
           <thead>
             <tr>
-              <th>Pedido</th>
-              <th>Cliente</th>
-              <th>Subtotal</th>
-              <th>Descuento</th>
-              <th>Total</th>
-              <th>Fecha</th>
+              <th>Codigo</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Minimo</th>
+              <th>Max descuento</th>
+              <th>Vigencia</th>
+              <th>Usos</th>
+              <th>Estado</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let uso of usos; trackBy: trackById">
-              <td class="text-break">{{ uso.pedidoId || '-' }}</td>
-              <td class="text-break">{{ uso.clienteNombre || uso.clienteEmail || uso.clienteId || '-' }}</td>
-              <td>{{ uso.subtotal ?? 0 | currency:'USD' }}</td>
-              <td>{{ uso.descuentoAplicado ?? 0 | currency:'USD' }}</td>
-              <td>{{ uso.totalFinal ?? 0 | currency:'USD' }}</td>
-              <td>{{ (uso.fechaUsoUtc || uso.fechaCreacionUtc) ? ((uso.fechaUsoUtc || uso.fechaCreacionUtc) | date:'short') : '-' }}</td>
-            </tr>
+            @for (item of cupones; track trackById($index, item)) {
+              <tr>
+                <td>
+                  <strong>{{ item.codigo || '-' }}</strong>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="tipoClass(item.tipoDescuento)">{{
+                    item.tipoDescuento || '-'
+                  }}</span>
+                </td>
+                <td>{{ item.valorDescuento ?? 0 }}</td>
+                <td>
+                  {{
+                    item.montoMinimoCompra !== null && item.montoMinimoCompra !== undefined
+                      ? (item.montoMinimoCompra | currency: 'USD')
+                      : '-'
+                  }}
+                </td>
+                <td>
+                  {{
+                    item.montoMaximoDescuento !== null && item.montoMaximoDescuento !== undefined
+                      ? (item.montoMaximoDescuento | currency: 'USD')
+                      : '-'
+                  }}
+                </td>
+                <td>
+                  {{ item.fechaInicioUtc ? (item.fechaInicioUtc | date: 'shortDate') : '-' }}
+                  /
+                  {{ item.fechaFinUtc ? (item.fechaFinUtc | date: 'shortDate') : '-' }}
+                </td>
+                <td>
+                  {{ item.usosActuales ?? item.usosRealizados ?? 0 }} /
+                  {{ item.usosMaximos ?? 'Sin limite' }}
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="item.activo === false ? 'bg-secondary' : 'bg-success'"
+                    >{{ item.activo === false ? 'Inactivo' : 'Activo' }}</span
+                  >
+                </td>
+                <td>
+                  <div class="app-actions">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary rounded-pill"
+                      (click)="edit(item)"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary rounded-pill"
+                      [disabled]="actionId === item.id"
+                      (click)="verUsos(item)"
+                    >
+                      Usos
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm rounded-pill"
+                      [ngClass]="
+                        item.activo === false ? 'btn-outline-success' : 'btn-outline-warning'
+                      "
+                      [disabled]="actionId === item.id"
+                      (click)="cambiarActivo(item)"
+                    >
+                      {{ item.activo === false ? 'Activar' : 'Desactivar' }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger rounded-pill"
+                      [disabled]="actionId === item.id"
+                      (click)="eliminar(item)"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
-    </section>
+    }
+
+    @if (usosCupon) {
+      <section class="historial-section mt-4">
+        <h3 class="h5 mb-3">Usos de {{ usosCupon.codigo }}</h3>
+        @if (usos.length === 0) {
+          <app-empty-state text="Este cupon no tiene usos registrados."></app-empty-state>
+        }
+        @if (usos.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                  <th>Cliente</th>
+                  <th>Subtotal</th>
+                  <th>Descuento</th>
+                  <th>Total</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (uso of usos; track trackById($index, uso)) {
+                  <tr>
+                    <td class="text-break">{{ uso.pedidoId || '-' }}</td>
+                    <td class="text-break">
+                      {{ uso.clienteNombre || uso.clienteEmail || uso.clienteId || '-' }}
+                    </td>
+                    <td>{{ uso.subtotal ?? 0 | currency: 'USD' }}</td>
+                    <td>{{ uso.descuentoAplicado ?? 0 | currency: 'USD' }}</td>
+                    <td>{{ uso.totalFinal ?? 0 | currency: 'USD' }}</td>
+                    <td>
+                      {{
+                        uso.fechaUsoUtc || uso.fechaCreacionUtc
+                          ? (uso.fechaUsoUtc || uso.fechaCreacionUtc | date: 'short')
+                          : '-'
+                      }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
   </div>
 </div>
