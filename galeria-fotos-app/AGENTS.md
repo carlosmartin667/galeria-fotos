@@ -221,6 +221,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Migrar a `@if`/`@for` solo de forma gradual y en templates simples o tocados; no hacer migraciones masivas.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## DevTools diagnostico frontend
+
+- La pantalla `/admin/dev-tools` es solo `Admin` y consume el modulo backend `DevTools`.
+- DevTools sirve para demo tecnica y validacion controlada de errores HTTP, payloads inesperados, correlationId y bitacora.
+- En Production el backend puede responder 404 para bloquear el modulo; la UI debe mostrar mensaje claro de no disponible.
+- No mostrar DevTools a `Usuario` ni `Invitado`.
+- No guardar resultados DevTools en `localStorage`, sessionStorage ni otro storage del navegador.
+- No loguear payloads ni respuestas DevTools en consola.
+- No renderizar JSON crudo con `json` pipe; sanitizar con `sanitizeMetadata()` o utilidades equivalentes.
+- Redactar tokens, passwords, StorageKey, MarcaAguaStorageKey, URLs firmadas, secretos y metadata sensible fake.
+- No modificar autenticacion, sesion, token, roles ni modo invitado para DevTools.
+- Preservar CaterServ, modo claro/oscuro, responsive y menu Admin agrupado.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
@@ -228,6 +241,7 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
 - Bitacora: `GET /Bitacora`, `GET /Bitacora/{id}`, `GET /Bitacora/resumen`.
+- DevTools: `GET /dev-tools/ping`, `GET /dev-tools/current-user`, `GET /dev-tools/correlation-id`, `GET /dev-tools/errors/bad-request`, `GET /dev-tools/errors/unauthorized`, `GET /dev-tools/errors/forbidden`, `GET /dev-tools/errors/not-found`, `GET /dev-tools/errors/conflict`, `GET /dev-tools/errors/external-dependency`, `GET /dev-tools/errors/internal-controlled`, `GET /dev-tools/errors/throw`, `GET /dev-tools/rate-limit/probe`, `POST /dev-tools/audit/test-entry`, `GET /dev-tools/payloads/null-data`, `GET /dev-tools/payloads/missing-fields`, `GET /dev-tools/payloads/wrong-shape`, `GET /dev-tools/payloads/null-items`, `GET /dev-tools/payloads/invalid-date`, `GET /dev-tools/payloads/sensitive-metadata`, `GET /dev-tools/payloads/empty-list`, `GET /dev-tools/payloads/large-list`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
 - Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.

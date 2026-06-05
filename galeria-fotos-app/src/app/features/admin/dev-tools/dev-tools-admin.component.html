@@ -1,0 +1,186 @@
+<section class="page-section dev-tools-page">
+  <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+    <div>
+      <small class="app-kicker">Admin</small>
+      <h2 class="page-title mb-1">DevTools diagnostico</h2>
+      <p class="app-meta mb-0">
+        Panel interno para validar errores, payloads inesperados, correlationId y auditoria.
+      </p>
+    </div>
+    <span class="badge bg-warning text-dark">Solo Admin</span>
+  </div>
+
+  <div class="alert alert-light border dev-tools-note" role="note">
+    En Production el backend puede responder 404 para todo el modulo. La prueba 401 usa la politica
+    global existente de sesion.
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-xl-8">
+      <div class="row g-4">
+        <section class="col-12">
+          <div class="dev-tools-card">
+            <div class="dev-tools-card-header">
+              <div>
+                <small class="app-kicker">Informacion segura</small>
+                <h3 class="h5 mb-0">Contexto y trazabilidad</h3>
+              </div>
+            </div>
+            <div class="dev-tools-actions">
+              @for (action of infoActions; track trackAction($index, action)) {
+                <button
+                  type="button"
+                  class="btn btn-outline-primary rounded-pill"
+                  [disabled]="loadingKey === action.key"
+                  (click)="runAction(action)"
+                  [attr.aria-label]="'Ejecutar ' + action.label"
+                >
+                  @if (loadingKey === action.key) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ action.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="col-12">
+          <div class="dev-tools-card">
+            <div class="dev-tools-card-header">
+              <div>
+                <small class="app-kicker">Errores HTTP</small>
+                <h3 class="h5 mb-0">Resiliencia y mensajes seguros</h3>
+              </div>
+            </div>
+            <div class="dev-tools-actions">
+              @for (action of errorActions; track trackAction($index, action)) {
+                <button
+                  type="button"
+                  class="btn rounded-pill"
+                  [class.btn-outline-danger]="action.danger"
+                  [class.btn-outline-primary]="!action.danger"
+                  [disabled]="loadingKey === action.key"
+                  (click)="runAction(action)"
+                  [attr.aria-label]="'Ejecutar prueba ' + action.label"
+                >
+                  @if (loadingKey === action.key) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ action.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="col-12">
+          <div class="dev-tools-card">
+            <div class="dev-tools-card-header">
+              <div>
+                <small class="app-kicker">Payloads inesperados</small>
+                <h3 class="h5 mb-0">Contratos defensivos</h3>
+              </div>
+            </div>
+            <div class="dev-tools-actions">
+              @for (action of payloadActions; track trackAction($index, action)) {
+                <button
+                  type="button"
+                  class="btn btn-outline-primary rounded-pill"
+                  [disabled]="loadingKey === action.key"
+                  (click)="runAction(action)"
+                  [attr.aria-label]="'Ejecutar payload ' + action.label"
+                >
+                  @if (loadingKey === action.key) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ action.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="col-12">
+          <div class="dev-tools-card">
+            <div class="dev-tools-card-header">
+              <div>
+                <small class="app-kicker">Auditoria</small>
+                <h3 class="h5 mb-0">Bitacora controlada</h3>
+              </div>
+            </div>
+            <div class="dev-tools-actions">
+              @for (action of auditActions; track trackAction($index, action)) {
+                <button
+                  type="button"
+                  class="btn btn-primary rounded-pill"
+                  [disabled]="loadingKey === action.key"
+                  (click)="runAction(action)"
+                  [attr.aria-label]="'Ejecutar auditoria ' + action.label"
+                >
+                  @if (loadingKey === action.key) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  {{ action.label }}
+                </button>
+              }
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <aside class="col-12 col-xl-4">
+      <section class="dev-tools-result" aria-live="polite" aria-labelledby="devToolsResultTitle">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div>
+            <small class="app-kicker">Resultado</small>
+            <h3 id="devToolsResultTitle" class="h5 mb-0">Ultima prueba</h3>
+          </div>
+          @if (lastResult) {
+            <span [attr.class]="'badge ' + statusClass(lastResult)">HTTP {{ lastResult.status }}</span>
+          }
+        </div>
+
+        @if (!lastResult) {
+          <div class="dev-tools-empty">
+            <i class="fas fa-vial" aria-hidden="true"></i>
+            <p class="mb-0">Selecciona una prueba para ver el resultado sanitizado.</p>
+          </div>
+        }
+
+        @if (lastResult) {
+          <div class="dev-tools-result-body">
+            <dl class="dev-tools-summary">
+              <div>
+                <dt>Endpoint</dt>
+                <dd>{{ lastResult.action.endpoint }}</dd>
+              </div>
+              <div>
+                <dt>Estado</dt>
+                <dd>{{ lastResult.ok ? 'OK' : 'Error controlado' }}</dd>
+              </div>
+              <div>
+                <dt>Mensaje</dt>
+                <dd>{{ lastResult.message }}</dd>
+              </div>
+              @if (lastResult.correlationId) {
+                <div>
+                  <dt>CorrelationId</dt>
+                  <dd class="text-break">{{ lastResult.correlationId }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Fecha</dt>
+                <dd>{{ lastResult.receivedAt | date: 'short' }}</dd>
+              </div>
+            </dl>
+
+            <h4 class="h6 mt-4">Payload sanitizado</h4>
+            <pre class="dev-tools-payload">{{ lastResult.sanitizedPayload }}</pre>
+          </div>
+        }
+      </section>
+    </aside>
+  </div>
+</section>

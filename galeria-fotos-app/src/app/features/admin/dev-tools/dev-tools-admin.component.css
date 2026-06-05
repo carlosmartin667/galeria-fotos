@@ -1,0 +1,116 @@
+.dev-tools-page {
+  width: 100%;
+}
+
+.dev-tools-note {
+  border-radius: 8px;
+  color: var(--app-text, #222);
+}
+
+.dev-tools-card,
+.dev-tools-result {
+  background: var(--app-surface, #fff);
+  border: 1px solid rgba(212, 167, 98, 0.22);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+}
+
+.dev-tools-result {
+  position: sticky;
+  top: 96px;
+}
+
+.dev-tools-card-header {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.dev-tools-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dev-tools-empty {
+  align-items: center;
+  border: 1px dashed rgba(212, 167, 98, 0.45);
+  border-radius: 8px;
+  color: var(--app-muted, #6c757d);
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+}
+
+.dev-tools-empty i {
+  color: var(--bs-primary, #d4a762);
+  font-size: 1.3rem;
+}
+
+.dev-tools-summary {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.dev-tools-summary div {
+  border-bottom: 1px solid rgba(127, 127, 127, 0.16);
+  padding-bottom: 10px;
+}
+
+.dev-tools-summary dt {
+  color: var(--app-muted, #6c757d);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.dev-tools-summary dd {
+  color: var(--app-text, #222);
+  margin: 4px 0 0;
+}
+
+.dev-tools-payload {
+  background: #151922;
+  border: 1px solid rgba(212, 167, 98, 0.3);
+  border-radius: 8px;
+  color: #f5f5f5;
+  font-size: 0.86rem;
+  max-height: 420px;
+  overflow: auto;
+  padding: 16px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+:host-context(.dark-theme) .dev-tools-card,
+:host-context(.dark-theme) .dev-tools-result,
+:host-context(.dark-theme) .dev-tools-note {
+  background: var(--app-surface, #181a20);
+  border-color: rgba(212, 167, 98, 0.28);
+}
+
+:host-context(.dark-theme) .dev-tools-empty {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 1199px) {
+  .dev-tools-result {
+    position: static;
+  }
+}
+
+@media (max-width: 575px) {
+  .dev-tools-card,
+  .dev-tools-result {
+    padding: 18px;
+  }
+
+  .dev-tools-actions .btn {
+    width: 100%;
+  }
+}

@@ -70,6 +70,20 @@ Reglas:
 - No guardar metadata SEO ni respuestas completas en `localStorage` o sessionStorage.
 - No generar robots/sitemap con rutas privadas, Admin, IDs sensibles o URLs firmadas.
 
+## DevTools Admin
+
+`/admin/dev-tools` es una pantalla interna solo para `Admin`.
+
+Reglas:
+
+- Consume exclusivamente endpoints backend `dev-tools` mediante `DevToolsService`.
+- En Production puede recibir 404 porque el backend bloquea el modulo antes de Auth.
+- No guarda resultados en `localStorage`, sessionStorage ni otro storage.
+- No loguea payloads ni errores en consola.
+- No renderiza JSON crudo con `json` pipe.
+- Todo resultado visible pasa por `sanitizeMetadata()` para redactar tokens, passwords, storage keys, URLs firmadas y secretos.
+- La prueba 401 conserva la politica global existente: una respuesta 401 de API puede limpiar sesion desde `AuthInterceptor`.
+
 ## Manejo de Errores
 
 `ApiErrorService` transforma errores HTTP en mensajes seguros para:

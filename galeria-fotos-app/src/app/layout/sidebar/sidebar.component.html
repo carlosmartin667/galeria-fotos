@@ -40,6 +40,9 @@
       <a routerLink="/admin/operaciones" routerLinkActive="active">Operaciones</a>
     }
     @if (session.isAdmin) {
+      <a routerLink="/admin/dev-tools" routerLinkActive="active">DevTools</a>
+    }
+    @if (session.isAdmin) {
       <a routerLink="/admin/bitacora" routerLinkActive="active">Bitacora</a>
     }
     @if (session.isAdmin) {

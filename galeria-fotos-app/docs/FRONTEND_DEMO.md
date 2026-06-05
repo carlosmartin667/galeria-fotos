@@ -62,6 +62,7 @@ En Windows:
 
 - `/admin/dashboard`
 - `/admin/operaciones`
+- `/admin/dev-tools`
 - `/admin/bitacora`
 - `/clientes`
 - `/pedidos`
@@ -96,6 +97,15 @@ En Windows:
 - Filtros: desde, hasta, usuario email, accion, entidad, severidad, correlationId y pageSize.
 - Tabla paginada.
 - Panel de detalle con metadata sanitizada.
+
+## Demo DevTools
+
+- Ruta: `/admin/dev-tools`.
+- Solo Admin.
+- Pruebas visuales de errores HTTP, payloads inesperados, correlationId y auditoria.
+- En Production el backend puede devolver 404 para bloquear el modulo; la pantalla debe mostrarlo como no disponible.
+- Los resultados se muestran sanitizados, sin `json` pipe ni storage del navegador.
+- La prueba 401 usa la politica global existente de sesion del frontend.
 
 ## Checklist Visual
 
