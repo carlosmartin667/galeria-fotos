@@ -58,6 +58,18 @@ Tampoco se deben loguear respuestas completas ni errores con payloads sensibles.
 
 La Bitacora Admin usa `sanitizeMetadata()` para mostrar metadata resumida y segura. Si la metadata es JSON, se parsea y se redactan claves sensibles antes de renderizarla como texto en `<pre>`, no como HTML activo.
 
+## Metadata SEO
+
+La metadata publica se configura con `SeoService`.
+
+Reglas:
+
+- No incluir tokens, StorageKey, MarcaAguaStorageKey, URLs firmadas, secretos ni datos privados en titulos, descripciones u Open Graph.
+- No usar imagenes OG con query params sensibles como `token`, `signature`, `expires`, `storageKey`, `signedUrl` o equivalentes.
+- Si una imagen no es claramente publica, usar el fallback publico de CaterServ.
+- No guardar metadata SEO ni respuestas completas en `localStorage` o sessionStorage.
+- No generar robots/sitemap con rutas privadas, Admin, IDs sensibles o URLs firmadas.
+
 ## Manejo de Errores
 
 `ApiErrorService` transforma errores HTTP en mensajes seguros para:

@@ -25,6 +25,7 @@
             <a routerLink="/promociones" routerLinkActive="active" class="nav-link">Promociones</a>
             <a routerLink="/testimonios" routerLinkActive="active" class="nav-link">Testimonios</a>
             <a routerLink="/presupuesto" routerLinkActive="active" class="nav-link">Presupuesto</a>
+            <a routerLink="/disponibilidad" routerLinkActive="active" class="nav-link">Disponibilidad</a>
             <a routerLink="/faq" routerLinkActive="active" class="nav-link">FAQ</a>
             <a routerLink="/contacto" routerLinkActive="active" class="nav-link">Contacto</a>
             <a routerLink="/eventos" routerLinkActive="active" class="nav-link">Eventos</a>
@@ -78,6 +79,7 @@
             <a routerLink="/promociones">Promociones</a>
             <a routerLink="/testimonios">Testimonios</a>
             <a routerLink="/presupuesto">Solicitar presupuesto</a>
+            <a routerLink="/disponibilidad">Disponibilidad</a>
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
           </div>
@@ -95,6 +97,7 @@
             <a *ngIf="session.isAdmin" routerLink="/admin/dashboard">Dashboard admin</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/ventas">Resumen ventas</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/operaciones">Operaciones</a>
+            <a *ngIf="session.isAdmin" routerLink="/admin/bitacora">Bitacora</a>
             <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones">Notificaciones admin</a>
             <a *ngIf="!session.isAuthenticated" routerLink="/login">Login</a>
           </div>

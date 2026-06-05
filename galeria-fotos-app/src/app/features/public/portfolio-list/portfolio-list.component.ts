@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 
 import { PortfolioItem } from '../../../core/models/portfolio.models';
 import { PortfolioService } from '../../../core/services/portfolio.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
@@ -20,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class PortfolioListComponent implements OnInit {
   private readonly portfolioService = inject(PortfolioService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   items: PortfolioItem[] = [];
@@ -31,6 +33,11 @@ export class PortfolioListComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Portfolio fotografico',
+      description: 'Trabajos fotograficos destacados, eventos y sesiones publicadas por GaleriaFotos.',
+      image: '/assets/caterserv/img/event-1.jpg'
+    });
     this.load();
   }
 

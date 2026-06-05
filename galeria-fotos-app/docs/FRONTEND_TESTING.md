@@ -28,6 +28,11 @@ El proyecto usa el builder de testing de Angular con Vitest. `tsconfig.spec.json
 - `BitacoraService`: verifica endpoints `/Bitacora`, `/Bitacora/{id}` y `/Bitacora/resumen` usando `HttpTestingController`.
 - `sensitive-text`: cubre `sanitizeMetadata()` para evitar tokens, storage keys y URLs firmadas en metadata de bitacora.
 
+## Tests Agregados en Frontend 7C
+
+- `SeoService`: verifica titulo, descripcion, Open Graph y fallback de imagen cuando la URL tiene query params sensibles.
+- `PublicLayoutComponent`: verifica links visibles por rol para Invitado, Usuario y Admin.
+
 ## Que Probar en Services
 
 - Que cada service use el path correcto.

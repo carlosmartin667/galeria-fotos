@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { PreguntaFrecuente } from '../../../core/models/faq.models';
 import { FaqService } from '../../../core/services/faq.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -18,6 +19,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class FaqPublicComponent implements OnInit {
   private readonly faqService = inject(FaqService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   preguntas: PreguntaFrecuente[] = [];
@@ -28,6 +30,11 @@ export class FaqPublicComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Preguntas frecuentes',
+      description: 'Preguntas frecuentes sobre reservas, servicios fotograficos, eventos, compras y descargas de fotos.',
+      image: '/assets/caterserv/img/background-site.jpg'
+    });
     this.loading = true;
 
     this.faqService.getPublicas().pipe(

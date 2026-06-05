@@ -32,14 +32,14 @@
           <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
             <div class="col-md-6">
               <label class="form-label" for="presupuestoNombre">Nombre</label>
-              <input id="presupuestoNombre" type="text" class="form-control" formControlName="nombre" autocomplete="name">
-              <small *ngIf="showError('nombre')" class="text-danger">El nombre es requerido.</small>
+              <input id="presupuestoNombre" type="text" class="form-control" formControlName="nombre" autocomplete="name" [attr.aria-invalid]="showError('nombre')" [attr.aria-describedby]="showError('nombre') ? 'presupuestoNombreError' : null">
+              <small *ngIf="showError('nombre')" id="presupuestoNombreError" class="text-danger">El nombre es requerido.</small>
             </div>
 
             <div class="col-md-6">
               <label class="form-label" for="presupuestoEmail">Email</label>
-              <input id="presupuestoEmail" type="email" class="form-control" formControlName="email" autocomplete="email">
-              <small *ngIf="showError('email')" class="text-danger">Ingresá un email válido.</small>
+              <input id="presupuestoEmail" type="email" class="form-control" formControlName="email" autocomplete="email" [attr.aria-invalid]="showError('email')" [attr.aria-describedby]="showError('email') ? 'presupuestoEmailError' : null">
+              <small *ngIf="showError('email')" id="presupuestoEmailError" class="text-danger">Ingresa un email valido.</small>
             </div>
 
             <div class="col-md-6">
@@ -72,14 +72,14 @@
 
             <div class="col-md-4">
               <label class="form-label" for="presupuestoInvitados">Cantidad invitados</label>
-              <input id="presupuestoInvitados" type="number" min="1" class="form-control" formControlName="cantidadInvitados">
-              <small *ngIf="showError('cantidadInvitados')" class="text-danger">La cantidad debe ser mayor a 0.</small>
+              <input id="presupuestoInvitados" type="number" min="1" class="form-control" formControlName="cantidadInvitados" [attr.aria-invalid]="showError('cantidadInvitados')" [attr.aria-describedby]="showError('cantidadInvitados') ? 'presupuestoInvitadosError' : null">
+              <small *ngIf="showError('cantidadInvitados')" id="presupuestoInvitadosError" class="text-danger">La cantidad debe ser mayor a 0.</small>
             </div>
 
             <div class="col-12">
               <label class="form-label" for="presupuestoMensaje">Mensaje</label>
-              <textarea id="presupuestoMensaje" rows="5" class="form-control" formControlName="mensaje" placeholder="Contame horarios, estilo buscado y cualquier detalle importante."></textarea>
-              <small *ngIf="showError('mensaje')" class="text-danger">El mensaje es requerido.</small>
+              <textarea id="presupuestoMensaje" rows="5" class="form-control" formControlName="mensaje" placeholder="Contame horarios, estilo buscado y cualquier detalle importante." [attr.aria-invalid]="showError('mensaje')" [attr.aria-describedby]="showError('mensaje') ? 'presupuestoMensajeError' : null"></textarea>
+              <small *ngIf="showError('mensaje')" id="presupuestoMensajeError" class="text-danger">El mensaje es requerido.</small>
             </div>
 
             <div class="col-12 app-actions">

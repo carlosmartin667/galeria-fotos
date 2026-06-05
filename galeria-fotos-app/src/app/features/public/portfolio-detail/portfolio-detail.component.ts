@@ -6,6 +6,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { PortfolioItem } from '../../../core/models/portfolio.models';
 import { SitioContacto } from '../../../core/models/sitio-publico.models';
 import { PortfolioService } from '../../../core/services/portfolio.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -20,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class PortfolioDetailComponent implements OnInit {
   private readonly portfolioService = inject(PortfolioService);
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -29,6 +31,12 @@ export class PortfolioDetailComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Detalle de portfolio',
+      description: 'Detalle de un trabajo fotografico publicado en GaleriaFotos.',
+      type: 'article',
+      image: '/assets/caterserv/img/event-2.jpg'
+    });
     const id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {
@@ -49,6 +57,12 @@ export class PortfolioDetailComponent implements OnInit {
       next: ({ item, contacto }) => {
         this.item = item;
         this.contacto = contacto;
+        this.seo.setPublicPage({
+          title: item.titulo || 'Detalle de portfolio',
+          description: item.descripcion || item.categoria || 'Trabajo fotografico publicado en GaleriaFotos.',
+          type: 'article',
+          image: item.imagenUrl
+        });
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cargar el detalle.';

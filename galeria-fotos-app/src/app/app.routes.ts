@@ -62,6 +62,10 @@ export const routes: Routes = [
       {
         path: 'presupuesto',
         loadComponent: () => import('./features/public/presupuesto-solicitud/presupuesto-solicitud.component').then((m) => m.PresupuestoSolicitudComponent)
+      },
+      {
+        path: 'disponibilidad',
+        loadComponent: () => import('./features/public/disponibilidad/disponibilidad-public-page.component').then((m) => m.DisponibilidadPublicPageComponent)
       }
     ]
   },

@@ -208,6 +208,19 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No agregar `console.log` ni `console.error` con datos sensibles.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## Fase 7C SEO, SSR y demo publica
+
+- Las pantallas publicas deben configurar titulo, descripcion y Open Graph/Twitter Card mediante `SeoService` o una abstraccion equivalente.
+- No incluir tokens, StorageKey, MarcaAguaStorageKey, URLs firmadas, query params sensibles ni datos privados en metadata SEO, titulos, descripcion u OG image.
+- Las imagenes OG deben usar assets publicos o URLs publicas seguras; si hay duda, usar fallback publico de CaterServ.
+- Mantener rutas SSR publicas en `app.routes.server.ts`; no agregar rutas admin o privadas a robots/sitemap publicos.
+- La ruta publica `/disponibilidad` puede mostrar disponibilidad simple desde `GET /Agenda/disponibilidad`, sin clientes, ubicaciones privadas ni descripciones internas.
+- No agregar canonical, `robots.txt` ni sitemap definitivo sin dominio final confirmado; si se agregan, deben incluir solo rutas publicas estables.
+- Las rutas publicas no deben mostrar lenguaje de panel interno como "Hola Invitado" ni opciones privadas/admin.
+- Los formularios publicos y de auth deben usar labels claros, `aria-invalid` y `aria-describedby` en errores cuando sea viable.
+- Migrar a `@if`/`@for` solo de forma gradual y en templates simples o tocados; no hacer migraciones masivas.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.

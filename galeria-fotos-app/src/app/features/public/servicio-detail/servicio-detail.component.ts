@@ -6,6 +6,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { SitioContacto } from '../../../core/models/sitio-publico.models';
 import { ServiciosService } from '../../../core/services/servicios.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -20,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class ServicioDetailComponent implements OnInit {
   private readonly serviciosService = inject(ServiciosService);
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -29,6 +31,12 @@ export class ServicioDetailComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Detalle de servicio fotografico',
+      description: 'Informacion de un servicio fotografico disponible en GaleriaFotos.',
+      type: 'article',
+      image: '/assets/caterserv/img/event-4.jpg'
+    });
     const id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {
@@ -49,6 +57,12 @@ export class ServicioDetailComponent implements OnInit {
       next: ({ servicio, contacto }) => {
         this.servicio = servicio;
         this.contacto = contacto;
+        this.seo.setPublicPage({
+          title: servicio.nombre || 'Servicio fotografico',
+          description: servicio.descripcion || 'Servicio fotografico profesional disponible para presupuestar.',
+          type: 'article',
+          image: servicio.imagenUrl
+        });
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cargar el servicio.';

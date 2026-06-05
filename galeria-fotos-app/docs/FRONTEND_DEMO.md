@@ -44,6 +44,7 @@ En Windows:
 - `/faq`
 - `/contacto`
 - `/presupuesto`
+- `/disponibilidad`
 
 ## Demo Usuario/Cliente
 
@@ -104,6 +105,16 @@ En Windows:
 - Sidebar se oculta en mobile menor a 992px.
 - Cards, tablas, formularios y badges se leen en ambos temas.
 - No aparecen storage keys, tokens ni URLs firmadas completas.
+- Las rutas publicas no muestran lenguaje de panel interno como "Hola Invitado".
+
+## Checklist SEO/SSR
+
+- Revisar `title` y `meta[name="description"]` en Home, Portfolio, Servicios, Promociones, Testimonios, FAQ, Contacto, Presupuesto y Disponibilidad.
+- Revisar Open Graph: `og:title`, `og:description`, `og:type`, `og:image` y `og:site_name`.
+- Usar solo imagenes publicas seguras para metadata; nunca URLs firmadas ni query params sensibles.
+- Mantener SSR en rutas publicas registradas en `app.routes.server.ts`.
+- No agregar canonical hasta tener dominio final.
+- No generar `robots.txt` ni sitemap definitivo sin dominio final; cuando se agreguen, deben incluir solo rutas publicas estables y excluir Admin, rutas privadas e IDs sensibles.
 
 ## Estado de Versiones
 

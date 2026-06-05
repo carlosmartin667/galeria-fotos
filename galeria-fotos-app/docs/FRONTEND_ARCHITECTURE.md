@@ -19,9 +19,22 @@ El proyecto ya esta en Angular 21. No se fuerza una alineacion patch de CLI/buil
 
 ## Rutas y Layouts
 
-`app.routes.ts` usa lazy loading con `loadComponent`. El layout publico sirve Home, Portfolio, Servicios, Promociones, Testimonios, FAQ, Contacto y Presupuesto. El layout interno se protege con `authChildGuard` y usa `data.roles` para rutas Admin o Usuario.
+`app.routes.ts` usa lazy loading con `loadComponent`. El layout publico sirve Home, Portfolio, Servicios, Promociones, Testimonios, FAQ, Contacto, Presupuesto y Disponibilidad. El layout interno se protege con `authChildGuard` y usa `data.roles` para rutas Admin o Usuario.
 
-`app.routes.server.ts` declara rutas SSR para pantallas publicas e internas que deben renderizar en servidor. La ruta Admin `/admin/bitacora` tambien queda registrada ahi para mantener consistencia SSR.
+`app.routes.server.ts` declara rutas SSR para pantallas publicas e internas que deben renderizar en servidor. La ruta publica `/disponibilidad` queda incluida. La ruta Admin `/admin/bitacora` tambien queda registrada ahi para mantener consistencia SSR.
+
+## SEO y SSR Publico
+
+`SeoService` centraliza titulo, descripcion, Open Graph y Twitter Card para pantallas publicas. Las paginas publicas usan metadata especifica cuando la API devuelve contenido y fallback seguro cuando no hay datos.
+
+Reglas:
+
+- No usar tokens, StorageKey, MarcaAguaStorageKey, URLs firmadas ni query params sensibles en metadata.
+- No guardar metadata SEO en storage del navegador.
+- Usar una imagen publica segura como fallback para OG image.
+- Mantener metadata dinamica en componentes publicos de detalle cuando depende del contenido cargado.
+- No agregar canonical hasta tener dominio final confirmado.
+- No publicar robots/sitemap con rutas privadas, Admin o IDs sensibles.
 
 ## HTTP y API
 

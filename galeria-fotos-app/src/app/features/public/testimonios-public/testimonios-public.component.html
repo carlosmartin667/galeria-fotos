@@ -40,18 +40,18 @@
           <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
             <div class="col-12">
               <label class="form-label" for="testNombre">Nombre</label>
-              <input id="testNombre" type="text" class="form-control" formControlName="nombreCliente">
-              <small *ngIf="showError('nombreCliente')" class="text-danger">El nombre es requerido.</small>
+              <input id="testNombre" type="text" class="form-control" formControlName="nombreCliente" autocomplete="name" [attr.aria-invalid]="showError('nombreCliente')" [attr.aria-describedby]="showError('nombreCliente') ? 'testNombreError' : null">
+              <small *ngIf="showError('nombreCliente')" id="testNombreError" class="text-danger">El nombre es requerido.</small>
             </div>
             <div class="col-12">
               <label class="form-label" for="testEmail">Email opcional</label>
-              <input id="testEmail" type="email" class="form-control" formControlName="emailCliente">
-              <small *ngIf="showError('emailCliente')" class="text-danger">Ingresa un email valido.</small>
+              <input id="testEmail" type="email" class="form-control" formControlName="emailCliente" autocomplete="email" [attr.aria-invalid]="showError('emailCliente')" [attr.aria-describedby]="showError('emailCliente') ? 'testEmailError' : null">
+              <small *ngIf="showError('emailCliente')" id="testEmailError" class="text-danger">Ingresa un email valido.</small>
             </div>
             <div class="col-12">
               <label class="form-label" for="testCalificacion">Calificacion</label>
-              <input id="testCalificacion" type="number" min="1" max="5" class="form-control" formControlName="calificacion">
-              <small *ngIf="showError('calificacion')" class="text-danger">La calificacion debe estar entre 1 y 5.</small>
+              <input id="testCalificacion" type="number" min="1" max="5" class="form-control" formControlName="calificacion" [attr.aria-invalid]="showError('calificacion')" [attr.aria-describedby]="showError('calificacion') ? 'testCalificacionError' : null">
+              <small *ngIf="showError('calificacion')" id="testCalificacionError" class="text-danger">La calificacion debe estar entre 1 y 5.</small>
             </div>
             <div class="col-12">
               <label class="form-label" for="testImagen">Imagen URL opcional</label>
@@ -59,8 +59,8 @@
             </div>
             <div class="col-12">
               <label class="form-label" for="testTexto">Texto</label>
-              <textarea id="testTexto" rows="5" class="form-control" formControlName="texto"></textarea>
-              <small *ngIf="showError('texto')" class="text-danger">El texto es requerido.</small>
+              <textarea id="testTexto" rows="5" class="form-control" formControlName="texto" [attr.aria-invalid]="showError('texto')" [attr.aria-describedby]="showError('texto') ? 'testTextoError' : null"></textarea>
+              <small *ngIf="showError('texto')" id="testTextoError" class="text-danger">El texto es requerido.</small>
             </div>
             <div class="col-12">
               <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="saving">

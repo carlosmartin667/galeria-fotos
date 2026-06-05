@@ -11,14 +11,14 @@
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <div class="mb-3">
         <label class="form-label" for="loginEmail">Email</label>
-        <input id="loginEmail" type="email" class="form-control" formControlName="email" autocomplete="username">
-        <small *ngIf="showError('email')" class="text-danger">Ingresa un email valido.</small>
+        <input id="loginEmail" type="email" class="form-control" formControlName="email" autocomplete="username" [attr.aria-invalid]="showError('email')" [attr.aria-describedby]="showError('email') ? 'loginEmailError' : null">
+        <small *ngIf="showError('email')" id="loginEmailError" class="text-danger">Ingresa un email valido.</small>
       </div>
 
       <div class="mb-4">
         <label class="form-label" for="loginPassword">Password</label>
-        <input id="loginPassword" type="password" class="form-control" formControlName="password" autocomplete="current-password">
-        <small *ngIf="showError('password')" class="text-danger">La password debe tener al menos 8 caracteres.</small>
+        <input id="loginPassword" type="password" class="form-control" formControlName="password" autocomplete="current-password" [attr.aria-invalid]="showError('password')" [attr.aria-describedby]="showError('password') ? 'loginPasswordError' : null">
+        <small *ngIf="showError('password')" id="loginPasswordError" class="text-danger">La password debe tener al menos 8 caracteres.</small>
       </div>
 
       <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3" [disabled]="loading">

@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { Promocion } from '../../../core/models/promocion.models';
 import { PromocionesService } from '../../../core/services/promociones.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
@@ -17,6 +18,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 export class PromocionDetailComponent implements OnInit {
   private readonly promocionesService = inject(PromocionesService);
+  private readonly seo = inject(SeoService);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -25,6 +27,12 @@ export class PromocionDetailComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Detalle de promocion',
+      description: 'Detalle de una promocion fotografica disponible en GaleriaFotos.',
+      type: 'article',
+      image: '/assets/caterserv/img/event-6.jpg'
+    });
     this.load();
   }
 
@@ -45,6 +53,12 @@ export class PromocionDetailComponent implements OnInit {
     ).subscribe({
       next: (item) => {
         this.promocion = item;
+        this.seo.setPublicPage({
+          title: item.titulo || 'Promocion fotografica',
+          description: item.descripcion || 'Beneficio disponible para servicios fotograficos o compras de fotos.',
+          type: 'article',
+          image: item.imagenUrl
+        });
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cargar la promocion.';

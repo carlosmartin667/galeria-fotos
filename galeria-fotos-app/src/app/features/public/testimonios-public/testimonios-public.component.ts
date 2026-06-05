@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { CrearTestimonioRequest, Testimonio } from '../../../core/models/testimonio.models';
 import { TestimoniosService } from '../../../core/services/testimonios.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -20,6 +21,7 @@ type TestimonioControl = 'nombreCliente' | 'emailCliente' | 'texto' | 'calificac
 })
 export class TestimoniosPublicComponent implements OnInit {
   private readonly testimoniosService = inject(TestimoniosService);
+  private readonly seo = inject(SeoService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -39,6 +41,11 @@ export class TestimoniosPublicComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Testimonios de clientes',
+      description: 'Historias y opiniones publicadas por clientes sobre servicios fotograficos de GaleriaFotos.',
+      image: '/assets/caterserv/img/event-8.jpg'
+    });
     this.load();
   }
 

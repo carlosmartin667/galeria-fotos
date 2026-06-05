@@ -27,11 +27,11 @@
 
     <div class="public-faq-list" *ngIf="!loading && filteredPreguntas.length > 0">
       <article class="public-faq-item" *ngFor="let item of filteredPreguntas; let i = index; trackBy: trackById">
-        <button type="button" class="public-faq-question" (click)="toggle(item, i)" [attr.aria-expanded]="isOpen(item, i)">
+        <button type="button" class="public-faq-question" (click)="toggle(item, i)" [attr.aria-expanded]="isOpen(item, i)" [attr.aria-controls]="'faqAnswer-' + i">
           <span>{{ item.pregunta }}</span>
           <i [class]="isOpen(item, i) ? 'fas fa-minus' : 'fas fa-plus'"></i>
         </button>
-        <div class="public-faq-answer" [ngClass]="{ open: isOpen(item, i) }">
+        <div class="public-faq-answer" [id]="'faqAnswer-' + i" [ngClass]="{ open: isOpen(item, i) }">
           <p>{{ item.respuesta }}</p>
           <small *ngIf="item.categoria" class="app-meta">{{ item.categoria }}</small>
         </div>

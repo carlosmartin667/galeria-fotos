@@ -7,6 +7,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { CrearSolicitudPresupuestoRequest } from '../../../core/models/presupuesto.models';
 import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { PresupuestosService } from '../../../core/services/presupuestos.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { ServiciosService } from '../../../core/services/servicios.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -45,6 +46,7 @@ export class PresupuestoSolicitudComponent implements OnInit {
   private readonly presupuestosService = inject(PresupuestosService);
   private readonly serviciosService = inject(ServiciosService);
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -69,6 +71,11 @@ export class PresupuestoSolicitudComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Solicitar presupuesto',
+      description: 'Solicita un presupuesto para fotografia de eventos, sesiones privadas o servicios personalizados.',
+      image: '/assets/caterserv/img/event-7.jpg'
+    });
     this.loading = true;
     this.error = '';
 

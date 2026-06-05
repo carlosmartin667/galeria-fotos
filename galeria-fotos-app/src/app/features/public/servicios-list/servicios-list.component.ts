@@ -6,6 +6,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { SitioContacto } from '../../../core/models/sitio-publico.models';
 import { ServiciosService } from '../../../core/services/servicios.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -21,6 +22,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class ServiciosListComponent implements OnInit {
   private readonly serviciosService = inject(ServiciosService);
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   servicios: ServicioFotografia[] = [];
@@ -29,6 +31,11 @@ export class ServiciosListComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Servicios fotograficos',
+      description: 'Servicios de fotografia profesional para eventos, sesiones privadas y propuestas personalizadas.',
+      image: '/assets/caterserv/img/event-3.jpg'
+    });
     this.loading = true;
 
     forkJoin({

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { SitioContacto } from '../../../core/models/sitio-publico.models';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -18,6 +19,7 @@ import { AgendaDisponibilidadPublicaComponent } from '../disponibilidad/agenda-d
 })
 export class ContactoPublicComponent implements OnInit {
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   contacto: SitioContacto | null = null;
@@ -25,6 +27,11 @@ export class ContactoPublicComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Contacto',
+      description: 'Contacto de GaleriaFotos para coordinar servicios fotograficos, sesiones y presupuestos.',
+      image: '/assets/caterserv/img/background-site.jpg'
+    });
     this.loading = true;
 
     this.sitioService.getContacto().pipe(
@@ -35,6 +42,11 @@ export class ContactoPublicComponent implements OnInit {
     ).subscribe({
       next: (contacto) => {
         this.contacto = contacto;
+        this.seo.setPublicPage({
+          title: `Contacto ${this.nombre}`,
+          description: this.descripcion,
+          image: contacto.perfil?.bannerUrl || contacto.perfil?.fotoPerfilUrl
+        });
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cargar el contacto.';

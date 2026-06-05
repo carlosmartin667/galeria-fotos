@@ -11,6 +11,7 @@ import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { PerfilFotografa, SitioHome } from '../../../core/models/sitio-publico.models';
 import { Testimonio } from '../../../core/models/testimonio.models';
 import { PromocionesService } from '../../../core/services/promociones.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { TestimoniosService } from '../../../core/services/testimonios.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -28,6 +29,7 @@ export class PublicHomeComponent implements OnInit {
   private readonly sitioService = inject(SitioPublicoService);
   private readonly promocionesService = inject(PromocionesService);
   private readonly testimoniosService = inject(TestimoniosService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   home: SitioHome | null = null;
@@ -42,6 +44,11 @@ export class PublicHomeComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Fotografia profesional para eventos',
+      description: 'GaleriaFotos presenta servicios fotograficos, portfolio, promociones, testimonios y eventos para clientes.',
+      image: '/assets/caterserv/img/background-site.jpg'
+    });
     this.loading = true;
 
     forkJoin({
@@ -63,6 +70,11 @@ export class PublicHomeComponent implements OnInit {
         this.eventos = (home.eventosRecientes ?? []).slice(0, 3);
         this.promociones = this.takeFeaturedPromotions(promociones, 3);
         this.testimonios = testimonios.slice(0, 3);
+        this.seo.setPublicPage({
+          title: this.perfil?.nombre || 'Fotografia profesional para eventos',
+          description: this.perfil?.textoBienvenida || this.perfil?.descripcion || 'Servicios fotograficos, portfolio y eventos disponibles para clientes.',
+          image: this.perfil?.bannerUrl || this.perfil?.fotoPerfilUrl || '/assets/caterserv/img/background-site.jpg'
+        });
       },
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cargar el sitio publico.';
