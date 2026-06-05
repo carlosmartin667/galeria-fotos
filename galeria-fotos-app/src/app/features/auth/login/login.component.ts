@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { SessionService } from '../../../core/services/session.service';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 
 @Component({
@@ -14,6 +15,7 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
 })
 export class LoginComponent implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly session = inject(SessionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -48,7 +50,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.cdr.markForCheck();
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigateByUrl(this.nextUrl());
       },
       error: (error: unknown) => {
         this.loading = false;
@@ -70,5 +72,27 @@ export class LoginComponent implements OnInit {
 
   private toMessage(error: unknown): string {
     return error instanceof Error ? error.message : 'No se pudo iniciar sesion.';
+  }
+
+  private nextUrl(): string {
+    const returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+
+    if (returnUrl) {
+      return returnUrl;
+    }
+
+    return this.session.isAdmin ? '/admin/dashboard' : '/dashboard';
+  }
+
+  private safeReturnUrl(value: string | null): string | null {
+    if (!value || !value.startsWith('/') || value.startsWith('//')) {
+      return null;
+    }
+
+    if (value === '/login' || value.startsWith('/login?') || value === '/register' || value.startsWith('/register?')) {
+      return null;
+    }
+
+    return value;
   }
 }

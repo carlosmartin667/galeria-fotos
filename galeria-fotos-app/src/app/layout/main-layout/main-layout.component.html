@@ -50,9 +50,6 @@
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
-            @if (session.isAdmin) {
-              <a routerLink="/clientes">Clientes</a>
-            }
             @if (session.isUser) {
               <a routerLink="/mi-historial">Mi historial</a>
             }
@@ -82,60 +79,6 @@
             }
             @if (session.isUser) {
               <a routerLink="/descargas">Mis descargas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/descargas">Gestion descargas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/operaciones">Operaciones</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/dev-tools">DevTools</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/portfolio">Admin portfolio</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/servicios">Admin servicios</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/faq">Admin FAQ</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/presupuestos">Presupuestos</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/agenda">Agenda</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/notificaciones">Notificaciones</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/notificaciones/plantillas">Plantillas de notificacion</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/ventas">Resumen ventas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/cupones">Cupones</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/promociones">Admin promociones</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/testimonios">Admin testimonios</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/carritos-abandonados">Carritos abandonados</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/reportes/ventas">Reportes ventas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
             }
           </div>
         </div>

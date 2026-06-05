@@ -4,7 +4,7 @@
       <small class="app-kicker">Pedidos</small>
       <h2 class="h3 mb-0">Nuevo pedido</h2>
     </div>
-    <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+    <a [routerLink]="pedidosPath()" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
   </div>
 
   <div class="app-panel-body">
@@ -42,7 +42,9 @@
           }
           Guardar
         </button>
-        <a routerLink="/pedidos" class="btn btn-outline-dark rounded-pill px-4">Cancelar</a>
+        <a [routerLink]="pedidosPath()" class="btn btn-outline-dark rounded-pill px-4"
+          >Cancelar</a
+        >
       </div>
     </form>
   </div>

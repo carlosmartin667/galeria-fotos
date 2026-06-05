@@ -1,26 +1,32 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChildFn, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AppRole } from '../models/auth.models';
 import { SessionService } from '../services/session.service';
 
-function checkAccess(route: ActivatedRouteSnapshot): boolean | UrlTree {
+function checkAccess(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
   const session = inject(SessionService);
   const router = inject(Router);
-  const requiresUser = route.data['requiresUser'] === true;
-  const roles = route.data['roles'] as AppRole[] | undefined;
+  const routeTree = route.pathFromRoot?.length ? route.pathFromRoot : [route];
+  const requiresUser = routeTree.some((snapshot) => snapshot.data['requiresUser'] === true);
+  const roleRequirements = routeTree
+    .map((snapshot) => snapshot.data['roles'] as AppRole[] | undefined)
+    .filter((roles): roles is AppRole[] => Array.isArray(roles) && roles.length > 0);
 
-  if (!requiresUser && !roles?.length) {
+  if (!requiresUser && roleRequirements.length === 0) {
     return true;
   }
 
   if (!session.isAuthenticated) {
     return router.createUrlTree(['/login'], {
-      queryParams: { message: 'Esta seccion requiere iniciar sesion.' }
+      queryParams: {
+        message: 'Esta seccion requiere iniciar sesion.',
+        ...returnUrlParam(state.url)
+      }
     });
   }
 
-  if (roles?.length && !roles.includes(session.role)) {
+  if (roleRequirements.length > 0 && !roleRequirements.every((roles) => roles.includes(session.role))) {
     return router.createUrlTree(['/dashboard'], {
       queryParams: { message: 'No tenes permisos para acceder a esta seccion.' }
     });
@@ -29,5 +35,13 @@ function checkAccess(route: ActivatedRouteSnapshot): boolean | UrlTree {
   return true;
 }
 
-export const authGuard: CanActivateFn = (route) => checkAccess(route);
-export const authChildGuard: CanActivateChildFn = (route) => checkAccess(route);
+function returnUrlParam(url: string): { returnUrl?: string } {
+  if (!url || url === '/login' || url.startsWith('/login?')) {
+    return {};
+  }
+
+  return { returnUrl: url };
+}
+
+export const authGuard: CanActivateFn = (route, state) => checkAccess(route, state);
+export const authChildGuard: CanActivateChildFn = (route, state) => checkAccess(route, state);

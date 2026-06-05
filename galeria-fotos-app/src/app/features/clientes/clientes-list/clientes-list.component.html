@@ -5,7 +5,9 @@
       <h2 class="h3 mb-0">Listado</h2>
     </div>
     @if (session.isAdmin) {
-      <a routerLink="/clientes/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo cliente</a>
+      <a [routerLink]="[clientesPath(), 'nuevo']" class="btn btn-primary rounded-pill px-4"
+        >Nuevo cliente</a
+      >
     }
   </div>
 
@@ -61,12 +63,12 @@
                   <td class="text-end">
                     <div class="app-actions justify-content-end">
                       <a
-                        [routerLink]="['/clientes/editar', cliente.id]"
+                        [routerLink]="[clientesPath(), 'editar', cliente.id]"
                         class="btn btn-sm btn-outline-primary rounded-pill"
                         >Editar</a
                       >
                       <a
-                        [routerLink]="['/clientes', cliente.id, 'historial']"
+                        [routerLink]="[clientesPath(), cliente.id, 'historial']"
                         class="btn btn-sm btn-outline-primary rounded-pill"
                         >Historial</a
                       >

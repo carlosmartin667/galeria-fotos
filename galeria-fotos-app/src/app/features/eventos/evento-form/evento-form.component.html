@@ -4,7 +4,7 @@
       <small class="app-kicker">Eventos</small>
       <h2 class="h3 mb-0">{{ isEdit ? 'Editar evento' : 'Crear evento' }}</h2>
     </div>
-    <a routerLink="/eventos" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+    <a [routerLink]="eventosPath()" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
   </div>
 
   <div class="app-panel-body">
@@ -112,7 +112,9 @@
             }
             Guardar
           </button>
-          <a routerLink="/eventos" class="btn btn-outline-dark rounded-pill px-4">Cancelar</a>
+          <a [routerLink]="eventosPath()" class="btn btn-outline-dark rounded-pill px-4"
+            >Cancelar</a
+          >
         </div>
       </form>
     }

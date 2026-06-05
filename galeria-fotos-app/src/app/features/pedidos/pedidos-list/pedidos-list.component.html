@@ -5,7 +5,9 @@
       <h2 class="h3 mb-0">Listado</h2>
     </div>
     @if (session.canWrite) {
-      <a routerLink="/pedidos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo pedido</a>
+      <a [routerLink]="[pedidosPath(), 'nuevo']" class="btn btn-primary rounded-pill px-4"
+        >Nuevo pedido</a
+      >
     }
   </div>
 
@@ -66,7 +68,7 @@
                 </td>
                 <td>
                   <a
-                    [routerLink]="['/pedidos', pedido.id]"
+                    [routerLink]="[pedidosPath(), pedido.id]"
                     class="btn btn-sm btn-outline-primary rounded-pill"
                     >Ver detalle</a
                   >

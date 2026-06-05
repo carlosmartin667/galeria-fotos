@@ -39,10 +39,12 @@ describe('authChildGuard', () => {
   });
 
   it('redirects unauthenticated users to login for private routes', () => {
-    const result = runGuard({ roles: ['Admin'] });
+    const result = runGuard({ roles: ['Admin'] }, '/admin/dashboard');
 
     expect(result instanceof UrlTree).toBe(true);
-    expect(router.serializeUrl(result as UrlTree)).toContain('/login');
+    const url = router.serializeUrl(result as UrlTree);
+    expect(url).toContain('/login');
+    expect(url).toContain('returnUrl=%2Fadmin%2Fdashboard');
   });
 
   it('allows Admin users on Admin routes', () => {
@@ -51,6 +53,24 @@ describe('authChildGuard', () => {
     const result = runGuard({ roles: ['Admin'] });
 
     expect(result).toBe(true);
+  });
+
+  it('allows Admin users when roles are inherited from parent routes', () => {
+    state = { isAuthenticated: true, role: 'Admin' };
+
+    const result = runGuard({}, '/admin/dashboard', [{ roles: ['Admin'] }, {}]);
+
+    expect(result).toBe(true);
+  });
+
+  it('blocks non Admin users when Admin role is inherited from parent routes', () => {
+    state = { isAuthenticated: true, role: 'Usuario' };
+
+    const result = runGuard({}, '/admin/dashboard', [{ roles: ['Admin'] }, {}]);
+
+    expect(result instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(result as UrlTree)).toContain('/dashboard');
+    expect(router.serializeUrl(result as UrlTree)).not.toContain('/login');
   });
 
   it('blocks Usuario from Admin routes without treating it as expired login', () => {
@@ -71,7 +91,19 @@ describe('authChildGuard', () => {
   });
 });
 
-function runGuard(data: Record<string, unknown>): boolean | UrlTree {
+function runGuard(
+  data: Record<string, unknown>,
+  url = '/demo',
+  pathData?: Record<string, unknown>[]
+): boolean | UrlTree {
   const route = { data } as ActivatedRouteSnapshot;
-  return TestBed.runInInjectionContext(() => authChildGuard(route, {} as RouterStateSnapshot)) as boolean | UrlTree;
+  const pathFromRoot = pathData?.map((item) => ({ data: item }) as ActivatedRouteSnapshot);
+
+  if (pathFromRoot) {
+    Object.defineProperty(route, 'pathFromRoot', {
+      value: pathFromRoot
+    });
+  }
+
+  return TestBed.runInInjectionContext(() => authChildGuard(route, { url } as RouterStateSnapshot)) as boolean | UrlTree;
 }

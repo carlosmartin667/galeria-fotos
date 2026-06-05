@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Cliente } from '../../../core/models/cliente.models';
@@ -19,6 +19,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class ClientesListComponent implements OnInit {
   private readonly clientesService = inject(ClientesService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
   readonly session = inject(SessionService);
 
   readonly clientes = signal<Cliente[]>([]);
@@ -42,6 +43,15 @@ export class ClientesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  clientesPath(): string {
+    return this.isAdminRoute ? '/admin/clientes' : '/clientes';
   }
 
   load(): void {

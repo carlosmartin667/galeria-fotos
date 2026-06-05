@@ -4,15 +4,7 @@
       <small class="app-kicker">Fotos</small>
       <h2 class="h3 mb-0">{{ isEdit ? 'Editar metadata' : 'Crear metadata' }}</h2>
     </div>
-    <a
-      [routerLink]="
-        form.controls.eventoId.getRawValue()
-          ? ['/fotos/evento', form.controls.eventoId.getRawValue()]
-          : ['/eventos']
-      "
-      class="btn btn-outline-primary rounded-pill px-4"
-      >Cancelar</a
-    >
+    <a [routerLink]="cancelLink()" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
   </div>
 
   <div class="app-panel-body">

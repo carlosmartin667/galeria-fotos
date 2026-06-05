@@ -130,19 +130,19 @@ export class OperacionesAdminComponent implements OnInit {
         label: 'Pedidos pendientes pago',
         value: this.metric(resumen, ['pedidosPendientesPago']),
         icon: 'fas fa-clock',
-        link: '/pedidos',
+        link: '/admin/pedidos',
       },
       {
         label: 'Pedidos pagados',
         value: this.metric(resumen, ['pedidosPagados']),
         icon: 'fas fa-receipt',
-        link: '/pedidos',
+        link: '/admin/pedidos',
       },
       {
         label: 'Preparando descarga',
         value: this.metric(resumen, ['pedidosPreparandoDescarga']),
         icon: 'fas fa-box-open',
-        link: '/pedidos',
+        link: '/admin/pedidos',
       },
       {
         label: 'Listos para descargar',
@@ -160,7 +160,7 @@ export class OperacionesAdminComponent implements OnInit {
         label: 'Eventos proximos',
         value: this.metric(resumen, ['eventosProximos']),
         icon: 'fas fa-calendar-alt',
-        link: '/eventos',
+        link: '/admin/eventos',
       },
       {
         label: 'Descargas vencidas',

@@ -62,6 +62,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/dashboard',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/perfil-publico',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'admin/mi-perfil',
     renderMode: RenderMode.Server
   },
@@ -79,6 +91,86 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'admin/descargas',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/descargas/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/eventos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/eventos/nuevo',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/eventos/editar/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/eventos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/evento',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/evento/:eventoId',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/metadata',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/metadata/nuevo',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/editar/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/fotos/bulk',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/pedidos',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/pedidos/nuevo',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/pedidos/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/clientes',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/clientes/nuevo',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/clientes/editar/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/clientes/:id/historial',
     renderMode: RenderMode.Server
   },
   {

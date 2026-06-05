@@ -5,7 +5,9 @@
       <h2 class="h3 mb-0">Detalle de descarga</h2>
     </div>
     <div class="app-actions">
-      <a routerLink="/descargas" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+      <a [routerLink]="descargasPath()" class="btn btn-outline-primary rounded-pill px-4"
+        >Volver</a
+      >
       @if (descarga) {
         <button
           type="button"

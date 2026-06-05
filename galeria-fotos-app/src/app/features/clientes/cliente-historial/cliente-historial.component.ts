@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { ClienteHistorial } from '../../../core/models/cliente-historial.models';
@@ -39,6 +39,7 @@ interface SafeEntry {
 export class ClienteHistorialComponent implements OnInit {
   private readonly historialService = inject(ClienteHistorialService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
@@ -65,6 +66,19 @@ export class ClienteHistorialComponent implements OnInit {
 
   get isMiHistorial(): boolean {
     return !this.route.snapshot.paramMap.get('id');
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  backLink(): string {
+    if (this.session.isAdmin) {
+      return this.isAdminRoute ? '/admin/clientes' : '/clientes';
+    }
+
+    return '/dashboard';
   }
 
   load(): void {

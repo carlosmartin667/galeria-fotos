@@ -33,26 +33,8 @@
     <a routerLink="/presupuesto" routerLinkActive="active">Solicitar presupuesto</a>
     <a routerLink="/faq" routerLinkActive="active">FAQ</a>
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
-    @if (session.isAdmin) {
-      <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard admin</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/operaciones" routerLinkActive="active">Operaciones</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/dev-tools" routerLinkActive="active">DevTools</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/bitacora" routerLinkActive="active">Bitacora</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
-    }
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
-    @if (session.isAdmin) {
-      <a routerLink="/admin/fotos/bulk" routerLinkActive="active">Carga masiva fotos</a>
-    }
     @if (session.isAuthenticated) {
       <a routerLink="/pedidos" routerLinkActive="active">{{
         session.isAdmin ? 'Pedidos' : 'Mis pedidos'
@@ -72,60 +54,7 @@
     @if (session.isUser) {
       <a routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
     }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/descargas" routerLinkActive="active">Gestion descargas</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/portfolio" routerLinkActive="active">Admin portfolio</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/servicios" routerLinkActive="active">Admin servicios</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/faq" routerLinkActive="active">Admin FAQ</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/presupuestos" routerLinkActive="active">Presupuestos</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/agenda" routerLinkActive="active">Agenda</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/sesiones-privadas" routerLinkActive="active">Sesiones privadas</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/notificaciones" routerLinkActive="active">Notificaciones</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/notificaciones/plantillas" routerLinkActive="active"
-        >Plantillas notif.</a
-      >
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/ventas" routerLinkActive="active">Resumen ventas</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/cupones" routerLinkActive="active">Cupones</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/promociones" routerLinkActive="active">Admin promociones</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/testimonios" routerLinkActive="active">Admin testimonios</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/carritos-abandonados" routerLinkActive="active">Carritos abandonados</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/reportes/ventas" routerLinkActive="active">Reportes ventas</a>
-    }
     <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
-    @if (session.isAdmin) {
-      <a routerLink="/admin/mi-perfil" routerLinkActive="active">Mi perfil admin</a>
-    }
-    @if (session.isAdmin) {
-      <a routerLink="/admin/pexels/importar-fotos" routerLinkActive="active">Importar Pexels</a>
-    }
     @if (session.isUser) {
       <a routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
     }

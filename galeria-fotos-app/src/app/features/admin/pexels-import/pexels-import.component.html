@@ -6,7 +6,7 @@
     </div>
     @if (selectedEventoId) {
       <a
-        [routerLink]="['/fotos/evento', selectedEventoId]"
+        [routerLink]="['/admin/fotos/evento', selectedEventoId]"
         class="btn btn-outline-primary rounded-pill px-4"
         >Ver fotos del evento</a
       >
@@ -96,7 +96,7 @@
           </button>
           @if (selectedEventoId) {
             <a
-              [routerLink]="['/fotos/evento', selectedEventoId]"
+              [routerLink]="['/admin/fotos/evento', selectedEventoId]"
               class="btn btn-outline-primary rounded-pill px-4"
               >Ver fotos del evento</a
             >

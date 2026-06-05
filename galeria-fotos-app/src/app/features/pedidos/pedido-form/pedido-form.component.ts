@@ -28,6 +28,15 @@ export class PedidoFormComponent {
     fotoIds: [''],
   });
 
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  pedidosPath(): string {
+    return this.isAdminRoute ? '/admin/pedidos' : '/pedidos';
+  }
+
   submit(): void {
     this.submitted = true;
     this.error = '';
@@ -50,7 +59,7 @@ export class PedidoFormComponent {
 
     this.saving = true;
     this.pedidosService.create(payload).subscribe({
-      next: () => void this.router.navigate(['/pedidos']),
+      next: () => void this.router.navigate([this.pedidosPath()]),
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo crear el pedido.';
         this.saving = false;

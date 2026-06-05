@@ -1,0 +1,106 @@
+<div class="admin-layout" [class.admin-sidebar-open]="sidebarOpen">
+  <div class="admin-mobile-backdrop" (click)="closeSidebar()" aria-hidden="true"></div>
+
+  <aside class="navbar navbar-vertical navbar-expand-lg admin-sidebar" aria-label="Menu administrativo">
+    <div class="container-fluid">
+      <button
+        type="button"
+        class="navbar-toggler admin-sidebar-close"
+        aria-label="Cerrar menu administrativo"
+        [attr.aria-expanded]="sidebarOpen"
+        (click)="toggleSidebar()"
+      >
+        <span class="bi bi-x-lg" aria-hidden="true"></span>
+      </button>
+
+      <a routerLink="/admin/dashboard" class="navbar-brand admin-brand">
+        <span class="admin-brand-mark">GF</span>
+        <span>
+          <strong>GaleriaFotos</strong>
+          <small>Admin</small>
+        </span>
+      </a>
+
+      <nav class="navbar-nav admin-nav" aria-label="Navegacion admin">
+        @for (group of navGroups; track trackGroup($index, group)) {
+          <div class="admin-nav-group">
+            <div class="admin-nav-title">{{ group.label }}</div>
+            @for (item of group.items; track trackItem($index, item)) {
+              <a
+                class="nav-item nav-link"
+                [class.active]="isActive(item.path)"
+                [routerLink]="item.path"
+                (click)="closeSidebar()"
+              >
+                <span class="nav-link-icon">
+                  <i [class]="'bi ' + item.icon" aria-hidden="true"></i>
+                </span>
+                <span class="nav-link-title">{{ item.label }}</span>
+              </a>
+            }
+          </div>
+        }
+      </nav>
+    </div>
+  </aside>
+
+  <div class="page-wrapper admin-page-wrapper">
+    <header class="navbar navbar-expand-md admin-topbar">
+      <div class="container-fluid">
+        <button
+          type="button"
+          class="btn admin-icon-btn d-lg-none"
+          aria-label="Abrir menu administrativo"
+          [attr.aria-expanded]="sidebarOpen"
+          (click)="toggleSidebar()"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+
+        <div class="admin-topbar-title">
+          <small>Panel administrativo</small>
+          <strong>{{ currentTitle() }}</strong>
+        </div>
+
+        <div class="admin-topbar-actions">
+          <a routerLink="/home" class="btn btn-outline-primary rounded-pill">Ver sitio</a>
+          <app-notification-bell></app-notification-bell>
+          <button
+            type="button"
+            class="btn admin-theme-btn rounded-pill"
+            (click)="themeService.toggleTheme()"
+            [attr.aria-label]="
+              themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+            "
+          >
+            <i [class]="themeService.getTheme() === 'dark' ? 'bi bi-sun' : 'bi bi-moon'"></i>
+            <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+          </button>
+          <div class="admin-user">
+            <span>{{ displayName() }}</span>
+            <small>{{ session.email || session.displayRole }}</small>
+          </div>
+          <button type="button" class="btn btn-primary rounded-pill" (click)="logout()">
+            Cerrar sesion
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-body admin-page-body">
+      <div class="container-fluid admin-container">
+        <div class="page-header admin-page-header">
+          <div>
+            <ol class="breadcrumb mb-1">
+              <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Admin</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ currentTitle() }}</li>
+            </ol>
+            <h1 class="page-title mb-0">{{ currentTitle() }}</h1>
+          </div>
+        </div>
+
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

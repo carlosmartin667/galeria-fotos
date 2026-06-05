@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { PaginationQuery } from '../../../core/models/pagination.models';
@@ -31,6 +31,7 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
 export class PedidosListComponent implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
   readonly session = inject(SessionService);
 
   pedidos: Pedido[] = [];
@@ -47,6 +48,15 @@ export class PedidosListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  pedidosPath(): string {
+    return this.isAdminRoute ? '/admin/pedidos' : '/pedidos';
   }
 
   load(): void {

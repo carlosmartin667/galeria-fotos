@@ -24,9 +24,17 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
         const message = session.isAuthenticated
           ? 'Sesion expirada. Inicia sesion nuevamente.'
           : 'Esta seccion requiere iniciar sesion.';
+        const returnUrl = router.url && router.url !== '/login' && !router.url.startsWith('/login?')
+          ? router.url
+          : undefined;
 
         session.clear();
-        void router.navigate(['/login'], { queryParams: { message } });
+        void router.navigate(['/login'], {
+          queryParams: {
+            message,
+            ...(returnUrl ? { returnUrl } : {})
+          }
+        });
       }
 
       return throwError(() => error);

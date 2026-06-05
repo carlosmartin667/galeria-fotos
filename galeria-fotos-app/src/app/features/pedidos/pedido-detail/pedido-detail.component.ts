@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
 import { CrearLinkDescargaResponse } from '../../../core/models/descarga.models';
@@ -32,6 +32,7 @@ export class PedidoDetailComponent implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly descargasService = inject(DescargasService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
@@ -63,6 +64,19 @@ export class PedidoDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  pedidosPath(): string {
+    return this.isAdminRoute ? '/admin/pedidos' : '/pedidos';
+  }
+
+  descargasPath(): string {
+    return this.isAdminRoute ? '/admin/descargas' : '/descargas';
   }
 
   load(): void {

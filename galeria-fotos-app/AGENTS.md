@@ -234,6 +234,25 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No modificar autenticacion, sesion, token, roles ni modo invitado para DevTools.
 - Preservar CaterServ, modo claro/oscuro, responsive y menu Admin agrupado.
 
+## Frontend 8A AdminLayout Tabler
+
+- Las rutas administrativas principales viven bajo el route padre `/admin` con `AdminLayoutComponent`.
+- `AdminLayoutComponent` usa una estructura visual basada en Tabler Bootstrap 5: `navbar`, `navbar-vertical`, `navbar-expand-lg`, `navbar-brand`, `navbar-nav`, `nav-item`, `nav-link`, `nav-link-icon`, `page-wrapper`, `page-header`, `page-body` y `container-fluid`.
+- Los estilos Tabler adaptados deben quedar scopeados bajo `.admin-layout` en `admin-layout.component.css`.
+- No instalar `@tabler/core` ni CSS global de Tabler mientras pueda contaminar PublicLayout o CaterServ.
+- Tabler aplica solo al area Admin; PublicLayout y MainLayout conservan CaterServ.
+- No agregar jQuery ni dependencias visuales nuevas para el AdminLayout.
+- El menu admin se organiza en grupos: Principal, Ventas, Gestion, Sitio publico y Sistema.
+- El menu admin no debe mezclarse con navbar/sidebar/footer de usuario o publico.
+- El menu de `AdminLayoutComponent` debe apuntar solo a rutas `/admin/...`; no enlazar desde el sidebar admin a `/eventos`, `/fotos`, `/pedidos` o `/clientes` del layout comun.
+- Las pantallas de gestion compartidas tienen alias bajo AdminLayout: `/admin/eventos`, `/admin/fotos`, `/admin/pedidos`, `/admin/clientes` y `/admin/descargas/:id`.
+- Cuando un componente compartido se renderiza desde `/admin/...`, sus acciones de volver, detalle, editar y crear deben conservar el prefijo `/admin`; cuando se renderiza fuera del admin debe conservar las rutas publicas o de usuario existentes.
+- Las acciones administrativas de eventos y fotos deben mostrarse dentro de rutas admin; fuera de ellas, ofrecer como maximo un acceso claro al panel admin para usuarios `Admin`.
+- Mantener `NotificationBell`, logout y cambio de tema claro/oscuro dentro del AdminLayout.
+- El sidebar admin debe ser lateral en desktop y colapsable en mobile con botones accesibles.
+- Las rutas admin mantienen guards y `data: { roles: ['Admin'] }`; no cambiar endpoints ni payloads.
+- La ruta historica `/admin/perfil-publico` se preserva como perfil publico compatible con el layout interno existente.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.

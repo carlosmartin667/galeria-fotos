@@ -4,8 +4,15 @@
       <small class="app-kicker">Eventos</small>
       <h2 class="h3 mb-0">Listado</h2>
     </div>
-    @if (session.isAdmin) {
-      <a routerLink="/eventos/nuevo" class="btn btn-primary rounded-pill px-4">Nuevo evento</a>
+    @if (session.isAdmin && isAdminRoute) {
+      <a [routerLink]="[eventosPath(), 'nuevo']" class="btn btn-primary rounded-pill px-4"
+        >Nuevo evento</a
+      >
+    }
+    @if (session.isAdmin && !isAdminRoute) {
+      <a routerLink="/admin/eventos" class="btn btn-outline-primary rounded-pill px-4"
+        >Administrar eventos</a
+      >
     }
   </div>
 
@@ -63,7 +70,7 @@
               }
               <div class="event-image-overlay">
                 <a
-                  [routerLink]="['/eventos', evento.id]"
+                  [routerLink]="[eventosPath(), evento.id]"
                   class="btn btn-sm btn-primary rounded-pill"
                   >Ver detalle</a
                 >
@@ -103,16 +110,16 @@
               </div>
               <div class="app-actions mt-3">
                 <a
-                  [routerLink]="['/eventos', evento.id]"
+                  [routerLink]="[eventosPath(), evento.id]"
                   class="btn btn-sm btn-primary rounded-pill"
                   >Ver detalle</a
                 >
                 <a
-                  [routerLink]="['/fotos/evento', evento.id]"
+                  [routerLink]="[fotosEventoPath(), evento.id]"
                   class="btn btn-sm btn-outline-dark rounded-pill"
                   >Ver fotos</a
                 >
-                @if (session.isAdmin) {
+                @if (session.isAdmin && isAdminRoute) {
                   <a
                     routerLink="/admin/pexels/importar-fotos"
                     [queryParams]="{ eventoId: evento.id }"
@@ -120,14 +127,14 @@
                     >Importar fotos demo</a
                   >
                 }
-                @if (session.isAdmin) {
+                @if (session.isAdmin && isAdminRoute) {
                   <a
-                    [routerLink]="['/eventos/editar', evento.id]"
+                    [routerLink]="[eventosPath(), 'editar', evento.id]"
                     class="btn btn-sm btn-outline-primary rounded-pill"
                     >Editar</a
                   >
                 }
-                @if (session.isAdmin) {
+                @if (session.isAdmin && isAdminRoute) {
                   <button
                     type="button"
                     class="btn btn-sm btn-outline-danger rounded-pill"
@@ -135,6 +142,13 @@
                   >
                     Eliminar
                   </button>
+                }
+                @if (session.isAdmin && !isAdminRoute) {
+                  <a
+                    [routerLink]="['/admin/eventos', evento.id]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Administrar</a
+                  >
                 }
               </div>
             </div>

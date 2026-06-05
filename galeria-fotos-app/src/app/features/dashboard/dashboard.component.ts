@@ -43,10 +43,10 @@ export class DashboardComponent implements OnInit {
   get quickLinks(): SummaryCard[] {
     if (this.session.isAdmin) {
       return [
-        { label: 'Clientes', value: '', link: '/clientes', icon: 'fas fa-users' },
+        { label: 'Clientes', value: '', link: '/admin/clientes', icon: 'fas fa-users' },
         { label: 'Operaciones', value: '', link: '/admin/operaciones', icon: 'fas fa-tasks' },
-        { label: 'Eventos', value: '', link: '/eventos', icon: 'fas fa-calendar-alt' },
-        { label: 'Fotos', value: '', link: '/fotos/evento', icon: 'fas fa-images' },
+        { label: 'Eventos', value: '', link: '/admin/eventos', icon: 'fas fa-calendar-alt' },
+        { label: 'Fotos', value: '', link: '/admin/fotos/evento', icon: 'fas fa-images' },
         {
           label: 'Presupuestos',
           value: '',
@@ -145,8 +145,18 @@ export class DashboardComponent implements OnInit {
 
   private buildCards(clientes: number, eventos: number, pedidos: number): SummaryCard[] {
     const cards: SummaryCard[] = [
-      { label: 'Eventos', value: eventos, link: '/eventos', icon: 'fas fa-calendar-alt' },
-      { label: 'Fotos', value: 'Por evento', link: '/fotos/evento', icon: 'fas fa-images' },
+      {
+        label: 'Eventos',
+        value: eventos,
+        link: this.session.isAdmin ? '/admin/eventos' : '/eventos',
+        icon: 'fas fa-calendar-alt',
+      },
+      {
+        label: 'Fotos',
+        value: 'Por evento',
+        link: this.session.isAdmin ? '/admin/fotos/evento' : '/fotos/evento',
+        icon: 'fas fa-images',
+      },
       { label: 'Promociones', value: 'Ver', link: '/promociones', icon: 'fas fa-tags' },
       {
         label: 'Perfil publico',
@@ -160,7 +170,7 @@ export class DashboardComponent implements OnInit {
       cards.push({
         label: this.session.isAdmin ? 'Pedidos' : 'Mis pedidos',
         value: pedidos,
-        link: '/pedidos',
+        link: this.session.isAdmin ? '/admin/pedidos' : '/pedidos',
         icon: 'fas fa-shopping-cart',
       });
       cards.push({
@@ -181,7 +191,7 @@ export class DashboardComponent implements OnInit {
       cards.unshift({
         label: 'Clientes',
         value: clientes,
-        link: '/clientes',
+        link: '/admin/clientes',
         icon: 'fas fa-users',
       });
       cards.push({

@@ -63,6 +63,27 @@ describe('SessionService', () => {
     expect(service.displayRole).toBe('Cliente');
   });
 
+  it('normalizes administrator role aliases from login responses', () => {
+    const service = TestBed.inject(SessionService);
+
+    service.setAuthenticated({
+      token: jwt({ exp: futureExp(), role: 'administrador' }),
+      rol: 'Administrador'
+    });
+
+    expect(service.role).toBe('Admin');
+    expect(service.isAdmin).toBe(true);
+  });
+
+  it('supports role arrays from JWT claims and prioritizes Admin', () => {
+    localStorage.setItem('auth_token', jwt({ exp: futureExp(), roles: ['Usuario', 'Admin'] }));
+
+    const service = TestBed.inject(SessionService);
+
+    expect(service.role).toBe('Admin');
+    expect(service.isAdmin).toBe(true);
+  });
+
   it('clears auth and guest state on logout', () => {
     const service = TestBed.inject(SessionService);
 

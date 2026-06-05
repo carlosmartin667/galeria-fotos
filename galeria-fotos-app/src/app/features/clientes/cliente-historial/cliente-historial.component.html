@@ -5,7 +5,7 @@
       <h2 class="h3 mb-0">{{ isMiHistorial ? 'Mi historial' : 'Historial del cliente' }}</h2>
     </div>
     <a
-      [routerLink]="session.isAdmin ? '/clientes' : '/dashboard'"
+      [routerLink]="backLink()"
       class="btn btn-outline-primary rounded-pill px-4"
       >Volver</a
     >

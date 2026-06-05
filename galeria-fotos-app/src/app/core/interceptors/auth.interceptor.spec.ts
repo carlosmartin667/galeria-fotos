@@ -14,19 +14,29 @@ describe('authInterceptor', () => {
   let sessionState: { isAuthenticated: boolean; token: string | null };
   let clear: ReturnType<typeof vi.fn>;
   let navigate: ReturnType<typeof vi.fn>;
+  let routerUrl: string;
   const apiUrl = environment.apiUrl.replace(/\/$/, '');
 
   beforeEach(() => {
     sessionState = { isAuthenticated: false, token: null };
     clear = vi.fn();
     navigate = vi.fn();
+    routerUrl = '/admin/dashboard';
 
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
         { provide: PLATFORM_ID, useValue: 'browser' },
-        { provide: Router, useValue: { navigate } },
+        {
+          provide: Router,
+          useValue: {
+            get url(): string {
+              return routerUrl;
+            },
+            navigate
+          }
+        },
         {
           provide: SessionService,
           useValue: {
@@ -88,7 +98,10 @@ describe('authInterceptor', () => {
 
     expect(clear).toHaveBeenCalledOnce();
     expect(navigate).toHaveBeenCalledWith(['/login'], {
-      queryParams: { message: 'Sesion expirada. Inicia sesion nuevamente.' }
+      queryParams: {
+        message: 'Sesion expirada. Inicia sesion nuevamente.',
+        returnUrl: '/admin/dashboard'
+      }
     });
   });
 

@@ -7,14 +7,19 @@
     <div class="app-actions">
       @if (foto) {
         <a
-          [routerLink]="['/fotos/evento', foto.eventoId]"
+          [routerLink]="[fotosEventoPath(), foto.eventoId]"
           class="btn btn-outline-primary rounded-pill px-4"
           >Volver a fotos</a
         >
       }
-      @if (session.isAdmin && foto) {
-        <a [routerLink]="['/fotos/editar', foto.id]" class="btn btn-primary rounded-pill px-4"
+      @if (session.isAdmin && foto && isAdminRoute) {
+        <a [routerLink]="[fotoEditPath(), foto.id]" class="btn btn-primary rounded-pill px-4"
           >Editar</a
+        >
+      }
+      @if (session.isAdmin && foto && !isAdminRoute) {
+        <a [routerLink]="['/admin/fotos', foto.id]" class="btn btn-primary rounded-pill px-4"
+          >Administrar</a
         >
       }
     </div>
@@ -76,7 +81,7 @@
             {{ item.fechaActualizacionUtc ? (item.fechaActualizacionUtc | date: 'short') : '-' }}
           </p>
           <div class="app-actions">
-            @if (session.isAdmin) {
+            @if (session.isAdmin && isAdminRoute) {
               <button
                 type="button"
                 class="btn btn-outline-primary rounded-pill px-4"

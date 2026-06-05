@@ -5,10 +5,15 @@
       <h2 class="h3 mb-0">Detalle</h2>
     </div>
     <div class="app-actions">
-      <a routerLink="/eventos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
-      @if (session.isAdmin && evento) {
-        <a [routerLink]="['/eventos/editar', evento.id]" class="btn btn-primary rounded-pill px-4"
+      <a [routerLink]="eventosPath()" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+      @if (session.isAdmin && evento && isAdminRoute) {
+        <a [routerLink]="[eventosPath(), 'editar', evento.id]" class="btn btn-primary rounded-pill px-4"
           >Editar</a
+        >
+      }
+      @if (session.isAdmin && evento && !isAdminRoute) {
+        <a [routerLink]="['/admin/eventos', evento.id]" class="btn btn-primary rounded-pill px-4"
+          >Administrar</a
         >
       }
     </div>
@@ -62,11 +67,11 @@
         <div class="col-lg-4">
           <div class="app-actions justify-content-lg-end">
             <a
-              [routerLink]="['/fotos/evento', item.id]"
+              [routerLink]="[fotosEventoPath(), item.id]"
               class="btn btn-outline-dark rounded-pill px-4"
               >Ver fotos</a
             >
-            @if (session.isAdmin) {
+            @if (session.isAdmin && isAdminRoute) {
               <a
                 routerLink="/admin/pexels/importar-fotos"
                 [queryParams]="{ eventoId: item.id }"

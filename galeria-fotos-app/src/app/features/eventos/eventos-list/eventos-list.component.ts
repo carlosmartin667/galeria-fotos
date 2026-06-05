@@ -1,7 +1,7 @@
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Evento } from '../../../core/models/evento.models';
@@ -34,6 +34,7 @@ export class EventosListComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
   private readonly fotosService = inject(FotosService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
   readonly session = inject(SessionService);
 
   eventos: Evento[] = [];
@@ -52,6 +53,19 @@ export class EventosListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  eventosPath(): string {
+    return this.isAdminRoute ? '/admin/eventos' : '/eventos';
+  }
+
+  fotosEventoPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/evento' : '/fotos/evento';
   }
 
   load(): void {

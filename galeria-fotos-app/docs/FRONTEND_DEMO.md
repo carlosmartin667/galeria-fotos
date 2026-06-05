@@ -60,17 +60,32 @@ En Windows:
 
 ## Demo Admin
 
+Las rutas `/admin/*` usan `AdminLayoutComponent`, con sidebar vertical tipo Tabler Bootstrap 5 y estilos scopeados bajo `.admin-layout`. No se instalo `@tabler/core`; el sitio publico sigue usando CaterServ sin CSS global de Tabler.
+
 - `/admin/dashboard`
 - `/admin/operaciones`
 - `/admin/dev-tools`
 - `/admin/bitacora`
-- `/clientes`
-- `/pedidos`
+- `/admin/eventos`
+- `/admin/eventos/nuevo`
+- `/admin/fotos`
+- `/admin/fotos/evento`
+- `/admin/fotos/bulk`
+- `/admin/pedidos`
+- `/admin/clientes`
 - `/admin/descargas`
+- `/admin/portfolio`
+- `/admin/servicios`
+- `/admin/faq`
+- `/admin/presupuestos`
+- `/admin/agenda`
+- `/admin/sesiones-privadas`
 - `/admin/notificaciones`
 - `/admin/notificaciones/plantillas`
 - `/admin/ventas`
 - `/admin/reportes/ventas`
+
+Las pantallas operativas compartidas mantienen sus URLs existentes para Usuario/Cliente, pero el AdminLayout usa aliases `/admin/...` para no saltar al layout comun: Eventos, Fotos, Pedidos, Clientes y detalle de Descargas.
 
 ## Demo Ventas
 

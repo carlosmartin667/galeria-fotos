@@ -66,6 +66,24 @@ export class FotoFormComponent implements OnInit {
     return Boolean(this.id);
   }
 
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  eventosPath(): string {
+    return this.isAdminRoute ? '/admin/eventos' : '/eventos';
+  }
+
+  fotosEventoPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/evento' : '/fotos/evento';
+  }
+
+  cancelLink(): unknown[] {
+    const eventoId = this.form.controls.eventoId.getRawValue();
+    return eventoId ? [this.fotosEventoPath(), eventoId] : [this.eventosPath()];
+  }
+
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     const eventoId = this.route.snapshot.queryParamMap.get('eventoId');
@@ -157,7 +175,8 @@ export class FotoFormComponent implements OnInit {
 
     this.saving = true;
     request.subscribe({
-      next: (foto) => void this.router.navigate(['/fotos/evento', foto.eventoId || raw.eventoId]),
+      next: (foto) =>
+        void this.router.navigate([this.fotosEventoPath(), foto.eventoId || raw.eventoId]),
       error: (error: unknown) => {
         this.error = this.message(error);
         this.saving = false;

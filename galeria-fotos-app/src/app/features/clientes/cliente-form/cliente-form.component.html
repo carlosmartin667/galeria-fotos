@@ -4,7 +4,9 @@
       <small class="app-kicker">Clientes</small>
       <h2 class="h3 mb-0">{{ isEdit ? 'Editar cliente' : 'Crear cliente' }}</h2>
     </div>
-    <a routerLink="/clientes" class="btn btn-outline-primary rounded-pill px-4">Cancelar</a>
+    <a [routerLink]="clientesPath()" class="btn btn-outline-primary rounded-pill px-4"
+      >Cancelar</a
+    >
   </div>
 
   <div class="app-panel-body">
@@ -49,7 +51,9 @@
             }
             Guardar
           </button>
-          <a routerLink="/clientes" class="btn btn-outline-dark rounded-pill px-4">Cancelar</a>
+          <a [routerLink]="clientesPath()" class="btn btn-outline-dark rounded-pill px-4"
+            >Cancelar</a
+          >
         </div>
       </form>
     }

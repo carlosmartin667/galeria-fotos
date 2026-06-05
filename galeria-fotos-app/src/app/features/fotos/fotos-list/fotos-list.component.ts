@@ -72,13 +72,34 @@ export class FotosListComponent implements OnInit {
     }
   }
 
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  fotosPath(): string {
+    return this.isAdminRoute ? '/admin/fotos' : '/fotos';
+  }
+
+  fotosEventoPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/evento' : '/fotos/evento';
+  }
+
+  fotosMetadataPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/metadata' : '/fotos/metadata';
+  }
+
+  fotoEditPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/editar' : '/fotos/editar';
+  }
+
   searchByValue(value: string): void {
     const eventoId = value.trim();
 
     if (eventoId) {
       this.eventoId = eventoId;
       this.pagination = { page: 1, pageSize: this.pagination.pageSize, all: this.pagination.all };
-      void this.router.navigate(['/fotos/evento', eventoId]);
+      void this.router.navigate([this.fotosEventoPath(), eventoId]);
       this.load();
       return;
     }

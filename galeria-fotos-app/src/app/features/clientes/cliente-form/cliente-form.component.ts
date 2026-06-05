@@ -38,6 +38,15 @@ export class ClienteFormComponent implements OnInit {
     return Boolean(this.id);
   }
 
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  clientesPath(): string {
+    return this.isAdminRoute ? '/admin/clientes' : '/clientes';
+  }
+
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
 
@@ -91,7 +100,7 @@ export class ClienteFormComponent implements OnInit {
 
     this.saving = true;
     request.subscribe({
-      next: () => void this.router.navigate(['/clientes']),
+      next: () => void this.router.navigate([this.clientesPath()]),
       error: (error: unknown) => {
         this.error = this.message(error);
         this.saving = false;

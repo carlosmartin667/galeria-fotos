@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
 import { ComentarioResponse } from '../../../core/models/comentario.models';
@@ -39,6 +39,7 @@ export class FotoDetailComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
   private readonly favoritosService = inject(FavoritosService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
@@ -59,6 +60,23 @@ export class FotoDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  fotosPath(): string {
+    return this.isAdminRoute ? '/admin/fotos' : '/fotos';
+  }
+
+  fotosEventoPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/evento' : '/fotos/evento';
+  }
+
+  fotoEditPath(): string {
+    return this.isAdminRoute ? '/admin/fotos/editar' : '/fotos/editar';
   }
 
   load(): void {

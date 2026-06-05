@@ -4,7 +4,7 @@
       <small class="app-kicker">Pedidos</small>
       <h2 class="h3 mb-0">Detalle</h2>
     </div>
-    <a routerLink="/pedidos" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
+    <a [routerLink]="pedidosPath()" class="btn btn-outline-primary rounded-pill px-4">Volver</a>
   </div>
 
   <div class="app-panel-body">
@@ -166,7 +166,7 @@
                       }
                       @if (linkId(link)) {
                         <a
-                          [routerLink]="['/descargas', linkId(link)]"
+                          [routerLink]="[descargasPath(), linkId(link)]"
                           class="btn btn-sm btn-outline-dark rounded-pill mt-2 ms-2"
                           >Ver descarga</a
                         >
@@ -231,7 +231,7 @@
                       }
                       @if (linkId(link)) {
                         <a
-                          [routerLink]="['/descargas', linkId(link)]"
+                          [routerLink]="[descargasPath(), linkId(link)]"
                           class="btn btn-sm btn-outline-dark rounded-pill mt-2 ms-2"
                           >Ver descarga</a
                         >

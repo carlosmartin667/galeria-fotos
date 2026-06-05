@@ -44,6 +44,15 @@ export class EventoFormComponent implements OnInit {
     return Boolean(this.id);
   }
 
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  eventosPath(): string {
+    return this.isAdminRoute ? '/admin/eventos' : '/eventos';
+  }
+
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
 
@@ -112,7 +121,7 @@ export class EventoFormComponent implements OnInit {
 
     this.saving = true;
     request.subscribe({
-      next: () => void this.router.navigate(['/eventos']),
+      next: () => void this.router.navigate([this.eventosPath()]),
       error: (error: unknown) => {
         this.error = this.message(error);
         this.saving = false;

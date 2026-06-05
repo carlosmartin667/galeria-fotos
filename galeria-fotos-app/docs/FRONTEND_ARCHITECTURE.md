@@ -21,6 +21,10 @@ El proyecto ya esta en Angular 21. No se fuerza una alineacion patch de CLI/buil
 
 `app.routes.ts` usa lazy loading con `loadComponent`. El layout publico sirve Home, Portfolio, Servicios, Promociones, Testimonios, FAQ, Contacto, Presupuesto y Disponibilidad. El layout interno se protege con `authChildGuard` y usa `data.roles` para rutas Admin o Usuario.
 
+Las rutas administrativas principales cuelgan del padre `/admin` y renderizan `AdminLayoutComponent`. Este layout usa una estructura visual basada en Tabler Bootstrap 5, con sidebar vertical, topbar, `page-wrapper`, `page-header`, `page-body` y `container-fluid`, pero todos los estilos quedan scopeados bajo `.admin-layout`. No se instalo `@tabler/core` ni CSS global de Tabler para evitar contaminar `PublicLayoutComponent`, `MainLayoutComponent` o la estetica CaterServ.
+
+`PublicLayoutComponent` y `MainLayoutComponent` conservan CaterServ. El menu administrativo ya no se duplica en navbar/sidebar/footer publicos o de usuario. El sidebar de `AdminLayoutComponent` apunta solo a rutas `/admin/...`. Las pantallas compartidas de gestion tienen aliases admin para conservar el layout Tabler: `/admin/eventos`, `/admin/fotos`, `/admin/pedidos`, `/admin/clientes` y `/admin/descargas/:id`. La ruta historica `/admin/perfil-publico` se conserva como perfil publico compatible con el layout interno existente.
+
 `app.routes.server.ts` declara rutas SSR para pantallas publicas e internas que deben renderizar en servidor. La ruta publica `/disponibilidad` queda incluida. La ruta Admin `/admin/bitacora` tambien queda registrada ahi para mantener consistencia SSR.
 
 ## SEO y SSR Publico

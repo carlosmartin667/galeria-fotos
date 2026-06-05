@@ -146,21 +146,6 @@
             @if (session.isUser) {
               <a routerLink="/notificaciones">Notificaciones</a>
             }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/dashboard">Dashboard admin</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/ventas">Resumen ventas</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/operaciones">Operaciones</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/bitacora">Bitacora</a>
-            }
-            @if (session.isAdmin) {
-              <a routerLink="/admin/notificaciones">Notificaciones admin</a>
-            }
             @if (!session.isAuthenticated) {
               <a routerLink="/login">Login</a>
             }

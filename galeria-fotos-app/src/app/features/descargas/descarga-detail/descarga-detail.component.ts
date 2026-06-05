@@ -1,6 +1,6 @@
 import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Descarga, RegenerarDescargaResponse } from '../../../core/models/descarga.models';
@@ -18,6 +18,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class DescargaDetailComponent implements OnInit {
   private readonly descargasService = inject(DescargasService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
   descarga: Descarga | null = null;
@@ -35,6 +36,15 @@ export class DescargaDetailComponent implements OnInit {
     }
 
     this.load(id);
+  }
+
+  get isAdminRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/admin' || url.startsWith('/admin/');
+  }
+
+  descargasPath(): string {
+    return this.isAdminRoute ? '/admin/descargas' : '/descargas';
   }
 
   load(id = this.descarga?.id ?? ''): void {

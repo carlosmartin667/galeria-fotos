@@ -4,12 +4,19 @@
       <small class="app-kicker">Fotos</small>
       <h2 class="h3 mb-0">Fotos por evento</h2>
     </div>
-    @if (session.isAdmin && eventoId) {
+    @if (session.isAdmin && eventoId && isAdminRoute) {
       <a
-        [routerLink]="['/fotos/metadata']"
+        [routerLink]="[fotosMetadataPath()]"
         [queryParams]="{ eventoId: eventoId }"
         class="btn btn-primary rounded-pill px-4"
         >Crear metadata</a
+      >
+    }
+    @if (session.isAdmin && !isAdminRoute) {
+      <a
+        [routerLink]="eventoId ? ['/admin/fotos/evento', eventoId] : ['/admin/fotos']"
+        class="btn btn-outline-primary rounded-pill px-4"
+        >Administrar fotos</a
       >
     }
   </div>
@@ -46,7 +53,7 @@
           placeholder="Archivo, tipo o precio"
         />
       </div>
-      @if (session.isAdmin) {
+      @if (session.isAdmin && isAdminRoute) {
         <div class="col-lg-2">
           <label class="form-label" for="fotosActiva">Estado</label>
           <select id="fotosActiva" class="form-select" [(ngModel)]="activaFilter">
@@ -103,10 +110,10 @@
               <p class="mb-1"><strong>Precio:</strong> {{ foto.precioUnitario ?? 0 | currency }}</p>
               <p class="mb-3"><strong>Activa:</strong> {{ foto.activa === false ? 'No' : 'Si' }}</p>
               <div class="app-actions">
-                <a [routerLink]="['/fotos', foto.id]" class="btn btn-sm btn-primary rounded-pill"
+                <a [routerLink]="[fotosPath(), foto.id]" class="btn btn-sm btn-primary rounded-pill"
                   >Ver detalle</a
                 >
-                @if (session.isAdmin) {
+                @if (session.isAdmin && isAdminRoute) {
                   <button
                     type="button"
                     class="btn btn-sm btn-outline-primary rounded-pill"
@@ -119,7 +126,7 @@
                     {{ isPortada(foto) ? 'Portada actual' : 'Usar como portada' }}
                   </button>
                   <a
-                    [routerLink]="['/fotos/editar', foto.id]"
+                    [routerLink]="[fotoEditPath(), foto.id]"
                     class="btn btn-sm btn-outline-primary rounded-pill"
                     >Editar metadata</a
                   >
@@ -130,6 +137,13 @@
                   >
                     Eliminar
                   </button>
+                }
+                @if (session.isAdmin && !isAdminRoute) {
+                  <a
+                    [routerLink]="['/admin/fotos', foto.id]"
+                    class="btn btn-sm btn-outline-primary rounded-pill"
+                    >Administrar</a
+                  >
                 }
               </div>
             </div>

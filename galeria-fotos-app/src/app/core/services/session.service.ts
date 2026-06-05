@@ -99,11 +99,12 @@ export class SessionService {
         'email',
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
       ]),
-      rol: this.normalizeRole(response.rol ?? response.usuario?.rol ?? this.claim(tokenPayload, [
+      rol: this.normalizeRole(response.rol ?? response.usuario?.rol ?? this.claimValues(tokenPayload, [
         'rol',
         'role',
         'roles',
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'
       ]))
     };
 
@@ -169,11 +170,12 @@ export class SessionService {
         'email',
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
       ]),
-      rol: this.normalizeRole(this.claim(payload, [
+      rol: this.normalizeRole(this.claimValues(payload, [
         'rol',
         'role',
         'roles',
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'
       ]))
     };
   }
@@ -210,41 +212,65 @@ export class SessionService {
   }
 
   private claim(payload: JwtPayload, names: string[]): string | undefined {
+    return this.claimValues(payload, names)[0];
+  }
+
+  private claimValues(payload: JwtPayload, names: string[]): string[] {
     for (const name of names) {
-      const value = payload[name];
+      const entry = Object.entries(payload).find(([key]) => key.toLowerCase() === name.toLowerCase());
+
+      if (!entry) {
+        continue;
+      }
+
+      const value = entry[1];
 
       if (Array.isArray(value) && value.length > 0) {
-        return String(value[0]);
+        return value.map((item) => String(item)).filter(Boolean);
       }
 
       if (typeof value === 'string' || typeof value === 'number') {
-        return String(value);
+        return [String(value)];
       }
     }
 
-    return undefined;
+    return [];
   }
 
-  private normalizeRole(value?: string): AppRole | undefined {
-    if (!value) {
-      return undefined;
+  private normalizeRole(value?: unknown): AppRole | undefined {
+    const values = Array.isArray(value) ? value : [value];
+    const normalizedRoles: AppRole[] = [];
+
+    for (const item of values) {
+      if (item === null || item === undefined) {
+        continue;
+      }
+
+      const parts = String(item)
+        .split(/[,\s;|]+/)
+        .map((part) => part.trim().toLowerCase())
+        .filter(Boolean);
+
+      for (const role of parts) {
+        if (role === 'admin' || role === 'administrador' || role === 'administrator') {
+          normalizedRoles.push('Admin');
+        }
+
+        if (role === 'usuario' || role === 'cliente' || role === 'user') {
+          normalizedRoles.push('Usuario');
+        }
+
+        if (role === 'invitado' || role === 'guest') {
+          normalizedRoles.push('Invitado');
+        }
+      }
     }
 
-    const role = value.toLowerCase();
-
-    if (role === 'admin') {
-      return 'Admin';
-    }
-
-    if (role === 'usuario' || role === 'cliente') {
-      return 'Usuario';
-    }
-
-    if (role === 'invitado' || role === 'guest') {
-      return 'Invitado';
-    }
-
-    return undefined;
+    return normalizedRoles.includes('Admin')
+      ? 'Admin'
+      : normalizedRoles.includes('Usuario')
+        ? 'Usuario'
+        : normalizedRoles[0];
   }
 
   private read(key: string): string | null {

@@ -80,15 +80,15 @@ describe('PublicLayoutComponent', () => {
     expect(text).not.toContain('Resumen ventas');
   });
 
-  it('shows admin footer links only for Admin', () => {
+  it('keeps admin links out of the public layout for Admin', () => {
     fixture = createWithRole('Admin', true);
 
     const text = pageText();
 
-    expect(text).toContain('Dashboard admin');
-    expect(text).toContain('Operaciones');
-    expect(text).toContain('Bitacora');
-    expect(text).toContain('Resumen ventas');
+    expect(text).not.toContain('Dashboard admin');
+    expect(text).not.toContain('Operaciones');
+    expect(text).not.toContain('Bitacora');
+    expect(text).not.toContain('Resumen ventas');
   });
 
   function createWithRole(role: AppRole, authenticated: boolean): ComponentFixture<PublicLayoutComponent> {
