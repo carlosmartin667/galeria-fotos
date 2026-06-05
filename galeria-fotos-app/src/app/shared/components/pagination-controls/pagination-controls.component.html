@@ -3,40 +3,78 @@
     <strong>{{ totalItems }}</strong>
     <span>registros</span>
     <span class="pagination-dot"></span>
-    <span *ngIf="!all">Pagina {{ page }} de {{ safeTotalPages }}</span>
-    <span *ngIf="all">Todos los registros</span>
+    @if (!all) {
+      <span>Pagina {{ page }} de {{ safeTotalPages }}</span>
+    }
+    @if (all) {
+      <span>Todos los registros</span>
+    }
   </div>
 
   <div class="pagination-actions">
     <label class="pagination-size">
       <span>Mostrar</span>
-      <select class="form-select form-select-sm" [(ngModel)]="selectedSize" [disabled]="disabled">
+      <select
+        class="form-select form-select-sm"
+        aria-label="Cantidad de registros a mostrar"
+        [(ngModel)]="selectedSize"
+        [disabled]="disabled"
+      >
         <option value="all">Todos</option>
-        <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        @for (size of pageSizes; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
       </select>
     </label>
 
     <div class="pagination-pages" role="group" aria-label="Paginacion">
-      <button type="button" class="pagination-btn" [disabled]="!canPrevious" aria-label="Primera pagina" (click)="first()">
+      <button
+        type="button"
+        class="pagination-btn"
+        [disabled]="!canPrevious"
+        aria-label="Primera pagina"
+        (click)="first()"
+      >
         &lt;&lt;
       </button>
-      <button type="button" class="pagination-btn" [disabled]="!canPrevious" aria-label="Pagina anterior" (click)="previous()">
+      <button
+        type="button"
+        class="pagination-btn"
+        [disabled]="!canPrevious"
+        aria-label="Pagina anterior"
+        (click)="previous()"
+      >
         &lt;
       </button>
+      @for (item of visiblePages; track item) {
+        <button
+          type="button"
+          class="pagination-btn pagination-number"
+          [class.active]="item === page"
+          [disabled]="disabled || all || item === page"
+          [attr.aria-label]="'Ir a pagina ' + item"
+          [attr.aria-current]="item === page ? 'page' : null"
+          (click)="goToPage(item)"
+        >
+          {{ item }}
+        </button>
+      }
       <button
-        *ngFor="let item of visiblePages"
         type="button"
-        class="pagination-btn pagination-number"
-        [class.active]="item === page"
-        [disabled]="disabled || all || item === page"
-        [attr.aria-current]="item === page ? 'page' : null"
-        (click)="goToPage(item)">
-        {{ item }}
-      </button>
-      <button type="button" class="pagination-btn" [disabled]="!canNext" aria-label="Pagina siguiente" (click)="next()">
+        class="pagination-btn"
+        [disabled]="!canNext"
+        aria-label="Pagina siguiente"
+        (click)="next()"
+      >
         &gt;
       </button>
-      <button type="button" class="pagination-btn" [disabled]="!canNext" aria-label="Ultima pagina" (click)="last()">
+      <button
+        type="button"
+        class="pagination-btn"
+        [disabled]="!canNext"
+        aria-label="Ultima pagina"
+        (click)="last()"
+      >
         &gt;&gt;
       </button>
     </div>

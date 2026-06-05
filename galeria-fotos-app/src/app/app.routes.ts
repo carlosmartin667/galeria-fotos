@@ -62,6 +62,10 @@ export const routes: Routes = [
       {
         path: 'presupuesto',
         loadComponent: () => import('./features/public/presupuesto-solicitud/presupuesto-solicitud.component').then((m) => m.PresupuestoSolicitudComponent)
+      },
+      {
+        path: 'disponibilidad',
+        loadComponent: () => import('./features/public/disponibilidad/disponibilidad-public-page.component').then((m) => m.DisponibilidadPublicPageComponent)
       }
     ]
   },
@@ -87,6 +91,11 @@ export const routes: Routes = [
         path: 'admin/operaciones',
         data: { roles: ['Admin'] },
         loadComponent: () => import('./features/admin/operaciones/operaciones-admin.component').then((m) => m.OperacionesAdminComponent)
+      },
+      {
+        path: 'admin/bitacora',
+        data: { roles: ['Admin'] },
+        loadComponent: () => import('./features/admin/bitacora/bitacora-admin.component').then((m) => m.BitacoraAdminComponent)
       },
       {
         path: 'admin/mi-perfil',

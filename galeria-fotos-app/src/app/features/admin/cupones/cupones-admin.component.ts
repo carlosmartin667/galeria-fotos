@@ -1,9 +1,13 @@
-import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
-import { ActualizarCuponDescuentoRequest, CuponDescuento, CuponUso } from '../../../core/models/cupon.models';
+import {
+  ActualizarCuponDescuentoRequest,
+  CuponDescuento,
+  CuponUso,
+} from '../../../core/models/cupon.models';
 import { CuponesService } from '../../../core/services/cupones.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -14,9 +18,17 @@ type CuponControl = 'codigo' | 'tipoDescuento' | 'valorDescuento' | 'fechaInicio
 @Component({
   selector: 'app-cupones-admin',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './cupones-admin.component.html',
-  styleUrl: './cupones-admin.component.css'
+  styleUrl: './cupones-admin.component.css',
 })
 export class CuponesAdminComponent implements OnInit {
   private readonly cuponesService = inject(CuponesService);
@@ -48,7 +60,7 @@ export class CuponesAdminComponent implements OnInit {
     usosMaximos: [null as number | null],
     usosMaximosPorUsuario: [null as number | null],
     soloPrimerCompra: [false],
-    activo: [true]
+    activo: [true],
   });
 
   ngOnInit(): void {
@@ -60,19 +72,22 @@ export class CuponesAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.cuponesService.getAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.cupones = [...items].sort((a, b) => (a.codigo ?? '').localeCompare(b.codigo ?? ''));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar cupones.';
-      }
-    });
+    this.cuponesService
+      .getAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.cupones = [...items].sort((a, b) => (a.codigo ?? '').localeCompare(b.codigo ?? ''));
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudieron cargar cupones.';
+        },
+      });
   }
 
   edit(item: CuponDescuento): void {
@@ -93,7 +108,7 @@ export class CuponesAdminComponent implements OnInit {
       usosMaximos: item.usosMaximos ?? null,
       usosMaximosPorUsuario: item.usosMaximosPorUsuario ?? null,
       soloPrimerCompra: item.soloPrimerCompra === true,
-      activo: item.activo !== false
+      activo: item.activo !== false,
     });
     this.form.controls.codigo.disable();
   }
@@ -115,7 +130,7 @@ export class CuponesAdminComponent implements OnInit {
       usosMaximos: null,
       usosMaximosPorUsuario: null,
       soloPrimerCompra: false,
-      activo: true
+      activo: true,
     });
   }
 
@@ -136,21 +151,23 @@ export class CuponesAdminComponent implements OnInit {
       : this.cuponesService.crear({ ...payload, codigo: this.form.getRawValue().codigo.trim() });
 
     this.saving = true;
-    request.pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = this.editingId ? 'Cupon actualizado.' : 'Cupon creado.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo guardar el cupon.';
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = this.editingId ? 'Cupon actualizado.' : 'Cupon creado.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo guardar el cupon.';
+        },
+      });
   }
 
   cambiarActivo(item: CuponDescuento): void {
@@ -159,21 +176,27 @@ export class CuponesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    const request = item.activo === false ? this.cuponesService.activar(item.id) : this.cuponesService.desactivar(item.id);
-    request.pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = item.activo === false ? 'Cupon activado.' : 'Cupon desactivado.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cambiar el estado del cupon.';
-      }
-    });
+    const request =
+      item.activo === false
+        ? this.cuponesService.activar(item.id)
+        : this.cuponesService.desactivar(item.id);
+    request
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = item.activo === false ? 'Cupon activado.' : 'Cupon desactivado.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cambiar el estado del cupon.';
+        },
+      });
   }
 
   eliminar(item: CuponDescuento): void {
@@ -182,20 +205,23 @@ export class CuponesAdminComponent implements OnInit {
     }
 
     this.actionId = item.id;
-    this.cuponesService.eliminar(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Cupon eliminado.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo eliminar el cupon.';
-      }
-    });
+    this.cuponesService
+      .eliminar(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Cupon eliminado.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo eliminar el cupon.';
+        },
+      });
   }
 
   verUsos(item: CuponDescuento): void {
@@ -205,19 +231,23 @@ export class CuponesAdminComponent implements OnInit {
 
     this.usosCupon = item;
     this.actionId = item.id;
-    this.cuponesService.getUsos(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (usos) => {
-        this.usos = usos;
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar los usos del cupon.';
-      }
-    });
+    this.cuponesService
+      .getUsos(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (usos) => {
+          this.usos = usos;
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar los usos del cupon.';
+        },
+      });
   }
 
   showError(controlName: CuponControl): boolean {
@@ -244,7 +274,11 @@ export class CuponesAdminComponent implements OnInit {
     if (!tipo.includes('porcentaje') && valor <= 0) {
       return 'El monto fijo debe ser mayor a 0.';
     }
-    if (raw.fechaInicio && raw.fechaFin && new Date(raw.fechaFin).getTime() <= new Date(raw.fechaInicio).getTime()) {
+    if (
+      raw.fechaInicio &&
+      raw.fechaFin &&
+      new Date(raw.fechaFin).getTime() <= new Date(raw.fechaInicio).getTime()
+    ) {
       return 'La fecha fin debe ser mayor a la fecha inicio.';
     }
     return '';
@@ -263,7 +297,7 @@ export class CuponesAdminComponent implements OnInit {
       usosMaximos: this.numberOrNull(raw.usosMaximos),
       usosMaximosPorUsuario: this.numberOrNull(raw.usosMaximosPorUsuario),
       soloPrimerCompra: raw.soloPrimerCompra,
-      activo: raw.activo
+      activo: raw.activo,
     };
   }
 

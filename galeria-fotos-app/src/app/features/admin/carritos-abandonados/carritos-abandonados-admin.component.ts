@@ -1,8 +1,11 @@
-import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { finalize, forkJoin } from 'rxjs';
 
-import { CarritoAbandonadoRegistro, CarritoAbandonadoResumen } from '../../../core/models/carrito-abandonado.models';
+import {
+  CarritoAbandonadoRegistro,
+  CarritoAbandonadoResumen,
+} from '../../../core/models/carrito-abandonado.models';
 import { CarritosAbandonadosService } from '../../../core/services/carritos-abandonados.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -11,9 +14,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-carritos-abandonados-admin',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgClass, NgFor, NgIf, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    NgClass,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './carritos-abandonados-admin.component.html',
-  styleUrl: './carritos-abandonados-admin.component.css'
+  styleUrl: './carritos-abandonados-admin.component.css',
 })
 export class CarritosAbandonadosAdminComponent implements OnInit {
   private readonly service = inject(CarritosAbandonadosService);
@@ -38,21 +48,32 @@ export class CarritosAbandonadosAdminComponent implements OnInit {
 
     forkJoin({
       resumen: this.service.getResumen(),
-      registros: this.service.getAbandonados()
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ resumen, registros }) => {
-        this.resumen = resumen;
-        this.registros = [...registros].sort((a, b) => new Date(b.fechaAbandonoUtc ?? b.fechaDeteccionUtc ?? b.fechaCreacionUtc ?? '').getTime() - new Date(a.fechaAbandonoUtc ?? a.fechaDeteccionUtc ?? a.fechaCreacionUtc ?? '').getTime());
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar carritos abandonados.';
-      }
-    });
+      registros: this.service.getAbandonados(),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ resumen, registros }) => {
+          this.resumen = resumen;
+          this.registros = [...registros].sort(
+            (a, b) =>
+              new Date(
+                b.fechaAbandonoUtc ?? b.fechaDeteccionUtc ?? b.fechaCreacionUtc ?? '',
+              ).getTime() -
+              new Date(
+                a.fechaAbandonoUtc ?? a.fechaDeteccionUtc ?? a.fechaCreacionUtc ?? '',
+              ).getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar carritos abandonados.';
+        },
+      });
   }
 
   detectar(): void {
@@ -60,20 +81,24 @@ export class CarritosAbandonadosAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.service.detectar().pipe(
-      finalize(() => {
-        this.detecting = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Deteccion ejecutada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo detectar carritos abandonados.';
-      }
-    });
+    this.service
+      .detectar()
+      .pipe(
+        finalize(() => {
+          this.detecting = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Deteccion ejecutada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo detectar carritos abandonados.';
+        },
+      });
   }
 
   notificar(item: CarritoAbandonadoRegistro): void {
@@ -84,20 +109,23 @@ export class CarritosAbandonadosAdminComponent implements OnInit {
     this.actionId = item.id;
     this.error = '';
     this.success = '';
-    this.service.notificar(item.id).pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Recordatorio solicitado.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = this.notificationMessage(error);
-      }
-    });
+    this.service
+      .notificar(item.id)
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Recordatorio solicitado.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = this.notificationMessage(error);
+        },
+      });
   }
 
   estadoClass(estado?: string | null): string {
@@ -116,7 +144,9 @@ export class CarritosAbandonadosAdminComponent implements OnInit {
 
   resumenValue(keys: (keyof CarritoAbandonadoResumen)[]): number {
     const source = this.resumen ?? {};
-    const value = keys.map((key) => source[key]).find((item) => item !== null && item !== undefined);
+    const value = keys
+      .map((key) => source[key])
+      .find((item) => item !== null && item !== undefined);
     return Number(value ?? 0);
   }
 
@@ -127,7 +157,11 @@ export class CarritosAbandonadosAdminComponent implements OnInit {
   private notificationMessage(error: unknown): string {
     const message = error instanceof Error ? error.message : '';
     const normalized = message.toLowerCase();
-    if (normalized.includes('spam') || normalized.includes('bloque') || normalized.includes('limite')) {
+    if (
+      normalized.includes('spam') ||
+      normalized.includes('bloque') ||
+      normalized.includes('limite')
+    ) {
       return 'El backend bloqueo el recordatorio para evitar spam o por limite de envios.';
     }
     return message || 'No se pudo notificar el carrito abandonado.';

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -11,8 +10,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-mi-perfil-admin',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
-  templateUrl: './mi-perfil-admin.component.html'
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  templateUrl: './mi-perfil-admin.component.html',
 })
 export class MiPerfilAdminComponent implements OnInit {
   private readonly adminService = inject(AdminService);
@@ -31,32 +30,36 @@ export class MiPerfilAdminComponent implements OnInit {
     whatsApp: ['', Validators.maxLength(64)],
     instagram: ['', Validators.maxLength(120)],
     correoPublico: ['', Validators.email],
-    direccion: ['', Validators.maxLength(300)]
+    direccion: ['', Validators.maxLength(300)],
   });
 
   ngOnInit(): void {
     this.loading = true;
 
-    this.adminService.getMiPerfil().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (perfil) => {
-        this.form.patchValue({
-          nombre: perfil.nombre,
-          descripcion: perfil.descripcion ?? '',
-          whatsApp: perfil.whatsApp ?? '',
-          instagram: perfil.instagram ?? '',
-          correoPublico: perfil.correoPublico ?? '',
-          direccion: perfil.direccion ?? ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el perfil admin.';
-      }
-    });
+    this.adminService
+      .getMiPerfil()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (perfil) => {
+          this.form.patchValue({
+            nombre: perfil.nombre,
+            descripcion: perfil.descripcion ?? '',
+            whatsApp: perfil.whatsApp ?? '',
+            instagram: perfil.instagram ?? '',
+            correoPublico: perfil.correoPublico ?? '',
+            direccion: perfil.direccion ?? '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar el perfil admin.';
+        },
+      });
   }
 
   submit(): void {
@@ -72,25 +75,27 @@ export class MiPerfilAdminComponent implements OnInit {
     const raw = this.form.getRawValue();
     this.saving = true;
 
-    this.adminService.updateMiPerfil({
-      nombre: raw.nombre.trim(),
-      descripcion: raw.descripcion.trim() || undefined,
-      whatsApp: raw.whatsApp.trim() || undefined,
-      instagram: raw.instagram.trim() || undefined,
-      correoPublico: raw.correoPublico.trim() || undefined,
-      direccion: raw.direccion.trim() || undefined
-    }).subscribe({
-      next: () => {
-        this.success = 'Perfil publico actualizado.';
-        this.saving = false;
-        this.cdr.markForCheck();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo actualizar el perfil.';
-        this.saving = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.adminService
+      .updateMiPerfil({
+        nombre: raw.nombre.trim(),
+        descripcion: raw.descripcion.trim() || undefined,
+        whatsApp: raw.whatsApp.trim() || undefined,
+        instagram: raw.instagram.trim() || undefined,
+        correoPublico: raw.correoPublico.trim() || undefined,
+        direccion: raw.direccion.trim() || undefined,
+      })
+      .subscribe({
+        next: () => {
+          this.success = 'Perfil publico actualizado.';
+          this.saving = false;
+          this.cdr.markForCheck();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo actualizar el perfil.';
+          this.saving = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   showError(controlName: 'nombre' | 'correoPublico'): boolean {

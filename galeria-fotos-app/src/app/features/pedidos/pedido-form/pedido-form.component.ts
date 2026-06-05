@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -10,8 +9,8 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
 @Component({
   selector: 'app-pedido-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterLink, ErrorAlertComponent],
-  templateUrl: './pedido-form.component.html'
+  imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
+  templateUrl: './pedido-form.component.html',
 })
 export class PedidoFormComponent {
   private readonly pedidosService = inject(PedidosService);
@@ -26,7 +25,7 @@ export class PedidoFormComponent {
   readonly form = this.fb.nonNullable.group({
     eventoId: ['', Validators.required],
     clienteId: ['', Validators.required],
-    fotoIds: ['']
+    fotoIds: [''],
   });
 
   submit(): void {
@@ -46,7 +45,7 @@ export class PedidoFormComponent {
     const payload: CrearPedidoRequest = {
       eventoId: raw.eventoId.trim(),
       clienteId: raw.clienteId.trim(),
-      fotoIds: fotoIds.length > 0 ? fotoIds : undefined
+      fotoIds: fotoIds.length > 0 ? fotoIds : undefined,
     };
 
     this.saving = true;
@@ -56,7 +55,7 @@ export class PedidoFormComponent {
         this.error = error instanceof Error ? error.message : 'No se pudo crear el pedido.';
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 

@@ -1,55 +1,85 @@
-<section *ngIf="session.isAdmin" class="notas-internas app-panel mt-4">
-  <div class="app-panel-header">
-    <div>
-      <small class="app-kicker">Admin</small>
-      <h3 class="h5 mb-0">Notas internas</h3>
+@if (session.isAdmin) {
+  <section class="notas-internas app-panel mt-4">
+    <div class="app-panel-header">
+      <div>
+        <small class="app-kicker">Admin</small>
+        <h3 class="h5 mb-0">Notas internas</h3>
+      </div>
+      <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+        Actualizar
+      </button>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
-  </div>
-
-  <div class="app-panel-body">
-    <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-
-    <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3 mb-4" novalidate>
-      <div class="col-12">
-        <label class="form-label" for="notaTexto">Nota</label>
-        <textarea id="notaTexto" rows="3" class="form-control" formControlName="texto"></textarea>
-        <small *ngIf="showError()" class="text-danger">La nota es requerida.</small>
-      </div>
-      <div class="col-md-4 d-flex align-items-end">
-        <label class="form-check mb-2">
-          <input type="checkbox" class="form-check-input" formControlName="activa">
-          <span class="form-check-label">Activa</span>
-        </label>
-      </div>
-      <div class="col-md-8 app-actions align-items-end justify-content-md-end">
-        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
-          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
-          {{ editingId ? 'Guardar nota' : 'Crear nota' }}
-        </button>
-        <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">Limpiar</button>
-      </div>
-    </form>
-
-    <app-loading *ngIf="loading" text="Cargando notas..."></app-loading>
-    <app-empty-state *ngIf="!loading && notas.length === 0" text="No hay notas internas."></app-empty-state>
-
-    <div class="notas-internas-list" *ngIf="!loading && notas.length > 0">
-      <article class="notas-internas-item" *ngFor="let nota of notas; trackBy: trackById">
-        <div>
-          <strong>{{ autor(nota) }}</strong>
-          <span class="app-meta">
-            {{ nota.fechaCreacionUtc ? (nota.fechaCreacionUtc | date:'short') : '-' }}
-            <span *ngIf="nota.activa === false"> - Inactiva</span>
-          </span>
+    <div class="app-panel-body">
+      <app-error-alert [message]="error"></app-error-alert>
+      @if (success) {
+        <div class="alert alert-success">{{ success }}</div>
+      }
+      <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3 mb-4" novalidate>
+        <div class="col-12">
+          <label class="form-label" for="notaTexto">Nota</label>
+          <textarea id="notaTexto" rows="3" class="form-control" formControlName="texto"></textarea>
+          @if (showError()) {
+            <small class="text-danger">La nota es requerida.</small>
+          }
         </div>
-        <p class="mb-0">{{ nota.texto }}</p>
-        <div class="app-actions">
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="edit(nota)">Editar</button>
-          <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" (click)="eliminar(nota)">Eliminar</button>
+        <div class="col-md-4 d-flex align-items-end">
+          <label class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" formControlName="activa" />
+            <span class="form-check-label">Activa</span>
+          </label>
         </div>
-      </article>
+        <div class="col-md-8 app-actions align-items-end justify-content-md-end">
+          <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="saving">
+            @if (saving) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            {{ editingId ? 'Guardar nota' : 'Crear nota' }}
+          </button>
+          <button type="button" class="btn btn-outline-dark rounded-pill px-4" (click)="cancel()">
+            Limpiar
+          </button>
+        </div>
+      </form>
+      @if (loading) {
+        <app-loading text="Cargando notas..."></app-loading>
+      }
+      @if (!loading && notas.length === 0) {
+        <app-empty-state text="No hay notas internas."></app-empty-state>
+      }
+      @if (!loading && notas.length > 0) {
+        <div class="notas-internas-list">
+          @for (nota of notas; track trackById($index, nota)) {
+            <article class="notas-internas-item">
+              <div>
+                <strong>{{ autor(nota) }}</strong>
+                <span class="app-meta">
+                  {{ nota.fechaCreacionUtc ? (nota.fechaCreacionUtc | date: 'short') : '-' }}
+                  @if (nota.activa === false) {
+                    <span> - Inactiva</span>
+                  }
+                </span>
+              </div>
+              <p class="mb-0">{{ nota.texto }}</p>
+              <div class="app-actions">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary rounded-pill"
+                  (click)="edit(nota)"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger rounded-pill"
+                  (click)="eliminar(nota)"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      }
     </div>
-  </div>
-</section>
+  </section>
+}

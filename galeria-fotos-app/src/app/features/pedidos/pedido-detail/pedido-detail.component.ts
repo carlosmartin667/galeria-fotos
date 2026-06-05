@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -16,8 +16,17 @@ import { NotasInternasComponent } from '../../../shared/components/notas-interna
 @Component({
   selector: 'app-pedido-detail',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgClass, NgFor, NgIf, RouterLink, ReactiveFormsModule, ErrorAlertComponent, LoadingComponent, NotasInternasComponent],
-  templateUrl: './pedido-detail.component.html'
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    NgClass,
+    RouterLink,
+    ReactiveFormsModule,
+    ErrorAlertComponent,
+    LoadingComponent,
+    NotasInternasComponent,
+  ],
+  templateUrl: './pedido-detail.component.html',
 })
 export class PedidoDetailComponent implements OnInit {
   private readonly pedidosService = inject(PedidosService);
@@ -27,7 +36,15 @@ export class PedidoDetailComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
-  readonly estadosPedido = ['Pendiente', 'PendientePago', 'Pagado', 'PreparandoDescarga', 'ListoParaDescargar', 'Cancelado', 'Reembolsado'];
+  readonly estadosPedido = [
+    'Pendiente',
+    'PendientePago',
+    'Pagado',
+    'PreparandoDescarga',
+    'ListoParaDescargar',
+    'Cancelado',
+    'Reembolsado',
+  ];
   pedido: Pedido | null = null;
   historialEstados: PedidoEstadoHistorial[] = [];
   linksByItem: Record<string, CrearLinkDescargaResponse> = {};
@@ -41,7 +58,7 @@ export class PedidoDetailComponent implements OnInit {
 
   readonly estadoForm = this.fb.nonNullable.group({
     estado: ['Pendiente', Validators.required],
-    comentario: ['', Validators.maxLength(1000)]
+    comentario: ['', Validators.maxLength(1000)],
   });
 
   ngOnInit(): void {
@@ -61,25 +78,27 @@ export class PedidoDetailComponent implements OnInit {
 
     forkJoin({
       pedido: this.pedidosService.get(id),
-      historial: this.pedidosService.getHistorialEstados(id).pipe(catchError(() => of([])))
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ pedido, historial }) => {
-        this.pedido = pedido;
-        this.historialEstados = historial;
-        this.estadoForm.patchValue({
-          estado: pedido.estado || 'Pendiente',
-          comentario: ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el pedido.';
-      }
-    });
+      historial: this.pedidosService.getHistorialEstados(id).pipe(catchError(() => of([]))),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ pedido, historial }) => {
+          this.pedido = pedido;
+          this.historialEstados = historial;
+          this.estadoForm.patchValue({
+            estado: pedido.estado || 'Pendiente',
+            comentario: '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar el pedido.';
+        },
+      });
   }
 
   cambiarEstado(): void {
@@ -98,23 +117,27 @@ export class PedidoDetailComponent implements OnInit {
     this.estadoError = '';
     this.estadoSuccess = '';
 
-    this.pedidosService.cambiarEstadoPedido(this.pedido.id, {
-      estado: raw.estado,
-      comentario: raw.comentario.trim() || null
-    }).pipe(
-      finalize(() => {
-        this.savingEstado = false;
-        this.cdr.markForCheck();
+    this.pedidosService
+      .cambiarEstadoPedido(this.pedido.id, {
+        estado: raw.estado,
+        comentario: raw.comentario.trim() || null,
       })
-    ).subscribe({
-      next: () => {
-        this.estadoSuccess = 'Estado del pedido actualizado.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.estadoError = error instanceof Error ? error.message : 'No se pudo cambiar el estado del pedido.';
-      }
-    });
+      .pipe(
+        finalize(() => {
+          this.savingEstado = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.estadoSuccess = 'Estado del pedido actualizado.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.estadoError =
+            error instanceof Error ? error.message : 'No se pudo cambiar el estado del pedido.';
+        },
+      });
   }
 
   generarLinkFoto(fotoId: string): void {
@@ -156,10 +179,15 @@ export class PedidoDetailComponent implements OnInit {
   }
 
   trackByEstado(index: number, item: PedidoEstadoHistorial): string {
-    return item.id ?? `${item.estadoNuevo}-${item.fechaCambioUtc ?? item.fechaCreacionUtc}-${index}`;
+    return (
+      item.id ?? `${item.estadoNuevo}-${item.fechaCambioUtc ?? item.fechaCreacionUtc}-${index}`
+    );
   }
 
-  private generateLink(key: string, payload: { pedidoId: string; fotoId?: string; fotoPrivadaId?: string }): void {
+  private generateLink(
+    key: string,
+    payload: { pedidoId: string; fotoId?: string; fotoPrivadaId?: string },
+  ): void {
     this.generatingItemId = key;
     this.downloadError = '';
 
@@ -173,7 +201,7 @@ export class PedidoDetailComponent implements OnInit {
         this.downloadError = this.downloadMessage(error);
         this.generatingItemId = '';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -185,7 +213,11 @@ export class PedidoDetailComponent implements OnInit {
       return 'El pedido todavia no esta pagado. Completa el pago antes de generar descargas.';
     }
 
-    if (normalized.includes('limite') || normalized.includes('limit') || normalized.includes('max')) {
+    if (
+      normalized.includes('limite') ||
+      normalized.includes('limit') ||
+      normalized.includes('max')
+    ) {
       return 'Se alcanzo el limite de descargas permitido.';
     }
 
@@ -193,7 +225,11 @@ export class PedidoDetailComponent implements OnInit {
       return 'El link esta vencido. Regenera un nuevo link desde la seccion Descargas.';
     }
 
-    if (normalized.includes('permiso') || normalized.includes('forbidden') || normalized.includes('403')) {
+    if (
+      normalized.includes('permiso') ||
+      normalized.includes('forbidden') ||
+      normalized.includes('403')
+    ) {
       return 'No tenes permisos para generar esta descarga.';
     }
 

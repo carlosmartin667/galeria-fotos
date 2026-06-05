@@ -1,10 +1,13 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { CrearSolicitudPresupuestoRequest, SolicitudPresupuesto } from '../../../core/models/presupuesto.models';
+import {
+  CrearSolicitudPresupuestoRequest,
+  SolicitudPresupuesto,
+} from '../../../core/models/presupuesto.models';
 import { PresupuestosService } from '../../../core/services/presupuestos.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -25,16 +28,31 @@ type PresupuestoFormControl =
 @Component({
   selector: 'app-presupuestos-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, RouterLink, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    RouterLink,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './presupuestos-admin.component.html',
-  styleUrl: './presupuestos-admin.component.css'
+  styleUrl: './presupuestos-admin.component.css',
 })
 export class PresupuestosAdminComponent implements OnInit {
   private readonly presupuestosService = inject(PresupuestosService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  readonly estados = ['Nuevo', 'Contactado', 'PresupuestoEnviado', 'Aceptado', 'Rechazado', 'Cerrado'];
+  readonly estados = [
+    'Nuevo',
+    'Contactado',
+    'PresupuestoEnviado',
+    'Aceptado',
+    'Rechazado',
+    'Cerrado',
+  ];
   solicitudes: SolicitudPresupuesto[] = [];
   editingId = '';
   loading = false;
@@ -45,7 +63,7 @@ export class PresupuestosAdminComponent implements OnInit {
 
   readonly filterForm = this.fb.nonNullable.group({
     activa: ['all'],
-    search: ['']
+    search: [''],
   });
 
   readonly form = this.fb.group({
@@ -59,7 +77,7 @@ export class PresupuestosAdminComponent implements OnInit {
     cantidadInvitados: [null as number | null, Validators.min(1)],
     mensaje: ['', [Validators.required, Validators.maxLength(2000)]],
     estado: ['Nuevo', [Validators.required, Validators.maxLength(64)]],
-    activa: [true]
+    activa: [true],
   });
 
   ngOnInit(): void {
@@ -72,13 +90,11 @@ export class PresupuestosAdminComponent implements OnInit {
       return this.solicitudes;
     }
 
-    return this.solicitudes.filter((item) => [
-      item.nombre,
-      item.email,
-      item.whatsApp,
-      item.tipoEvento,
-      item.estado
-    ].some((value) => (value ?? '').toLowerCase().includes(search)));
+    return this.solicitudes.filter((item) =>
+      [item.nombre, item.email, item.whatsApp, item.tipoEvento, item.estado].some((value) =>
+        (value ?? '').toLowerCase().includes(search),
+      ),
+    );
   }
 
   load(): void {
@@ -86,21 +102,27 @@ export class PresupuestosAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.presupuestosService.getSolicitudes(this.activaParam()).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (solicitudes) => {
-        this.solicitudes = [...solicitudes].sort((a, b) =>
-          new Date(b.fechaCreacionUtc ?? '').getTime() - new Date(a.fechaCreacionUtc ?? '').getTime()
-        );
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar solicitudes.';
-      }
-    });
+    this.presupuestosService
+      .getSolicitudes(this.activaParam())
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (solicitudes) => {
+          this.solicitudes = [...solicitudes].sort(
+            (a, b) =>
+              new Date(b.fechaCreacionUtc ?? '').getTime() -
+              new Date(a.fechaCreacionUtc ?? '').getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar solicitudes.';
+        },
+      });
   }
 
   edit(item: SolicitudPresupuesto): void {
@@ -119,7 +141,7 @@ export class PresupuestosAdminComponent implements OnInit {
       cantidadInvitados: item.cantidadInvitados ?? null,
       mensaje: item.mensaje,
       estado: item.estado ?? 'Nuevo',
-      activa: item.activa !== false
+      activa: item.activa !== false,
     });
   }
 
@@ -137,7 +159,7 @@ export class PresupuestosAdminComponent implements OnInit {
       cantidadInvitados: null,
       mensaje: '',
       estado: 'Nuevo',
-      activa: true
+      activa: true,
     });
   }
 
@@ -157,21 +179,24 @@ export class PresupuestosAdminComponent implements OnInit {
     }
 
     this.saving = true;
-    this.presupuestosService.actualizarSolicitud(this.editingId, this.toPayload()).pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Solicitud actualizada.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo guardar la solicitud.';
-      }
-    });
+    this.presupuestosService
+      .actualizarSolicitud(this.editingId, this.toPayload())
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Solicitud actualizada.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo guardar la solicitud.';
+        },
+      });
   }
 
   cambiarEstado(item: SolicitudPresupuesto, event: Event): void {
@@ -188,7 +213,7 @@ export class PresupuestosAdminComponent implements OnInit {
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cambiar el estado.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -205,7 +230,7 @@ export class PresupuestosAdminComponent implements OnInit {
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo cerrar la solicitud.';
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -248,9 +273,15 @@ export class PresupuestosAdminComponent implements OnInit {
     return null;
   }
 
-  private toPayload(): CrearSolicitudPresupuestoRequest & { estado?: string | null; activa: boolean } {
+  private toPayload(): CrearSolicitudPresupuestoRequest & {
+    estado?: string | null;
+    activa: boolean;
+  } {
     const raw = this.form.getRawValue();
-    const cantidad = raw.cantidadInvitados === null || raw.cantidadInvitados === undefined ? null : Number(raw.cantidadInvitados);
+    const cantidad =
+      raw.cantidadInvitados === null || raw.cantidadInvitados === undefined
+        ? null
+        : Number(raw.cantidadInvitados);
 
     return {
       nombre: this.trim(raw.nombre),
@@ -263,7 +294,7 @@ export class PresupuestosAdminComponent implements OnInit {
       cantidadInvitados: cantidad,
       mensaje: this.trim(raw.mensaje),
       estado: this.optional(raw.estado),
-      activa: raw.activa === true
+      activa: raw.activa === true,
     };
   }
 

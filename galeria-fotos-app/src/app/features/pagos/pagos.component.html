@@ -12,21 +12,37 @@
     <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
       <div class="col-md-8">
         <label class="form-label" for="pagoPedido">Pedido ID</label>
-        <input id="pagoPedido" type="text" class="form-control" formControlName="pedidoId">
-        <small *ngIf="form.controls.pedidoId.invalid && (form.controls.pedidoId.touched || submitted)" class="text-danger">El pedidoId es requerido.</small>
+        <input id="pagoPedido" type="text" class="form-control" formControlName="pedidoId" />
+        @if (form.controls.pedidoId.invalid && (form.controls.pedidoId.touched || submitted)) {
+          <small class="text-danger">El pedidoId es requerido.</small>
+        }
       </div>
       <div class="col-md-4 d-flex align-items-end">
         <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="loading">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
           Crear preferencia
         </button>
       </div>
     </form>
 
-    <div *ngIf="preference" class="alert alert-success mt-4">
-      <p class="mb-2">Preferencia creada.</p>
-      <p *ngIf="preference.preferenceId" class="mb-2"><strong>ID:</strong> {{ preference.preferenceId }}</p>
-      <a *ngIf="checkoutUrl" [href]="checkoutUrl" target="_blank" rel="noopener" class="btn btn-primary rounded-pill">Ir a Mercado Pago</a>
-    </div>
+    @if (preference) {
+      <div class="alert alert-success mt-4">
+        <p class="mb-2">Preferencia creada.</p>
+        @if (preference.preferenceId) {
+          <p class="mb-2"><strong>ID:</strong> {{ preference.preferenceId }}</p>
+        }
+        @if (checkoutUrl) {
+          <a
+            [href]="checkoutUrl"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-primary rounded-pill"
+            >Ir a Mercado Pago</a
+          >
+        }
+      </div>
+    }
   </div>
 </div>

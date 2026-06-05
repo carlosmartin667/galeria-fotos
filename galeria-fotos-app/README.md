@@ -2,6 +2,13 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
 
+## Frontend documentation
+
+- [Architecture](docs/FRONTEND_ARCHITECTURE.md)
+- [Security](docs/FRONTEND_SECURITY.md)
+- [Testing](docs/FRONTEND_TESTING.md)
+- [Demo checklist](docs/FRONTEND_DEMO.md)
+
 ## Development server
 
 To start a local development server, run:
@@ -31,7 +38,7 @@ ng generate --help
 To build the project run:
 
 ```bash
-ng build
+npm run build
 ```
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
@@ -41,7 +48,7 @@ This will compile your project and store the build artifacts in the `dist/` dire
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
 ```bash
-ng test
+npm test -- --watch=false
 ```
 
 ## Running end-to-end tests

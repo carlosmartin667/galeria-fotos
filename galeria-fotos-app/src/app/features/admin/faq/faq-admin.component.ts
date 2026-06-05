@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -12,9 +12,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-faq-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './faq-admin.component.html',
-  styleUrl: './faq-admin.component.css'
+  styleUrl: './faq-admin.component.css',
 })
 export class FaqAdminComponent implements OnInit {
   private readonly faqService = inject(FaqService);
@@ -34,7 +41,7 @@ export class FaqAdminComponent implements OnInit {
     respuesta: ['', [Validators.required, Validators.maxLength(2000)]],
     categoria: ['', Validators.maxLength(120)],
     orden: [0],
-    activa: [true]
+    activa: [true],
   });
 
   ngOnInit(): void {
@@ -46,19 +53,24 @@ export class FaqAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.faqService.getAdmin().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (preguntas) => {
-        this.preguntas = [...preguntas].sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar FAQ admin.';
-      }
-    });
+    this.faqService
+      .getAdmin()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (preguntas) => {
+          this.preguntas = [...preguntas].sort(
+            (a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0),
+          );
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo cargar FAQ admin.';
+        },
+      });
   }
 
   edit(item: PreguntaFrecuente): void {
@@ -71,7 +83,7 @@ export class FaqAdminComponent implements OnInit {
       respuesta: item.respuesta,
       categoria: item.categoria ?? '',
       orden: item.orden ?? 0,
-      activa: item.activa !== false
+      activa: item.activa !== false,
     });
   }
 
@@ -83,7 +95,7 @@ export class FaqAdminComponent implements OnInit {
       respuesta: '',
       categoria: '',
       orden: 0,
-      activa: true
+      activa: true,
     });
   }
 
@@ -114,7 +126,7 @@ export class FaqAdminComponent implements OnInit {
         this.error = error instanceof Error ? error.message : 'No se pudo guardar FAQ.';
         this.saving = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -127,7 +139,7 @@ export class FaqAdminComponent implements OnInit {
       next: () => this.load(),
       error: (error: unknown) => {
         this.error = error instanceof Error ? error.message : 'No se pudo eliminar FAQ.';
-      }
+      },
     });
   }
 
@@ -147,7 +159,7 @@ export class FaqAdminComponent implements OnInit {
       respuesta: raw.respuesta.trim(),
       categoria: raw.categoria.trim() || null,
       orden: Number(raw.orden || 0),
-      activa: raw.activa
+      activa: raw.activa,
     };
   }
 }

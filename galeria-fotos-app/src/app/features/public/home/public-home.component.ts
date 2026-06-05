@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
@@ -11,6 +11,7 @@ import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { PerfilFotografa, SitioHome } from '../../../core/models/sitio-publico.models';
 import { Testimonio } from '../../../core/models/testimonio.models';
 import { PromocionesService } from '../../../core/services/promociones.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { TestimoniosService } from '../../../core/services/testimonios.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -20,14 +21,22 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-public-home',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    RouterLink,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './public-home.component.html',
-  styleUrl: './public-home.component.css'
+  styleUrl: './public-home.component.css',
 })
 export class PublicHomeComponent implements OnInit {
   private readonly sitioService = inject(SitioPublicoService);
   private readonly promocionesService = inject(PromocionesService);
   private readonly testimoniosService = inject(TestimoniosService);
+  private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   home: SitioHome | null = null;
@@ -42,32 +51,52 @@ export class PublicHomeComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Fotografia profesional para eventos',
+      description:
+        'GaleriaFotos presenta servicios fotograficos, portfolio, promociones, testimonios y eventos para clientes.',
+      image: '/assets/caterserv/img/background-site.jpg',
+    });
     this.loading = true;
 
     forkJoin({
       home: this.sitioService.getHome(),
       promociones: this.promocionesService.getPublicas().pipe(catchError(() => of([]))),
-      testimonios: this.testimoniosService.getDestacados().pipe(catchError(() => of([])))
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ home, promociones, testimonios }) => {
-        this.home = home;
-        this.perfil = home.perfil ?? null;
-        this.servicios = this.takeActive(home.servicios ?? [], 3);
-        this.portfolio = this.takeFeatured(home.portfolio ?? [], 6);
-        this.preguntas = this.takeActive(home.preguntasFrecuentes ?? [], 4);
-        this.eventos = (home.eventosRecientes ?? []).slice(0, 3);
-        this.promociones = this.takeFeaturedPromotions(promociones, 3);
-        this.testimonios = testimonios.slice(0, 3);
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el sitio publico.';
-      }
-    });
+      testimonios: this.testimoniosService.getDestacados().pipe(catchError(() => of([]))),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ home, promociones, testimonios }) => {
+          this.home = home;
+          this.perfil = home.perfil ?? null;
+          this.servicios = this.takeActive(home.servicios ?? [], 3);
+          this.portfolio = this.takeFeatured(home.portfolio ?? [], 6);
+          this.preguntas = this.takeActive(home.preguntasFrecuentes ?? [], 4);
+          this.eventos = (home.eventosRecientes ?? []).slice(0, 3);
+          this.promociones = this.takeFeaturedPromotions(promociones, 3);
+          this.testimonios = testimonios.slice(0, 3);
+          this.seo.setPublicPage({
+            title: this.perfil?.nombre || 'Fotografia profesional para eventos',
+            description:
+              this.perfil?.textoBienvenida ||
+              this.perfil?.descripcion ||
+              'Servicios fotograficos, portfolio y eventos disponibles para clientes.',
+            image:
+              this.perfil?.bannerUrl ||
+              this.perfil?.fotoPerfilUrl ||
+              '/assets/caterserv/img/background-site.jpg',
+          });
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar el sitio publico.';
+        },
+      });
   }
 
   heroBackground(): string {
@@ -75,7 +104,7 @@ export class PublicHomeComponent implements OnInit {
   }
 
   trackById(_: number, item: { id?: string } | string): string {
-    return typeof item === 'string' ? item : item.id ?? String(_);
+    return typeof item === 'string' ? item : (item.id ?? String(_));
   }
 
   trackByNumber(_: number, item: number): number {
@@ -86,7 +115,10 @@ export class PublicHomeComponent implements OnInit {
     return promocion.cuponCodigo || promocion.codigoCupon || '';
   }
 
-  private takeActive<T extends { activo?: boolean; orden?: number | null }>(items: T[], count: number): T[] {
+  private takeActive<T extends { activo?: boolean; orden?: number | null }>(
+    items: T[],
+    count: number,
+  ): T[] {
     return [...items]
       .filter((item) => item.activo !== false)
       .sort((a, b) => Number(a.orden ?? 0) - Number(b.orden ?? 0))

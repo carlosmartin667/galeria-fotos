@@ -1,4 +1,4 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -6,7 +6,7 @@ import { finalize } from 'rxjs';
 import {
   ActualizarPlantillaNotificacionRequest,
   CrearPlantillaNotificacionRequest,
-  PlantillaNotificacion
+  PlantillaNotificacion,
 } from '../../../../core/models/notificacion.models';
 import { NotificacionesService } from '../../../../core/services/notificaciones.service';
 import { redactSensitiveText } from '../../../../core/utils/sensitive-text';
@@ -19,9 +19,16 @@ type PlantillaFormControl = 'codigo' | 'canal' | 'asunto' | 'cuerpoHtml' | 'cuer
 @Component({
   selector: 'app-plantillas-admin',
   standalone: true,
-  imports: [DatePipe, NgClass, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './plantillas-admin.component.html',
-  styleUrl: './plantillas-admin.component.css'
+  styleUrl: './plantillas-admin.component.css',
 })
 export class PlantillasAdminComponent implements OnInit {
   private readonly notificacionesService = inject(NotificacionesService);
@@ -37,7 +44,7 @@ export class PlantillasAdminComponent implements OnInit {
     '{{Estado}}',
     '{{Link}}',
     '{{NombreFotografa}}',
-    '{{Fecha}}'
+    '{{Fecha}}',
   ];
 
   plantillas: PlantillaNotificacion[] = [];
@@ -55,7 +62,7 @@ export class PlantillasAdminComponent implements OnInit {
     asunto: ['', [Validators.required, Validators.maxLength(240)]],
     cuerpoHtml: ['', [Validators.required, Validators.maxLength(12000)]],
     cuerpoTexto: ['', Validators.maxLength(12000)],
-    activa: [true]
+    activa: [true],
   });
 
   ngOnInit(): void {
@@ -75,19 +82,25 @@ export class PlantillasAdminComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    this.notificacionesService.getPlantillas().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.plantillas = [...items].sort((a, b) => (a.codigo ?? '').localeCompare(b.codigo ?? ''));
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar las plantillas.';
-      }
-    });
+    this.notificacionesService
+      .getPlantillas()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.plantillas = [...items].sort((a, b) =>
+            (a.codigo ?? '').localeCompare(b.codigo ?? ''),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar las plantillas.';
+        },
+      });
   }
 
   edit(item: PlantillaNotificacion): void {
@@ -101,7 +114,7 @@ export class PlantillasAdminComponent implements OnInit {
       asunto: item.asunto ?? '',
       cuerpoHtml: item.cuerpoHtml ?? '',
       cuerpoTexto: item.cuerpoTexto ?? '',
-      activa: item.activa !== false
+      activa: item.activa !== false,
     });
     this.form.controls.codigo.disable();
   }
@@ -117,7 +130,7 @@ export class PlantillasAdminComponent implements OnInit {
       asunto: '',
       cuerpoHtml: '',
       cuerpoTexto: '',
-      activa: true
+      activa: true,
     });
   }
 
@@ -134,24 +147,29 @@ export class PlantillasAdminComponent implements OnInit {
     this.saving = true;
     const request = this.editing?.id ? this.toUpdatePayload() : this.toCreatePayload();
     const operation = this.editing?.id
-      ? this.notificacionesService.actualizarPlantilla(this.editing.id, request as ActualizarPlantillaNotificacionRequest)
+      ? this.notificacionesService.actualizarPlantilla(
+          this.editing.id,
+          request as ActualizarPlantillaNotificacionRequest,
+        )
       : this.notificacionesService.crearPlantilla(request as CrearPlantillaNotificacionRequest);
 
-    operation.pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = this.editing?.id ? 'Plantilla actualizada.' : 'Plantilla creada.';
-        this.cancel();
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo guardar la plantilla.';
-      }
-    });
+    operation
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = this.editing?.id ? 'Plantilla actualizada.' : 'Plantilla creada.';
+          this.cancel();
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo guardar la plantilla.';
+        },
+      });
   }
 
   activar(item: PlantillaNotificacion): void {
@@ -172,7 +190,9 @@ export class PlantillasAdminComponent implements OnInit {
   }
 
   canalClass(canal?: string | null): string {
-    return (canal ?? '').toLowerCase().includes('email') ? 'bg-primary' : 'bg-light text-dark border';
+    return (canal ?? '').toLowerCase().includes('email')
+      ? 'bg-primary'
+      : 'bg-light text-dark border';
   }
 
   trackById(index: number, item: PlantillaNotificacion): string {
@@ -185,24 +205,30 @@ export class PlantillasAdminComponent implements OnInit {
 
   private runStateAction(id: string, action: 'activar' | 'desactivar'): void {
     this.actionId = id;
-    const request = action === 'activar'
-      ? this.notificacionesService.activarPlantilla(id)
-      : this.notificacionesService.desactivarPlantilla(id);
+    const request =
+      action === 'activar'
+        ? this.notificacionesService.activarPlantilla(id)
+        : this.notificacionesService.desactivarPlantilla(id);
 
-    request.pipe(
-      finalize(() => {
-        this.actionId = '';
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = action === 'activar' ? 'Plantilla activada.' : 'Plantilla desactivada.';
-        this.load();
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cambiar el estado de la plantilla.';
-      }
-    });
+    request
+      .pipe(
+        finalize(() => {
+          this.actionId = '';
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = action === 'activar' ? 'Plantilla activada.' : 'Plantilla desactivada.';
+          this.load();
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error
+              ? error.message
+              : 'No se pudo cambiar el estado de la plantilla.';
+        },
+      });
   }
 
   private toCreatePayload(): CrearPlantillaNotificacionRequest {
@@ -213,7 +239,7 @@ export class PlantillasAdminComponent implements OnInit {
       asunto: raw.asunto.trim(),
       cuerpoHtml: raw.cuerpoHtml.trim(),
       cuerpoTexto: this.optional(raw.cuerpoTexto),
-      activa: raw.activa
+      activa: raw.activa,
     };
   }
 
@@ -224,7 +250,7 @@ export class PlantillasAdminComponent implements OnInit {
       asunto: raw.asunto.trim(),
       cuerpoHtml: raw.cuerpoHtml.trim(),
       cuerpoTexto: this.optional(raw.cuerpoTexto),
-      activa: raw.activa
+      activa: raw.activa,
     };
   }
 

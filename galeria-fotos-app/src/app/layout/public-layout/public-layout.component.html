@@ -13,29 +13,61 @@
           data-bs-target="#publicNavbar"
           aria-controls="publicNavbar"
           aria-expanded="false"
-          aria-label="Abrir menu">
+          aria-label="Abrir menu"
+        >
           <span class="fa fa-bars text-primary"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="publicNavbar">
           <div class="navbar-nav mx-auto">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Home</a>
+            <a
+              routerLink="/"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="nav-link"
+              >Home</a
+            >
             <a routerLink="/portfolio" routerLinkActive="active" class="nav-link">Portfolio</a>
             <a routerLink="/servicios" routerLinkActive="active" class="nav-link">Servicios</a>
             <a routerLink="/promociones" routerLinkActive="active" class="nav-link">Promociones</a>
             <a routerLink="/testimonios" routerLinkActive="active" class="nav-link">Testimonios</a>
             <a routerLink="/presupuesto" routerLinkActive="active" class="nav-link">Presupuesto</a>
+            <a routerLink="/disponibilidad" routerLinkActive="active" class="nav-link"
+              >Disponibilidad</a
+            >
             <a routerLink="/faq" routerLinkActive="active" class="nav-link">FAQ</a>
             <a routerLink="/contacto" routerLinkActive="active" class="nav-link">Contacto</a>
             <a routerLink="/eventos" routerLinkActive="active" class="nav-link">Eventos</a>
             <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-link">Fotos</a>
-            <a *ngIf="session.isUser" routerLink="/favoritos" routerLinkActive="active" class="nav-link">Favoritos</a>
-            <a *ngIf="session.isUser" routerLink="/carrito" routerLinkActive="active" class="nav-link">Carrito</a>
-            <a *ngIf="session.isUser" routerLink="/pedidos" routerLinkActive="active" class="nav-link">Pedidos</a>
-            <a *ngIf="session.isUser" routerLink="/descargas" routerLinkActive="active" class="nav-link">Mis descargas</a>
-            <a *ngIf="session.isUser" routerLink="/mi-historial" routerLinkActive="active" class="nav-link">Mi historial</a>
-            <a *ngIf="session.isUser" routerLink="/notificaciones" routerLinkActive="active" class="nav-link">Notificaciones</a>
-            <a *ngIf="session.isUser" routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-link">Mi perfil</a>
+            @if (session.isUser) {
+              <a routerLink="/favoritos" routerLinkActive="active" class="nav-link">Favoritos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/carrito" routerLinkActive="active" class="nav-link">Carrito</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/pedidos" routerLinkActive="active" class="nav-link">Pedidos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/descargas" routerLinkActive="active" class="nav-link"
+                >Mis descargas</a
+              >
+            }
+            @if (session.isUser) {
+              <a routerLink="/mi-historial" routerLinkActive="active" class="nav-link"
+                >Mi historial</a
+              >
+            }
+            @if (session.isUser) {
+              <a routerLink="/notificaciones" routerLinkActive="active" class="nav-link"
+                >Notificaciones</a
+              >
+            }
+            @if (session.isUser) {
+              <a routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-link"
+                >Mi perfil</a
+              >
+            }
           </div>
 
           <div class="public-nav-actions">
@@ -44,12 +76,21 @@
               type="button"
               class="btn public-theme-toggle rounded-pill"
               (click)="themeService.toggleTheme()"
-              [attr.aria-label]="themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+              [attr.aria-label]="
+                themeService.getTheme() === 'dark'
+                  ? 'Cambiar a modo claro'
+                  : 'Cambiar a modo oscuro'
+              "
+            >
               <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
               <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
             </button>
-            <a *ngIf="session.isAuthenticated" routerLink="/dashboard" class="btn btn-outline-primary rounded-pill px-4">Panel</a>
-            <a *ngIf="!session.isAuthenticated" routerLink="/login" class="btn btn-primary rounded-pill px-4">Login</a>
+            @if (session.isAuthenticated) {
+              <a routerLink="/dashboard" class="btn btn-outline-primary rounded-pill px-4">Panel</a>
+            }
+            @if (!session.isAuthenticated) {
+              <a routerLink="/login" class="btn btn-primary rounded-pill px-4">Login</a>
+            }
           </div>
         </div>
       </nav>
@@ -67,7 +108,9 @@
           <a routerLink="/" class="public-footer-brand">
             <span class="text-primary">Galeria</span><span>Fotos</span>
           </a>
-          <p class="mb-0">Fotografia de eventos, sesiones y recuerdos listos para volver a mirar.</p>
+          <p class="mb-0">
+            Fotografia de eventos, sesiones y recuerdos listos para volver a mirar.
+          </p>
         </div>
         <div class="col-sm-6 col-lg-3">
           <h3 class="h6 text-white mb-3">Sitio</h3>
@@ -78,6 +121,7 @@
             <a routerLink="/promociones">Promociones</a>
             <a routerLink="/testimonios">Testimonios</a>
             <a routerLink="/presupuesto">Solicitar presupuesto</a>
+            <a routerLink="/disponibilidad">Disponibilidad</a>
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
           </div>
@@ -87,16 +131,39 @@
           <div class="public-footer-links">
             <a routerLink="/eventos">Eventos</a>
             <a routerLink="/fotos/evento">Fotos</a>
-            <a *ngIf="session.isUser" routerLink="/carrito">Carrito</a>
-            <a *ngIf="session.isAuthenticated" routerLink="/pedidos">Pedidos</a>
-            <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
-            <a *ngIf="session.isUser" routerLink="/mi-historial">Mi historial</a>
-            <a *ngIf="session.isUser" routerLink="/notificaciones">Notificaciones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/dashboard">Dashboard admin</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/ventas">Resumen ventas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/operaciones">Operaciones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones">Notificaciones admin</a>
-            <a *ngIf="!session.isAuthenticated" routerLink="/login">Login</a>
+            @if (session.isUser) {
+              <a routerLink="/carrito">Carrito</a>
+            }
+            @if (session.isAuthenticated) {
+              <a routerLink="/pedidos">Pedidos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/descargas">Mis descargas</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/mi-historial">Mi historial</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/notificaciones">Notificaciones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/dashboard">Dashboard admin</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/ventas">Resumen ventas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/operaciones">Operaciones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/bitacora">Bitacora</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/notificaciones">Notificaciones admin</a>
+            }
+            @if (!session.isAuthenticated) {
+              <a routerLink="/login">Login</a>
+            }
           </div>
         </div>
       </div>
@@ -104,7 +171,9 @@
   </footer>
 
   <div class="public-copyright">
-    <div class="container-fluid public-wide-container d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div
+      class="container-fluid public-wide-container d-flex flex-wrap align-items-center justify-content-between gap-2"
+    >
       <span>&copy; {{ year }} GaleriaFotos</span>
       <span>{{ session.displayRole }}</span>
     </div>

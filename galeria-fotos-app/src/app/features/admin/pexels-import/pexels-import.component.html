@@ -4,87 +4,165 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Importar fotos demo</h2>
     </div>
-    <a *ngIf="selectedEventoId" [routerLink]="['/fotos/evento', selectedEventoId]" class="btn btn-outline-primary rounded-pill px-4">Ver fotos del evento</a>
+    @if (selectedEventoId) {
+      <a
+        [routerLink]="['/fotos/evento', selectedEventoId]"
+        class="btn btn-outline-primary rounded-pill px-4"
+        >Ver fotos del evento</a
+      >
+    }
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loadingEventos" text="Cargando eventos..."></app-loading>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loadingEventos) {
+      <app-loading text="Cargando eventos..."></app-loading>
+    }
 
-    <form *ngIf="!loadingEventos" [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
-      <div class="col-lg-6">
-        <label class="form-label" for="pexelsEvento">Evento</label>
-        <select id="pexelsEvento" class="form-select" formControlName="eventoId">
-          <option value="">Seleccionar evento</option>
-          <option *ngFor="let evento of eventos; trackBy: trackEvento" [value]="evento.id">{{ evento.nombre }}</option>
-        </select>
-        <small *ngIf="showError('eventoId')" class="text-danger">El evento es requerido.</small>
-      </div>
-
-      <div class="col-lg-6">
-        <label class="form-label" for="pexelsQuery">Tematica</label>
-        <input id="pexelsQuery" type="text" class="form-control" formControlName="query" placeholder="Ej: wedding, birthday party, portrait photography">
-        <small *ngIf="showError('query')" class="text-danger">La tematica es requerida y debe tener maximo 120 caracteres.</small>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label" for="pexelsCantidad">Cantidad</label>
-        <input id="pexelsCantidad" type="number" min="1" max="200" class="form-control" formControlName="cantidad">
-        <small *ngIf="showError('cantidad')" class="text-danger">La cantidad debe estar entre 1 y 200.</small>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label" for="pexelsPrecio">Precio unitario</label>
-        <input id="pexelsPrecio" type="number" min="0" step="0.01" class="form-control" formControlName="precioUnitario">
-        <small *ngIf="showError('precioUnitario')" class="text-danger">El precio unitario debe ser mayor o igual a 0.</small>
-      </div>
-
-      <div class="col-12 app-actions">
-        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="importing">
-          <span *ngIf="importing" class="spinner-border spinner-border-sm me-2"></span>
-          Importar fotos
-        </button>
-        <button type="button" class="btn btn-outline-dark rounded-pill px-4" [disabled]="importing" (click)="reset()">Limpiar</button>
-        <a *ngIf="selectedEventoId" [routerLink]="['/fotos/evento', selectedEventoId]" class="btn btn-outline-primary rounded-pill px-4">Ver fotos del evento</a>
-      </div>
-    </form>
-
-    <app-empty-state *ngIf="!loadingEventos && eventos.length === 0" text="No hay eventos disponibles para importar fotos."></app-empty-state>
-
-    <section *ngIf="result as item" class="pexels-result mt-4">
-      <div class="pexels-summary">
-        <div>
-          <span>Solicitadas</span>
-          <strong>{{ item.cantidadSolicitada ?? '-' }}</strong>
+    @if (!loadingEventos) {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3" novalidate>
+        <div class="col-lg-6">
+          <label class="form-label" for="pexelsEvento">Evento</label>
+          <select id="pexelsEvento" class="form-select" formControlName="eventoId">
+            <option value="">Seleccionar evento</option>
+            @for (evento of eventos; track trackEvento($index, evento)) {
+              <option [value]="evento.id">{{ evento.nombre }}</option>
+            }
+          </select>
+          @if (showError('eventoId')) {
+            <small class="text-danger">El evento es requerido.</small>
+          }
         </div>
-        <div>
-          <span>Importadas</span>
-          <strong>{{ item.cantidadImportada ?? '-' }}</strong>
+        <div class="col-lg-6">
+          <label class="form-label" for="pexelsQuery">Tematica</label>
+          <input
+            id="pexelsQuery"
+            type="text"
+            class="form-control"
+            formControlName="query"
+            placeholder="Ej: wedding, birthday party, portrait photography"
+          />
+          @if (showError('query')) {
+            <small class="text-danger"
+              >La tematica es requerida y debe tener maximo 120 caracteres.</small
+            >
+          }
         </div>
-        <div>
-          <span>Duplicadas</span>
-          <strong>{{ item.cantidadDuplicada ?? 0 }}</strong>
+        <div class="col-md-6">
+          <label class="form-label" for="pexelsCantidad">Cantidad</label>
+          <input
+            id="pexelsCantidad"
+            type="number"
+            min="1"
+            max="200"
+            class="form-control"
+            formControlName="cantidad"
+          />
+          @if (showError('cantidad')) {
+            <small class="text-danger">La cantidad debe estar entre 1 y 200.</small>
+          }
         </div>
-        <div>
-          <span>Query</span>
-          <strong>{{ item.query || '-' }}</strong>
+        <div class="col-md-6">
+          <label class="form-label" for="pexelsPrecio">Precio unitario</label>
+          <input
+            id="pexelsPrecio"
+            type="number"
+            min="0"
+            step="0.01"
+            class="form-control"
+            formControlName="precioUnitario"
+          />
+          @if (showError('precioUnitario')) {
+            <small class="text-danger">El precio unitario debe ser mayor o igual a 0.</small>
+          }
         </div>
-      </div>
+        <div class="col-12 app-actions">
+          <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="importing">
+            @if (importing) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Importar fotos
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-dark rounded-pill px-4"
+            [disabled]="importing"
+            (click)="reset()"
+          >
+            Limpiar
+          </button>
+          @if (selectedEventoId) {
+            <a
+              [routerLink]="['/fotos/evento', selectedEventoId]"
+              class="btn btn-outline-primary rounded-pill px-4"
+              >Ver fotos del evento</a
+            >
+          }
+        </div>
+      </form>
+    }
 
-      <p class="app-meta mt-3 mb-0 text-break"><strong>Evento:</strong> {{ item.eventoId || selectedEventoId }}</p>
+    @if (!loadingEventos && eventos.length === 0) {
+      <app-empty-state text="No hay eventos disponibles para importar fotos."></app-empty-state>
+    }
 
-      <div *ngIf="fotosImportadas.length > 0" class="pexels-grid mt-4">
-        <article *ngFor="let foto of fotosImportadas; trackBy: trackFoto" class="pexels-photo">
-          <img *ngIf="foto.previewUrl" [src]="foto.previewUrl" [alt]="foto.nombreArchivo || 'Foto importada'" loading="lazy">
-          <div *ngIf="!foto.previewUrl" class="pexels-placeholder"><i class="fas fa-image"></i></div>
-          <div class="p-3">
-            <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo || 'Foto importada' }}</h3>
-            <p *ngIf="foto.storageKey" class="app-meta mb-2 text-break">{{ technicalValue(foto.storageKey) }}</p>
-            <p class="mb-0"><strong>Precio:</strong> {{ foto.precioUnitario ?? form.controls.precioUnitario.getRawValue() | currency }}</p>
+    @if (result; as item) {
+      <section class="pexels-result mt-4">
+        <div class="pexels-summary">
+          <div>
+            <span>Solicitadas</span>
+            <strong>{{ item.cantidadSolicitada ?? '-' }}</strong>
           </div>
-        </article>
-      </div>
-    </section>
+          <div>
+            <span>Importadas</span>
+            <strong>{{ item.cantidadImportada ?? '-' }}</strong>
+          </div>
+          <div>
+            <span>Duplicadas</span>
+            <strong>{{ item.cantidadDuplicada ?? 0 }}</strong>
+          </div>
+          <div>
+            <span>Query</span>
+            <strong>{{ item.query || '-' }}</strong>
+          </div>
+        </div>
+        <p class="app-meta mt-3 mb-0 text-break">
+          <strong>Evento:</strong> {{ item.eventoId || selectedEventoId }}
+        </p>
+        @if (fotosImportadas.length > 0) {
+          <div class="pexels-grid mt-4">
+            @for (foto of fotosImportadas; track foto.fotoId || foto.previewUrl || $index) {
+              <article class="pexels-photo">
+                @if (foto.previewUrl) {
+                  <img
+                    [src]="foto.previewUrl"
+                    [alt]="foto.nombreArchivo || 'Foto importada'"
+                    loading="lazy"
+                  />
+                }
+                @if (!foto.previewUrl) {
+                  <div class="pexels-placeholder"><i class="fas fa-image"></i></div>
+                }
+                <div class="p-3">
+                  <h3 class="h6 mb-2 text-break">{{ foto.nombreArchivo || 'Foto importada' }}</h3>
+                  @if (foto.storageKey) {
+                    <p class="app-meta mb-2 text-break">{{ technicalValue(foto.storageKey) }}</p>
+                  }
+                  <p class="mb-0">
+                    <strong>Precio:</strong>
+                    {{
+                      foto.precioUnitario ?? form.controls.precioUnitario.getRawValue() | currency
+                    }}
+                  </p>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
   </div>
 </div>

@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -7,6 +6,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { CrearSolicitudPresupuestoRequest } from '../../../core/models/presupuesto.models';
 import { ServicioFotografia } from '../../../core/models/servicio.models';
 import { PresupuestosService } from '../../../core/services/presupuestos.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { ServiciosService } from '../../../core/services/servicios.service';
 import { SitioPublicoService } from '../../../core/services/sitio-publico.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -29,22 +29,21 @@ type PresupuestoControl =
   selector: 'app-presupuesto-solicitud',
   standalone: true,
   imports: [
-    NgFor,
-    NgIf,
     RouterLink,
     ReactiveFormsModule,
     EmptyStateComponent,
     ErrorAlertComponent,
     LoadingComponent,
-    AgendaDisponibilidadPublicaComponent
+    AgendaDisponibilidadPublicaComponent,
   ],
   templateUrl: './presupuesto-solicitud.component.html',
-  styleUrl: './presupuesto-solicitud.component.css'
+  styleUrl: './presupuesto-solicitud.component.css',
 })
 export class PresupuestoSolicitudComponent implements OnInit {
   private readonly presupuestosService = inject(PresupuestosService);
   private readonly serviciosService = inject(ServiciosService);
   private readonly sitioService = inject(SitioPublicoService);
+  private readonly seo = inject(SeoService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -65,30 +64,41 @@ export class PresupuestoSolicitudComponent implements OnInit {
     fechaTentativa: [''],
     lugar: ['', Validators.maxLength(240)],
     cantidadInvitados: [null as number | null, Validators.min(1)],
-    mensaje: ['', [Validators.required, Validators.maxLength(2000)]]
+    mensaje: ['', [Validators.required, Validators.maxLength(2000)]],
   });
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Solicitar presupuesto',
+      description:
+        'Solicita un presupuesto para fotografia de eventos, sesiones privadas o servicios personalizados.',
+      image: '/assets/caterserv/img/event-7.jpg',
+    });
     this.loading = true;
     this.error = '';
 
     forkJoin({
       servicios: this.serviciosService.getPublicos(),
-      contacto: this.sitioService.getContacto()
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ servicios, contacto }) => {
-        this.servicios = servicios.filter((servicio) => servicio.activo !== false);
-        this.whatsAppUrl = contacto.whatsAppUrl || contacto.perfil?.whatsAppUrl || '';
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar los datos del formulario.';
-      }
-    });
+      contacto: this.sitioService.getContacto(),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ servicios, contacto }) => {
+          this.servicios = servicios.filter((servicio) => servicio.activo !== false);
+          this.whatsAppUrl = contacto.whatsAppUrl || contacto.perfil?.whatsAppUrl || '';
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error
+              ? error.message
+              : 'No se pudieron cargar los datos del formulario.';
+        },
+      });
   }
 
   submit(): void {
@@ -103,31 +113,34 @@ export class PresupuestoSolicitudComponent implements OnInit {
 
     const request = this.toRequest();
     this.saving = true;
-    this.presupuestosService.crearSolicitud(request).pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Solicitud enviada. Te vamos a contactar para avanzar con el presupuesto.';
-        this.submitted = false;
-        this.form.reset({
-          nombre: '',
-          email: '',
-          whatsApp: '',
-          tipoEvento: '',
-          servicioId: '',
-          fechaTentativa: '',
-          lugar: '',
-          cantidadInvitados: null,
-          mensaje: ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo enviar la solicitud.';
-      }
-    });
+    this.presupuestosService
+      .crearSolicitud(request)
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Solicitud enviada. Te vamos a contactar para avanzar con el presupuesto.';
+          this.submitted = false;
+          this.form.reset({
+            nombre: '',
+            email: '',
+            whatsApp: '',
+            tipoEvento: '',
+            servicioId: '',
+            fechaTentativa: '',
+            lugar: '',
+            cantidadInvitados: null,
+            mensaje: '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo enviar la solicitud.';
+        },
+      });
   }
 
   showError(controlName: PresupuestoControl): boolean {
@@ -141,9 +154,10 @@ export class PresupuestoSolicitudComponent implements OnInit {
 
   private toRequest(): CrearSolicitudPresupuestoRequest {
     const raw = this.form.getRawValue();
-    const cantidad = raw.cantidadInvitados === null || raw.cantidadInvitados === undefined
-      ? null
-      : Number(raw.cantidadInvitados);
+    const cantidad =
+      raw.cantidadInvitados === null || raw.cantidadInvitados === undefined
+        ? null
+        : Number(raw.cantidadInvitados);
 
     return {
       nombre: this.trim(raw.nombre),
@@ -154,7 +168,7 @@ export class PresupuestoSolicitudComponent implements OnInit {
       fechaTentativaUtc: this.toIsoOrNull(raw.fechaTentativa),
       lugar: this.optional(raw.lugar),
       cantidadInvitados: cantidad,
-      mensaje: this.trim(raw.mensaje)
+      mensaje: this.trim(raw.mensaje),
     };
   }
 

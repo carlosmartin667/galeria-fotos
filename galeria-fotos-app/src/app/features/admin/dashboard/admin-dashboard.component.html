@@ -4,37 +4,49 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Dashboard admin</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading" text="Cargando dashboard admin..."></app-loading>
+    @if (loading) {
+      <app-loading text="Cargando dashboard admin..."></app-loading>
+    }
 
-    <ng-container *ngIf="!loading">
-      <div class="admin-metrics-grid" *ngIf="metrics.length > 0">
-        <article class="dashboard-card admin-dashboard-card" *ngFor="let metric of metrics; trackBy: trackByMetric">
-          <i [class]="metric.icon"></i>
-          <span>{{ metric.label }}</span>
-          <strong>{{ metric.value }}</strong>
-        </article>
-      </div>
-
-      <div *ngIf="metrics.length === 0 && !error" class="alert alert-light border mb-0">
-        La API no devolvio metricas para mostrar.
-      </div>
-
-      <div class="row g-4 mt-1" *ngIf="sections.length > 0">
-        <section class="col-xl-4" *ngFor="let section of sections; trackBy: trackBySection">
-          <div class="admin-section">
-            <h3 class="h5 mb-3">{{ section.title }}</h3>
-            <article class="admin-section-item" *ngFor="let item of section.items; trackBy: trackByItem">
-              <strong>{{ itemTitle(item) }}</strong>
-              <span>{{ itemMeta(item) || 'Sin detalle' }}</span>
+    @if (!loading) {
+      @if (metrics.length > 0) {
+        <div class="admin-metrics-grid">
+          @for (metric of metrics; track trackByMetric($index, metric)) {
+            <article class="dashboard-card admin-dashboard-card">
+              <i [class]="metric.icon"></i>
+              <span>{{ metric.label }}</span>
+              <strong>{{ metric.value }}</strong>
             </article>
-          </div>
-        </section>
-      </div>
-    </ng-container>
+          }
+        </div>
+      }
+      @if (metrics.length === 0 && !error) {
+        <div class="alert alert-light border mb-0">La API no devolvio metricas para mostrar.</div>
+      }
+      @if (sections.length > 0) {
+        <div class="row g-4 mt-1">
+          @for (section of sections; track trackBySection($index, section)) {
+            <section class="col-xl-4">
+              <div class="admin-section">
+                <h3 class="h5 mb-3">{{ section.title }}</h3>
+                @for (item of section.items; track trackByItem($index, item)) {
+                  <article class="admin-section-item">
+                    <strong>{{ itemTitle(item) }}</strong>
+                    <span>{{ itemMeta(item) || 'Sin detalle' }}</span>
+                  </article>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      }
+    }
   </div>
 </div>

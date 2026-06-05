@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { finalize } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 @Component({
   selector: 'app-agenda-disponibilidad-publica',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [DatePipe, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './agenda-disponibilidad-publica.component.html',
   styleUrl: './agenda-disponibilidad-publica.component.css'
 })

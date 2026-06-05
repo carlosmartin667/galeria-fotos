@@ -1,10 +1,11 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
 import { CrearTestimonioRequest, Testimonio } from '../../../core/models/testimonio.models';
 import { TestimoniosService } from '../../../core/services/testimonios.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
@@ -14,12 +15,19 @@ type TestimonioControl = 'nombreCliente' | 'emailCliente' | 'texto' | 'calificac
 @Component({
   selector: 'app-testimonios-public',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, ReactiveFormsModule, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [
+    DatePipe,
+    ReactiveFormsModule,
+    EmptyStateComponent,
+    ErrorAlertComponent,
+    LoadingComponent,
+  ],
   templateUrl: './testimonios-public.component.html',
-  styleUrl: './testimonios-public.component.css'
+  styleUrl: './testimonios-public.component.css',
 })
 export class TestimoniosPublicComponent implements OnInit {
   private readonly testimoniosService = inject(TestimoniosService);
+  private readonly seo = inject(SeoService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -35,10 +43,16 @@ export class TestimoniosPublicComponent implements OnInit {
     emailCliente: ['', [Validators.email, Validators.maxLength(256)]],
     texto: ['', [Validators.required, Validators.maxLength(2000)]],
     calificacion: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
-    imagenUrl: ['', Validators.maxLength(1000)]
+    imagenUrl: ['', Validators.maxLength(1000)],
   });
 
   ngOnInit(): void {
+    this.seo.setPublicPage({
+      title: 'Testimonios de clientes',
+      description:
+        'Historias y opiniones publicadas por clientes sobre servicios fotograficos de GaleriaFotos.',
+      image: '/assets/caterserv/img/event-8.jpg',
+    });
     this.load();
   }
 
@@ -46,19 +60,27 @@ export class TestimoniosPublicComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.testimoniosService.getPublicos().pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.testimonios = [...items].sort((a, b) => new Date(b.fechaPublicacionUtc ?? b.fechaCreacionUtc ?? '').getTime() - new Date(a.fechaPublicacionUtc ?? a.fechaCreacionUtc ?? '').getTime());
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudieron cargar testimonios.';
-      }
-    });
+    this.testimoniosService
+      .getPublicos()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.testimonios = [...items].sort(
+            (a, b) =>
+              new Date(b.fechaPublicacionUtc ?? b.fechaCreacionUtc ?? '').getTime() -
+              new Date(a.fechaPublicacionUtc ?? a.fechaCreacionUtc ?? '').getTime(),
+          );
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudieron cargar testimonios.';
+        },
+      });
   }
 
   submit(): void {
@@ -72,31 +94,37 @@ export class TestimoniosPublicComponent implements OnInit {
     }
 
     this.saving = true;
-    this.testimoniosService.crear(this.toPayload()).pipe(
-      finalize(() => {
-        this.saving = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: () => {
-        this.success = 'Gracias. Tu testimonio quedo pendiente de aprobacion.';
-        this.submitted = false;
-        this.form.reset({
-          nombreCliente: '',
-          emailCliente: '',
-          texto: '',
-          calificacion: 5,
-          imagenUrl: ''
-        });
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo enviar el testimonio.';
-      }
-    });
+    this.testimoniosService
+      .crear(this.toPayload())
+      .pipe(
+        finalize(() => {
+          this.saving = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Gracias. Tu testimonio quedo pendiente de aprobacion.';
+          this.submitted = false;
+          this.form.reset({
+            nombreCliente: '',
+            emailCliente: '',
+            texto: '',
+            calificacion: 5,
+            imagenUrl: '',
+          });
+        },
+        error: (error: unknown) => {
+          this.error = error instanceof Error ? error.message : 'No se pudo enviar el testimonio.';
+        },
+      });
   }
 
   stars(value?: number | null): number[] {
-    return Array.from({ length: Math.max(Math.min(Number(value ?? 0), 5), 0) }, (_, index) => index + 1);
+    return Array.from(
+      { length: Math.max(Math.min(Number(value ?? 0), 5), 0) },
+      (_, index) => index + 1,
+    );
   }
 
   showError(controlName: TestimonioControl): boolean {
@@ -119,7 +147,7 @@ export class TestimoniosPublicComponent implements OnInit {
       emailCliente: raw.emailCliente.trim() || null,
       texto: raw.texto.trim(),
       calificacion: Number(raw.calificacion),
-      imagenUrl: raw.imagenUrl.trim() || null
+      imagenUrl: raw.imagenUrl.trim() || null,
     };
   }
 }

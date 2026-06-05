@@ -1,9 +1,11 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
-import { AdminOperacionesPendientes, AdminOperacionesResumen } from '../../../core/models/operaciones.models';
+import {
+  AdminOperacionesPendientes,
+  AdminOperacionesResumen,
+} from '../../../core/models/operaciones.models';
 import { OperacionesService } from '../../../core/services/operaciones.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorAlertComponent } from '../../../shared/components/error-alert/error-alert.component';
@@ -25,9 +27,9 @@ interface OperacionSection {
 @Component({
   selector: 'app-operaciones-admin',
   standalone: true,
-  imports: [NgFor, NgIf, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  imports: [RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './operaciones-admin.component.html',
-  styleUrl: './operaciones-admin.component.css'
+  styleUrl: './operaciones-admin.component.css',
 })
 export class OperacionesAdminComponent implements OnInit {
   private readonly operacionesService = inject(OperacionesService);
@@ -50,31 +52,52 @@ export class OperacionesAdminComponent implements OnInit {
 
     forkJoin({
       resumen: this.operacionesService.getResumen(),
-      pendientes: this.operacionesService.getPendientes()
-    }).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: ({ resumen, pendientes }) => {
-        this.resumen = resumen;
-        this.pendientes = pendientes;
-        this.metrics = this.buildMetrics(resumen);
-        this.sections = this.buildSections(resumen, pendientes);
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar el panel operativo.';
-      }
-    });
+      pendientes: this.operacionesService.getPendientes(),
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: ({ resumen, pendientes }) => {
+          this.resumen = resumen;
+          this.pendientes = pendientes;
+          this.metrics = this.buildMetrics(resumen);
+          this.sections = this.buildSections(resumen, pendientes);
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar el panel operativo.';
+        },
+      });
   }
 
   itemTitle(item: Record<string, unknown>): string {
-    return String(this.firstValue(item, ['nombre', 'titulo', 'clienteNombre', 'email', 'estado', 'id', 'pedidoId']) ?? 'Registro');
+    return String(
+      this.firstValue(item, [
+        'nombre',
+        'titulo',
+        'clienteNombre',
+        'email',
+        'estado',
+        'id',
+        'pedidoId',
+      ]) ?? 'Registro',
+    );
   }
 
   itemMeta(item: Record<string, unknown>): string {
-    return ['estado', 'tipo', 'total', 'fechaCreacionUtc', 'fechaInicioUtc', 'fechaSesionUtc', 'expiraEnUtc']
+    return [
+      'estado',
+      'tipo',
+      'total',
+      'fechaCreacionUtc',
+      'fechaInicioUtc',
+      'fechaSesionUtc',
+      'expiraEnUtc',
+    ]
       .map((key) => this.firstValue(item, [key]))
       .filter((value) => value !== undefined && value !== null && value !== '')
       .map((value) => String(value))
@@ -91,26 +114,103 @@ export class OperacionesAdminComponent implements OnInit {
 
   private buildMetrics(resumen: AdminOperacionesResumen): OperacionMetric[] {
     return [
-      { label: 'Solicitudes nuevas', value: this.metric(resumen, ['solicitudesNuevas']), icon: 'fas fa-file-signature', link: '/admin/presupuestos' },
-      { label: 'Pendientes contacto', value: this.metric(resumen, ['solicitudesPendientesContacto']), icon: 'fas fa-phone', link: '/admin/presupuestos' },
-      { label: 'Pedidos pendientes pago', value: this.metric(resumen, ['pedidosPendientesPago']), icon: 'fas fa-clock', link: '/pedidos' },
-      { label: 'Pedidos pagados', value: this.metric(resumen, ['pedidosPagados']), icon: 'fas fa-receipt', link: '/pedidos' },
-      { label: 'Preparando descarga', value: this.metric(resumen, ['pedidosPreparandoDescarga']), icon: 'fas fa-box-open', link: '/pedidos' },
-      { label: 'Listos para descargar', value: this.metric(resumen, ['pedidosListosParaDescargar']), icon: 'fas fa-download', link: '/admin/descargas' },
-      { label: 'Sesiones activas', value: this.metric(resumen, ['sesionesPrivadasActivas']), icon: 'fas fa-camera-retro', link: '/admin/sesiones-privadas' },
-      { label: 'Eventos proximos', value: this.metric(resumen, ['eventosProximos']), icon: 'fas fa-calendar-alt', link: '/eventos' },
-      { label: 'Descargas vencidas', value: this.metric(resumen, ['descargasVencidas']), icon: 'fas fa-exclamation-triangle', link: '/admin/descargas' },
-      { label: 'Descargas por vencer', value: this.metric(resumen, ['descargasPorVencer']), icon: 'fas fa-hourglass-half', link: '/admin/descargas' }
+      {
+        label: 'Solicitudes nuevas',
+        value: this.metric(resumen, ['solicitudesNuevas']),
+        icon: 'fas fa-file-signature',
+        link: '/admin/presupuestos',
+      },
+      {
+        label: 'Pendientes contacto',
+        value: this.metric(resumen, ['solicitudesPendientesContacto']),
+        icon: 'fas fa-phone',
+        link: '/admin/presupuestos',
+      },
+      {
+        label: 'Pedidos pendientes pago',
+        value: this.metric(resumen, ['pedidosPendientesPago']),
+        icon: 'fas fa-clock',
+        link: '/pedidos',
+      },
+      {
+        label: 'Pedidos pagados',
+        value: this.metric(resumen, ['pedidosPagados']),
+        icon: 'fas fa-receipt',
+        link: '/pedidos',
+      },
+      {
+        label: 'Preparando descarga',
+        value: this.metric(resumen, ['pedidosPreparandoDescarga']),
+        icon: 'fas fa-box-open',
+        link: '/pedidos',
+      },
+      {
+        label: 'Listos para descargar',
+        value: this.metric(resumen, ['pedidosListosParaDescargar']),
+        icon: 'fas fa-download',
+        link: '/admin/descargas',
+      },
+      {
+        label: 'Sesiones activas',
+        value: this.metric(resumen, ['sesionesPrivadasActivas']),
+        icon: 'fas fa-camera-retro',
+        link: '/admin/sesiones-privadas',
+      },
+      {
+        label: 'Eventos proximos',
+        value: this.metric(resumen, ['eventosProximos']),
+        icon: 'fas fa-calendar-alt',
+        link: '/eventos',
+      },
+      {
+        label: 'Descargas vencidas',
+        value: this.metric(resumen, ['descargasVencidas']),
+        icon: 'fas fa-exclamation-triangle',
+        link: '/admin/descargas',
+      },
+      {
+        label: 'Descargas por vencer',
+        value: this.metric(resumen, ['descargasPorVencer']),
+        icon: 'fas fa-hourglass-half',
+        link: '/admin/descargas',
+      },
     ];
   }
 
-  private buildSections(resumen: AdminOperacionesResumen, pendientes: AdminOperacionesPendientes): OperacionSection[] {
+  private buildSections(
+    resumen: AdminOperacionesResumen,
+    pendientes: AdminOperacionesPendientes,
+  ): OperacionSection[] {
     return [
-      { title: 'Pedidos recientes', items: this.list(resumen, ['pedidosRecientes']), empty: 'No hay pedidos recientes.' },
-      { title: 'Solicitudes recientes', items: this.list(resumen, ['solicitudesRecientes']), empty: 'No hay solicitudes recientes.' },
-      { title: 'Agenda proxima', items: this.list(pendientes, ['agendaProxima']).concat(this.list(resumen, ['agendaProxima'])).slice(0, 8), empty: 'No hay agenda proxima.' },
-      { title: 'Pendientes operativos', items: this.mergePendientes(pendientes), empty: 'No hay pendientes operativos.' },
-      { title: 'Descargas vencidas o por vencer', items: this.list(pendientes, ['descargasVencidas']).concat(this.list(pendientes, ['descargasPorVencer'])), empty: 'No hay descargas vencidas.' }
+      {
+        title: 'Pedidos recientes',
+        items: this.list(resumen, ['pedidosRecientes']),
+        empty: 'No hay pedidos recientes.',
+      },
+      {
+        title: 'Solicitudes recientes',
+        items: this.list(resumen, ['solicitudesRecientes']),
+        empty: 'No hay solicitudes recientes.',
+      },
+      {
+        title: 'Agenda proxima',
+        items: this.list(pendientes, ['agendaProxima'])
+          .concat(this.list(resumen, ['agendaProxima']))
+          .slice(0, 8),
+        empty: 'No hay agenda proxima.',
+      },
+      {
+        title: 'Pendientes operativos',
+        items: this.mergePendientes(pendientes),
+        empty: 'No hay pendientes operativos.',
+      },
+      {
+        title: 'Descargas vencidas o por vencer',
+        items: this.list(pendientes, ['descargasVencidas']).concat(
+          this.list(pendientes, ['descargasPorVencer']),
+        ),
+        empty: 'No hay descargas vencidas.',
+      },
     ];
   }
 
@@ -120,7 +220,7 @@ export class OperacionesAdminComponent implements OnInit {
       ...this.list(pendientes, ['pedidosPagados']),
       ...this.list(pendientes, ['pedidosPreparandoDescarga']),
       ...this.list(pendientes, ['solicitudesPendientes']),
-      ...this.list(pendientes, ['sesionesPrivadasActivas'])
+      ...this.list(pendientes, ['sesionesPrivadasActivas']),
     ].slice(0, 12);
   }
 
@@ -132,7 +232,10 @@ export class OperacionesAdminComponent implements OnInit {
   private list(item: Record<string, unknown>, keys: string[]): Record<string, unknown>[] {
     const value = this.firstValue(item, keys);
     return Array.isArray(value)
-      ? value.filter((entry): entry is Record<string, unknown> => !!entry && typeof entry === 'object' && !Array.isArray(entry))
+      ? value.filter(
+          (entry): entry is Record<string, unknown> =>
+            !!entry && typeof entry === 'object' && !Array.isArray(entry),
+        )
       : [];
   }
 

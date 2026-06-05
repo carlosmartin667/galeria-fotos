@@ -177,12 +177,57 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No subir budgets como primera solucion; priorizar lazy loading, limpieza de imports y reduccion de carga inicial.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## Fase 7A calidad tecnica frontend, CI, tests y bitacora
+
+- El frontend usa Angular 21 con standalone components, lazy loading y SSR configurado.
+- Mantener documentacion frontend en `docs`: arquitectura, seguridad, testing y demo.
+- Mantener CI frontend en `.github/workflows/frontend-ci.yml` usando `npm ci`, build y tests sin secretos ni deploy.
+- La Bitacora Admin vive en `/admin/bitacora`, es solo `Admin` y consume `GET /Bitacora`, `GET /Bitacora/{id}` y `GET /Bitacora/resumen`.
+- La metadata de bitacora siempre debe pasar por sanitizacion antes de renderizarse.
+- No renderizar `MetadataJson` como HTML activo; mostrarlo como texto seguro.
+- No mostrar tokens, passwords, StorageKey, MarcaAguaStorageKey, URLs firmadas, secretos ni datos financieros en bitacora.
+- No guardar bitacora, reportes ni metadata tecnica en `localStorage`, sessionStorage ni otro storage del navegador.
+- No usar `console.log` ni `console.error` con metadata de bitacora, payloads privados o datos sensibles.
+- Agregar tests nuevos para services, guards, interceptores o sanitizadores cuando se agregue comportamiento transversal.
+- Usar mejoras modernas de Angular de forma gradual y justificada: `OnPush`, `trackBy`, lazy loading y `takeUntilDestroyed` cuando aporten valor.
+- No migrar masivamente a signals ni a `@if`/`@for` sin una fase dedicada.
+- No usar Signal Forms mientras siga siendo experimental para el proyecto.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
+## Fase 7B tests criticos, modernizacion gradual y accesibilidad
+
+- Agregar tests criticos y mantenibles para `SessionService`, guards, interceptores, services tecnicos y sanitizadores cuando el cambio toque esas areas.
+- Los tests no deben depender de HTML grande ni de backend corriendo.
+- Preferir `takeUntilDestroyed` en componentes tocados con suscripciones manuales; no refactorizar componentes complejos solo por estilo.
+- Aplicar `ChangeDetectionStrategy.OnPush` solo en componentes puros o componentes tocados donde no rompa formularios ni flujos existentes.
+- Usar control flow moderno `@if`/`@for` de forma gradual en componentes tocados; no hacer migraciones masivas de templates.
+- No migrar masivamente a signals; usar signals solo para estado local simple cuando aporte claridad.
+- No activar zoneless ni usar Signal Forms en esta fase.
+- Mantener accesibilidad basica: `aria-label` en botones icon-only, labels claros en formularios, foco visible, tablas con encabezados y dropdowns con estado accesible.
+- No exponer StorageKey, MarcaAguaStorageKey, URLs firmadas, tokens, secretos, metadata cruda ni datos financieros en UI o tests.
+- No agregar `console.log` ni `console.error` con datos sensibles.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
+## Fase 7C SEO, SSR y demo publica
+
+- Las pantallas publicas deben configurar titulo, descripcion y Open Graph/Twitter Card mediante `SeoService` o una abstraccion equivalente.
+- No incluir tokens, StorageKey, MarcaAguaStorageKey, URLs firmadas, query params sensibles ni datos privados en metadata SEO, titulos, descripcion u OG image.
+- Las imagenes OG deben usar assets publicos o URLs publicas seguras; si hay duda, usar fallback publico de CaterServ.
+- Mantener rutas SSR publicas en `app.routes.server.ts`; no agregar rutas admin o privadas a robots/sitemap publicos.
+- La ruta publica `/disponibilidad` puede mostrar disponibilidad simple desde `GET /Agenda/disponibilidad`, sin clientes, ubicaciones privadas ni descripciones internas.
+- No agregar canonical, `robots.txt` ni sitemap definitivo sin dominio final confirmado; si se agregan, deben incluir solo rutas publicas estables.
+- Las rutas publicas no deben mostrar lenguaje de panel interno como "Hola Invitado" ni opciones privadas/admin.
+- Los formularios publicos y de auth deben usar labels claros, `aria-invalid` y `aria-describedby` en errores cuando sea viable.
+- Migrar a `@if`/`@for` solo de forma gradual y en templates simples o tocados; no hacer migraciones masivas.
+- Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
+
 ## Endpoints principales
 
 - Admin: `GET /Admin/dashboard`, `GET /Admin/operaciones/resumen`, `GET /Admin/operaciones/pendientes`, `GET /Admin/perfil-publico`, `GET /Admin/mi-perfil`, `PUT /Admin/mi-perfil`.
 - Admin ventas: `GET /Admin/ventas/resumen`.
 - Admin demo Pexels: `POST /Admin/demo/pexels/importar-fotos`.
 - Auth: `POST /Auth/register`, `POST /Auth/login`.
+- Bitacora: `GET /Bitacora`, `GET /Bitacora/{id}`, `GET /Bitacora/resumen`.
 - Clientes: `GET/POST /Clientes`, `GET/PUT/DELETE /Clientes/{id}`, `GET /Clientes/{clienteId}/historial`, `GET /Clientes/mi-historial`.
 - Eventos: `GET/POST /Eventos`, `GET/PUT/DELETE /Eventos/{id}`, `PUT /Eventos/{eventoId}/portada/{fotoId}`.
 - Comentarios de eventos: `GET/POST /Eventos/{eventoId}/comentarios`, `PUT/DELETE /Eventos/comentarios/{comentarioId}`.

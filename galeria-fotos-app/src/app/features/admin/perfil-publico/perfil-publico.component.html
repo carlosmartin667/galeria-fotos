@@ -8,21 +8,35 @@
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <app-loading *ngIf="loading"></app-loading>
+    @if (loading) {
+      <app-loading></app-loading>
+    }
 
-    <div *ngIf="perfil as item" class="row g-4 align-items-start">
-      <div class="col-lg-7">
-        <h3 class="h2 text-primary mb-3">{{ item.nombre }}</h3>
-        <p class="lead mb-0">{{ item.descripcion || 'Perfil publico de la galeria fotografica.' }}</p>
-      </div>
-      <div class="col-lg-5">
-        <div class="app-contact-list">
-          <p *ngIf="item.whatsApp"><strong>WhatsApp:</strong> {{ item.whatsApp }}</p>
-          <p *ngIf="item.instagram"><strong>Instagram:</strong> {{ item.instagram }}</p>
-          <p *ngIf="item.correoPublico"><strong>Email:</strong> {{ item.correoPublico }}</p>
-          <p *ngIf="item.direccion"><strong>Direccion:</strong> {{ item.direccion }}</p>
+    @if (perfil; as item) {
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-7">
+          <h3 class="h2 text-primary mb-3">{{ item.nombre }}</h3>
+          <p class="lead mb-0">
+            {{ item.descripcion || 'Perfil publico de la galeria fotografica.' }}
+          </p>
+        </div>
+        <div class="col-lg-5">
+          <div class="app-contact-list">
+            @if (item.whatsApp) {
+              <p><strong>WhatsApp:</strong> {{ item.whatsApp }}</p>
+            }
+            @if (item.instagram) {
+              <p><strong>Instagram:</strong> {{ item.instagram }}</p>
+            }
+            @if (item.correoPublico) {
+              <p><strong>Email:</strong> {{ item.correoPublico }}</p>
+            }
+            @if (item.direccion) {
+              <p><strong>Direccion:</strong> {{ item.direccion }}</p>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>

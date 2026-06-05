@@ -50,9 +50,15 @@
             <a routerLink="/faq">FAQ</a>
             <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
-            <a *ngIf="session.isAdmin" routerLink="/clientes">Clientes</a>
-            <a *ngIf="session.isUser" routerLink="/mi-historial">Mi historial</a>
-            <a *ngIf="session.isUser" routerLink="/notificaciones">Notificaciones</a>
+            @if (session.isAdmin) {
+              <a routerLink="/clientes">Clientes</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/mi-historial">Mi historial</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/notificaciones">Notificaciones</a>
+            }
             <a routerLink="/eventos">Eventos</a>
             <a routerLink="/fotos/evento">Fotos</a>
             <a routerLink="/admin/perfil-publico">Perfil publico</a>
@@ -62,28 +68,72 @@
         <div class="col-sm-6 col-lg-4">
           <h3 class="h6 text-white mb-3">Operaciones</h3>
           <div class="footer-links">
-            <a *ngIf="session.isAuthenticated" routerLink="/pedidos">Pedidos</a>
-            <a *ngIf="session.isUser" routerLink="/carrito">Carrito</a>
-            <a *ngIf="session.isAuthenticated" routerLink="/favoritos">Favoritos</a>
-            <a *ngIf="session.isAuthenticated" routerLink="/pagos">Pagos</a>
-            <a *ngIf="session.isUser" routerLink="/descargas">Mis descargas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/descargas">Gestion descargas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/operaciones">Operaciones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/portfolio">Admin portfolio</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/servicios">Admin servicios</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/faq">Admin FAQ</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/presupuestos">Presupuestos</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/agenda">Agenda</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones">Notificaciones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/notificaciones/plantillas">Plantillas de notificacion</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/ventas">Resumen ventas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/cupones">Cupones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/promociones">Admin promociones</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/testimonios">Admin testimonios</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/carritos-abandonados">Carritos abandonados</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/reportes/ventas">Reportes ventas</a>
-            <a *ngIf="session.isAdmin" routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
+            @if (session.isAuthenticated) {
+              <a routerLink="/pedidos">Pedidos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/carrito">Carrito</a>
+            }
+            @if (session.isAuthenticated) {
+              <a routerLink="/favoritos">Favoritos</a>
+            }
+            @if (session.isAuthenticated) {
+              <a routerLink="/pagos">Pagos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/descargas">Mis descargas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/descargas">Gestion descargas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/operaciones">Operaciones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/portfolio">Admin portfolio</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/servicios">Admin servicios</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/faq">Admin FAQ</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/presupuestos">Presupuestos</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/agenda">Agenda</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/sesiones-privadas">Sesiones privadas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/notificaciones">Notificaciones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/notificaciones/plantillas">Plantillas de notificacion</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/ventas">Resumen ventas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/cupones">Cupones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/promociones">Admin promociones</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/testimonios">Admin testimonios</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/carritos-abandonados">Carritos abandonados</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/reportes/ventas">Reportes ventas</a>
+            }
+            @if (session.isAdmin) {
+              <a routerLink="/admin/pexels/importar-fotos">Importar Pexels</a>
+            }
           </div>
         </div>
       </div>
@@ -93,7 +143,9 @@
 
   <!-- Copyright Start -->
   <div class="app-copyright">
-    <div class="container-fluid app-wide-container d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div
+      class="container-fluid app-wide-container d-flex flex-wrap align-items-center justify-content-between gap-2"
+    >
       <span>&copy; {{ year }} GaleriaFotos</span>
       <span>{{ session.displayRole }}</span>
     </div>

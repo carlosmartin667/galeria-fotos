@@ -4,62 +4,120 @@
       <small class="app-kicker">Admin</small>
       <h2 class="h3 mb-0">Sesiones privadas</h2>
     </div>
-    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">Actualizar</button>
+    <button type="button" class="btn btn-outline-primary rounded-pill px-4" (click)="load()">
+      Actualizar
+    </button>
   </div>
 
   <div class="app-panel-body">
     <app-error-alert [message]="error"></app-error-alert>
-    <div *ngIf="success" class="alert alert-success">{{ success }}</div>
-    <app-loading *ngIf="loading" text="Cargando sesiones privadas..."></app-loading>
-    <app-empty-state *ngIf="!loading && sesiones.length === 0" text="No hay sesiones privadas para mostrar."></app-empty-state>
+    @if (success) {
+      <div class="alert alert-success">{{ success }}</div>
+    }
+    @if (loading) {
+      <app-loading text="Cargando sesiones privadas..."></app-loading>
+    }
+    @if (!loading && sesiones.length === 0) {
+      <app-empty-state text="No hay sesiones privadas para mostrar."></app-empty-state>
+    }
 
-    <div class="table-responsive" *ngIf="!loading && sesiones.length > 0">
-      <table class="table table-hover align-middle admin-wide-table">
-        <thead>
-          <tr>
-            <th>Titulo</th>
-            <th>Cliente</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Precio</th>
-            <th>Activa</th>
-            <th>Cambiar estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let sesion of sesiones; trackBy: trackById">
-            <td class="text-break">
-              <strong>{{ sesion.titulo }}</strong>
-              <span *ngIf="sesion.descripcion" class="d-block app-meta">{{ sesion.descripcion }}</span>
-            </td>
-            <td class="text-break">{{ sesion.clienteNombre || sesion.clienteId || '-' }}</td>
-            <td>{{ sesion.fechaSesionUtc ? (sesion.fechaSesionUtc | date:'short') : '-' }}</td>
-            <td><span class="badge" [ngClass]="estadoClass(sesion.estado)">{{ sesion.estado || 'Borrador' }}</span></td>
-            <td>{{ sesion.precioPaquete !== null && sesion.precioPaquete !== undefined ? (sesion.precioPaquete | currency:'USD') : '-' }}</td>
-            <td><span class="badge" [ngClass]="sesion.activa === false ? 'bg-secondary' : 'bg-success'">{{ sesion.activa === false ? 'Inactiva' : 'Activa' }}</span></td>
-            <td>
-              <div class="sesion-state-control">
-                <select class="form-select form-select-sm" [(ngModel)]="estadosPorSesion[sesion.id || '']">
-                  <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-                </select>
-                <input type="text" class="form-control form-control-sm" placeholder="Comentario opcional" [(ngModel)]="comentariosPorSesion[sesion.id || '']">
-              </div>
-            </td>
-            <td>
-              <div class="app-actions">
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" [disabled]="savingId === sesion.id" (click)="cambiarEstado(sesion)">
-                  <span *ngIf="savingId === sesion.id" class="spinner-border spinner-border-sm me-2"></span>
-                  Guardar estado
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-dark rounded-pill" (click)="selectSesion(sesion)">Notas</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (!loading && sesiones.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle admin-wide-table">
+          <thead>
+            <tr>
+              <th>Titulo</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Precio</th>
+              <th>Activa</th>
+              <th>Cambiar estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sesion of sesiones; track trackById($index, sesion)) {
+              <tr>
+                <td class="text-break">
+                  <strong>{{ sesion.titulo }}</strong>
+                  @if (sesion.descripcion) {
+                    <span class="d-block app-meta">{{ sesion.descripcion }}</span>
+                  }
+                </td>
+                <td class="text-break">{{ sesion.clienteNombre || sesion.clienteId || '-' }}</td>
+                <td>{{ sesion.fechaSesionUtc ? (sesion.fechaSesionUtc | date: 'short') : '-' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="estadoClass(sesion.estado)">{{
+                    sesion.estado || 'Borrador'
+                  }}</span>
+                </td>
+                <td>
+                  {{
+                    sesion.precioPaquete !== null && sesion.precioPaquete !== undefined
+                      ? (sesion.precioPaquete | currency: 'USD')
+                      : '-'
+                  }}
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="sesion.activa === false ? 'bg-secondary' : 'bg-success'"
+                    >{{ sesion.activa === false ? 'Inactiva' : 'Activa' }}</span
+                  >
+                </td>
+                <td>
+                  <div class="sesion-state-control">
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="estadosPorSesion[sesion.id || '']"
+                    >
+                      @for (estado of estados; track estado) {
+                        <option [value]="estado">{{ estado }}</option>
+                      }
+                    </select>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      placeholder="Comentario opcional"
+                      [(ngModel)]="comentariosPorSesion[sesion.id || '']"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="app-actions">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary rounded-pill"
+                      [disabled]="savingId === sesion.id"
+                      (click)="cambiarEstado(sesion)"
+                    >
+                      @if (savingId === sesion.id) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                      }
+                      Guardar estado
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-dark rounded-pill"
+                      (click)="selectSesion(sesion)"
+                    >
+                      Notas
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
 
-    <app-notas-internas *ngIf="selectedSesion?.id" entidadTipo="SesionPrivada" [entidadId]="selectedSesion?.id || ''"></app-notas-internas>
+    @if (selectedSesion?.id) {
+      <app-notas-internas
+        entidadTipo="SesionPrivada"
+        [entidadId]="selectedSesion?.id || ''"
+      ></app-notas-internas>
+    }
   </div>
 </div>
