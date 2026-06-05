@@ -77,11 +77,15 @@ export class LoginComponent implements OnInit {
   private nextUrl(): string {
     const returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
 
+    if (this.session.isAdmin) {
+      return this.adminUrl(returnUrl) ?? '/admin/dashboard';
+    }
+
     if (returnUrl) {
       return returnUrl;
     }
 
-    return this.session.isAdmin ? '/admin/dashboard' : '/dashboard';
+    return '/dashboard';
   }
 
   private safeReturnUrl(value: string | null): string | null {
@@ -94,5 +98,34 @@ export class LoginComponent implements OnInit {
     }
 
     return value;
+  }
+
+  private adminUrl(returnUrl: string | null): string | null {
+    if (!returnUrl) {
+      return null;
+    }
+
+    const adminMappings: Array<[RegExp, string]> = [
+      [/^\/dashboard(?:\/)?([?#].*)?$/, '/admin/dashboard$1'],
+      [/^\/clientes(?:\/)?([?#].*)?$/, '/admin/clientes$1'],
+      [/^\/clientes\/nuevo(?:\/)?([?#].*)?$/, '/admin/clientes/nuevo$1'],
+      [/^\/clientes\/editar\/([^/?#]+)(.*)$/, '/admin/clientes/editar/$1$2'],
+      [/^\/clientes\/([^/?#]+)\/historial(.*)$/, '/admin/clientes/$1/historial$2'],
+      [/^\/eventos\/nuevo(?:\/)?([?#].*)?$/, '/admin/eventos/nuevo$1'],
+      [/^\/eventos\/editar\/([^/?#]+)(.*)$/, '/admin/eventos/editar/$1$2'],
+      [/^\/fotos\/metadata(?:\/)?([?#].*)?$/, '/admin/fotos/metadata$1'],
+      [/^\/fotos\/editar\/([^/?#]+)(.*)$/, '/admin/fotos/editar/$1$2'],
+      [/^\/pedidos(\/[^?#]*)?([?#].*)?$/, '/admin/pedidos$1$2'],
+      [/^\/descargas(\/[^?#]*)?([?#].*)?$/, '/admin/descargas$1$2'],
+      [/^\/notificaciones(\/[^?#]*)?([?#].*)?$/, '/admin/notificaciones$1$2'],
+    ];
+
+    for (const [pattern, replacement] of adminMappings) {
+      if (pattern.test(returnUrl)) {
+        return returnUrl.replace(pattern, replacement);
+      }
+    }
+
+    return returnUrl.startsWith('/admin/') ? returnUrl : null;
   }
 }

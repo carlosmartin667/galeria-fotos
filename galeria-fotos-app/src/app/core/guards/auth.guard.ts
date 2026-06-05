@@ -27,7 +27,9 @@ function checkAccess(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
   }
 
   if (roleRequirements.length > 0 && !roleRequirements.every((roles) => roles.includes(session.role))) {
-    return router.createUrlTree(['/dashboard'], {
+    const fallback = session.isAdmin ? '/admin/dashboard' : '/dashboard';
+
+    return router.createUrlTree([fallback], {
       queryParams: { message: 'No tenes permisos para acceder a esta seccion.' }
     });
   }

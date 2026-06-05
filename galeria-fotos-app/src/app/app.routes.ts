@@ -71,8 +71,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/perfil-publico',
-    loadComponent: () => import('./layout/main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
-    canActivateChild: [authChildGuard],
+    loadComponent: () => import('./layout/public-layout/public-layout.component').then((m) => m.PublicLayoutComponent),
     children: [
       {
         path: '',
@@ -320,32 +319,29 @@ export const routes: Routes = [
       },
       {
         path: 'clientes',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/clientes/clientes-list/clientes-list.component').then((m) => m.ClientesListComponent)
+        pathMatch: 'full',
+        redirectTo: '/admin/clientes'
       },
       {
         path: 'clientes/mi-perfil',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/clientes/mi-perfil/mi-perfil-cliente.component').then((m) => m.MiPerfilClienteComponent)
       },
       {
         path: 'clientes/nuevo',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent)
+        redirectTo: '/admin/clientes/nuevo'
       },
       {
         path: 'clientes/editar/:id',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/clientes/cliente-form/cliente-form.component').then((m) => m.ClienteFormComponent)
+        redirectTo: '/admin/clientes/editar/:id'
       },
       {
         path: 'clientes/:id/historial',
-        data: { roles: ['Usuario', 'Admin'] },
-        loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
+        redirectTo: '/admin/clientes/:id/historial'
       },
       {
         path: 'mi-historial',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/clientes/cliente-historial/cliente-historial.component').then((m) => m.ClienteHistorialComponent)
       },
       {
@@ -354,13 +350,11 @@ export const routes: Routes = [
       },
       {
         path: 'eventos/nuevo',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/eventos/evento-form/evento-form.component').then((m) => m.EventoFormComponent)
+        redirectTo: '/admin/eventos/nuevo'
       },
       {
         path: 'eventos/editar/:id',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/eventos/evento-form/evento-form.component').then((m) => m.EventoFormComponent)
+        redirectTo: '/admin/eventos/editar/:id'
       },
       {
         path: 'eventos/:id',
@@ -376,18 +370,17 @@ export const routes: Routes = [
       },
       {
         path: 'fotos/metadata',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/fotos/foto-form/foto-form.component').then((m) => m.FotoFormComponent)
+        pathMatch: 'full',
+        redirectTo: '/admin/fotos/metadata'
       },
       {
         path: 'fotos/metadata/nuevo',
-        redirectTo: 'fotos/metadata',
+        redirectTo: '/admin/fotos/metadata',
         pathMatch: 'full'
       },
       {
         path: 'fotos/editar/:id',
-        data: { roles: ['Admin'] },
-        loadComponent: () => import('./features/fotos/foto-form/foto-form.component').then((m) => m.FotoFormComponent)
+        redirectTo: '/admin/fotos/editar/:id'
       },
       {
         path: 'fotos/:id',
@@ -395,57 +388,57 @@ export const routes: Routes = [
       },
       {
         path: 'pedidos',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/pedidos/pedidos-list/pedidos-list.component').then((m) => m.PedidosListComponent)
       },
       {
         path: 'pedidos/nuevo',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/pedidos/pedido-form/pedido-form.component').then((m) => m.PedidoFormComponent)
       },
       {
         path: 'pedidos/:id',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/pedidos/pedido-detail/pedido-detail.component').then((m) => m.PedidoDetailComponent)
       },
       {
         path: 'pagos',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/pagos/pagos.component').then((m) => m.PagosComponent)
       },
       {
         path: 'carrito',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/carrito/carrito.component').then((m) => m.CarritoComponent)
       },
       {
         path: 'descargas',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/descargas/descargas.component').then((m) => m.DescargasComponent)
       },
       {
         path: 'descargas/:id',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/descargas/descarga-detail/descarga-detail.component').then((m) => m.DescargaDetailComponent)
       },
       {
         path: 'notificaciones',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/notificaciones/mis-notificaciones/mis-notificaciones.component').then((m) => m.MisNotificacionesComponent)
       },
       {
         path: 'favoritos',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/favoritos/favoritos-list/favoritos-list.component').then((m) => m.FavoritosListComponent)
       },
       {
         path: 'favoritos/eventos',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/favoritos/favoritos-list/favoritos-list.component').then((m) => m.FavoritosListComponent)
       },
       {
         path: 'favoritos/fotos',
-        data: { roles: ['Usuario', 'Admin'] },
+        data: { roles: ['Usuario'] },
         loadComponent: () => import('./features/favoritos/favoritos-list/favoritos-list.component').then((m) => m.FavoritosListComponent)
       }
     ]

@@ -1,98 +1,110 @@
 <div class="public-shell">
   <header class="public-nav-wrap">
     <div class="container-fluid public-wide-container">
-      <nav class="navbar navbar-expand-lg public-navbar">
-        <a routerLink="/" class="public-brand">
+      <nav class="public-navbar" aria-label="Navegacion publica">
+        <a routerLink="/" class="public-brand" (click)="closeMenu()">
           <span class="text-primary">Galeria</span><span>Fotos</span>
         </a>
 
+        <div class="public-nav-links" [class.is-open]="menuOpen" id="publicNavbar">
+          <a
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link public-nav-link"
+            (click)="closeMenu()"
+            >Home</a
+          >
+          <a routerLink="/portfolio" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Portfolio</a
+          >
+          <a routerLink="/servicios" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Servicios</a
+          >
+          <a routerLink="/promociones" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Promociones</a
+          >
+          <a routerLink="/testimonios" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Testimonios</a
+          >
+          <a routerLink="/presupuesto" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Presupuesto</a
+          >
+          <a
+            routerLink="/disponibilidad"
+            routerLinkActive="active"
+            class="nav-link public-nav-link"
+            (click)="closeMenu()"
+            >Disponibilidad</a
+          >
+          <a routerLink="/faq" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()">FAQ</a>
+          <a routerLink="/contacto" routerLinkActive="active" class="nav-link public-nav-link" (click)="closeMenu()"
+            >Contacto</a
+          >
+        </div>
+
+        <div class="public-nav-actions">
+          <button
+            type="button"
+            class="btn public-theme-toggle rounded-pill"
+            (click)="themeService.toggleTheme()"
+            [attr.aria-label]="
+              themeService.getTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
+            "
+          >
+            <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+            <span class="public-theme-label">{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
+          </button>
+
+          @if (session.isUser) {
+            <div class="dropdown public-account-dropdown">
+              <button
+                type="button"
+                class="btn btn-outline-primary rounded-pill public-account-toggle dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Mi cuenta
+              </button>
+              <div class="dropdown-menu dropdown-menu-end public-account-menu">
+                <a routerLink="/dashboard" class="dropdown-item" (click)="closeMenu()">Dashboard</a>
+                <a routerLink="/eventos" class="dropdown-item" (click)="closeMenu()">Eventos</a>
+                <a routerLink="/fotos/evento" class="dropdown-item" (click)="closeMenu()">Fotos</a>
+                <a routerLink="/carrito" class="dropdown-item" (click)="closeMenu()">Carrito</a>
+                <a routerLink="/pedidos" class="dropdown-item" (click)="closeMenu()">Mis pedidos</a>
+                <a routerLink="/descargas" class="dropdown-item" (click)="closeMenu()">Mis descargas</a>
+                <a routerLink="/favoritos" class="dropdown-item" (click)="closeMenu()">Favoritos</a>
+                <a routerLink="/mi-historial" class="dropdown-item" (click)="closeMenu()">Mi historial</a>
+                <a routerLink="/notificaciones" class="dropdown-item" (click)="closeMenu()">Notificaciones</a>
+                <a routerLink="/clientes/mi-perfil" class="dropdown-item" (click)="closeMenu()">Mi perfil</a>
+              </div>
+            </div>
+          }
+
+          <a [routerLink]="accountLink()" class="btn btn-primary rounded-pill public-panel-button" (click)="closeMenu()">
+            {{ accountLabel() }}
+          </a>
+
+          @if (!session.isAuthenticated) {
+            <a
+              routerLink="/register"
+              class="btn btn-outline-primary rounded-pill public-register-button"
+              (click)="closeMenu()"
+              >Registro</a
+            >
+          }
+        </div>
+
         <button
-          class="navbar-toggler py-2 px-3"
+          class="navbar-toggler public-nav-toggle py-2 px-3"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#publicNavbar"
           aria-controls="publicNavbar"
-          aria-expanded="false"
+          [attr.aria-expanded]="menuOpen"
           aria-label="Abrir menu"
+          (click)="toggleMenu()"
         >
           <span class="fa fa-bars text-primary"></span>
         </button>
-
-        <div class="collapse navbar-collapse" id="publicNavbar">
-          <div class="navbar-nav mx-auto">
-            <a
-              routerLink="/"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="nav-link"
-              >Home</a
-            >
-            <a routerLink="/portfolio" routerLinkActive="active" class="nav-link">Portfolio</a>
-            <a routerLink="/servicios" routerLinkActive="active" class="nav-link">Servicios</a>
-            <a routerLink="/promociones" routerLinkActive="active" class="nav-link">Promociones</a>
-            <a routerLink="/testimonios" routerLinkActive="active" class="nav-link">Testimonios</a>
-            <a routerLink="/presupuesto" routerLinkActive="active" class="nav-link">Presupuesto</a>
-            <a routerLink="/disponibilidad" routerLinkActive="active" class="nav-link"
-              >Disponibilidad</a
-            >
-            <a routerLink="/faq" routerLinkActive="active" class="nav-link">FAQ</a>
-            <a routerLink="/contacto" routerLinkActive="active" class="nav-link">Contacto</a>
-            <a routerLink="/eventos" routerLinkActive="active" class="nav-link">Eventos</a>
-            <a routerLink="/fotos/evento" routerLinkActive="active" class="nav-link">Fotos</a>
-            @if (session.isUser) {
-              <a routerLink="/favoritos" routerLinkActive="active" class="nav-link">Favoritos</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/carrito" routerLinkActive="active" class="nav-link">Carrito</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/pedidos" routerLinkActive="active" class="nav-link">Pedidos</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/descargas" routerLinkActive="active" class="nav-link"
-                >Mis descargas</a
-              >
-            }
-            @if (session.isUser) {
-              <a routerLink="/mi-historial" routerLinkActive="active" class="nav-link"
-                >Mi historial</a
-              >
-            }
-            @if (session.isUser) {
-              <a routerLink="/notificaciones" routerLinkActive="active" class="nav-link"
-                >Notificaciones</a
-              >
-            }
-            @if (session.isUser) {
-              <a routerLink="/clientes/mi-perfil" routerLinkActive="active" class="nav-link"
-                >Mi perfil</a
-              >
-            }
-          </div>
-
-          <div class="public-nav-actions">
-            <app-notification-bell></app-notification-bell>
-            <button
-              type="button"
-              class="btn public-theme-toggle rounded-pill"
-              (click)="themeService.toggleTheme()"
-              [attr.aria-label]="
-                themeService.getTheme() === 'dark'
-                  ? 'Cambiar a modo claro'
-                  : 'Cambiar a modo oscuro'
-              "
-            >
-              <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
-              <span>{{ themeService.getTheme() === 'dark' ? 'Claro' : 'Oscuro' }}</span>
-            </button>
-            @if (session.isAuthenticated) {
-              <a routerLink="/dashboard" class="btn btn-outline-primary rounded-pill px-4">Panel</a>
-            }
-            @if (!session.isAuthenticated) {
-              <a routerLink="/login" class="btn btn-primary rounded-pill px-4">Login</a>
-            }
-          </div>
-        </div>
       </nav>
     </div>
   </header>
@@ -127,28 +139,14 @@
           </div>
         </div>
         <div class="col-sm-6 col-lg-4">
-          <h3 class="h6 text-white mb-3">Clientes</h3>
+          <h3 class="h6 text-white mb-3">Cuenta</h3>
           <div class="public-footer-links">
-            <a routerLink="/eventos">Eventos</a>
-            <a routerLink="/fotos/evento">Fotos</a>
-            @if (session.isUser) {
-              <a routerLink="/carrito">Carrito</a>
-            }
-            @if (session.isAuthenticated) {
-              <a routerLink="/pedidos">Pedidos</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/descargas">Mis descargas</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/mi-historial">Mi historial</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/notificaciones">Notificaciones</a>
-            }
+            <a [routerLink]="accountLink()">{{ accountLabel() }}</a>
             @if (!session.isAuthenticated) {
-              <a routerLink="/login">Login</a>
+              <a routerLink="/register">Registro</a>
             }
+            <a routerLink="/presupuesto">Solicitar presupuesto</a>
+            <a routerLink="/contacto">Contacto</a>
           </div>
         </div>
       </div>

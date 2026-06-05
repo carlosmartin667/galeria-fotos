@@ -35,26 +35,21 @@
     <a routerLink="/contacto" routerLinkActive="active">Contacto</a>
     <a routerLink="/eventos" routerLinkActive="active">Eventos</a>
     <a routerLink="/fotos/evento" routerLinkActive="active">Fotos</a>
-    @if (session.isAuthenticated) {
-      <a routerLink="/pedidos" routerLinkActive="active">{{
-        session.isAdmin ? 'Pedidos' : 'Mis pedidos'
-      }}</a>
+    @if (session.isUser) {
+      <a routerLink="/pedidos" routerLinkActive="active">Mis pedidos</a>
     }
     @if (session.isUser) {
       <a routerLink="/carrito" routerLinkActive="active">Carrito</a>
     }
-    @if (session.isAuthenticated) {
-      <a routerLink="/favoritos" routerLinkActive="active">{{
-        session.isAdmin ? 'Favoritos' : 'Mis favoritos'
-      }}</a>
+    @if (session.isUser) {
+      <a routerLink="/favoritos" routerLinkActive="active">Mis favoritos</a>
     }
-    @if (session.isAuthenticated) {
+    @if (session.isUser) {
       <a routerLink="/pagos" routerLinkActive="active">Pagos</a>
     }
     @if (session.isUser) {
       <a routerLink="/descargas" routerLinkActive="active">Mis descargas</a>
     }
-    <a routerLink="/admin/perfil-publico" routerLinkActive="active">Perfil publico</a>
     @if (session.isUser) {
       <a routerLink="/clientes/mi-perfil" routerLinkActive="active">Mi perfil</a>
     }

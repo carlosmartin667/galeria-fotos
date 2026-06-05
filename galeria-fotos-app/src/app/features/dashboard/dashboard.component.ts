@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
 import { ClientesService } from '../../core/services/clientes.service';
@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
   private readonly eventosService = inject(EventosService);
   private readonly pedidosService = inject(PedidosService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   readonly session = inject(SessionService);
 
@@ -37,6 +38,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.message = this.route.snapshot.queryParamMap.get('message') ?? '';
+
+    if (this.session.isAdmin) {
+      void this.router.navigate(['/admin/dashboard']);
+      return;
+    }
+
     this.load();
   }
 

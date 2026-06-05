@@ -1,5 +1,7 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, computed, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 import { SessionService } from '../../core/services/session.service';
 import { ThemeService } from '../../core/services/theme.service';
@@ -27,6 +29,7 @@ export class AdminLayoutComponent {
   readonly session = inject(SessionService);
   readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   sidebarOpen = false;
   readonly displayName = computed(() => this.session.nombre || this.session.email || 'Admin');
@@ -83,6 +86,15 @@ export class AdminLayoutComponent {
       ]
     }
   ];
+
+  constructor() {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.closeSidebar());
+  }
 
   currentTitle(): string {
     const url = this.router.url.split('?')[0];

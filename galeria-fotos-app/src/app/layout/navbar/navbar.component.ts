@@ -17,8 +17,18 @@ export class InternalNavbarComponent {
   readonly session = inject(SessionService);
   readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
+  menuOpen = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
 
   logout(): void {
+    this.closeMenu();
     this.session.clear();
     void this.router.navigate(['/login']);
   }

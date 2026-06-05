@@ -23,6 +23,9 @@ describe('authChildGuard', () => {
             },
             get role(): AppRole {
               return state.role;
+            },
+            get isAdmin(): boolean {
+              return state.role === 'Admin';
             }
           }
         }
@@ -70,6 +73,16 @@ describe('authChildGuard', () => {
 
     expect(result instanceof UrlTree).toBe(true);
     expect(router.serializeUrl(result as UrlTree)).toContain('/dashboard');
+    expect(router.serializeUrl(result as UrlTree)).not.toContain('/login');
+  });
+
+  it('redirects authenticated Admin away from Usuario routes to the admin dashboard', () => {
+    state = { isAuthenticated: true, role: 'Admin' };
+
+    const result = runGuard({ roles: ['Usuario'] }, '/pedidos');
+
+    expect(result instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(result as UrlTree)).toContain('/admin/dashboard');
     expect(router.serializeUrl(result as UrlTree)).not.toContain('/login');
   });
 

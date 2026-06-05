@@ -68,6 +68,14 @@ describe('AdminLayoutComponent', () => {
     expect(compiled.querySelector('.admin-layout .page-wrapper')).toBeTruthy();
   });
 
+  it('renders a dedicated scrollable sidebar navigation container', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const nav = compiled.querySelector('.admin-sidebar .admin-sidebar-nav');
+
+    expect(nav).toBeTruthy();
+    expect(nav?.getAttribute('aria-label')).toBe('Navegacion admin');
+  });
+
   it('renders the requested navigation groups', () => {
     const text = pageText();
 
@@ -113,9 +121,52 @@ describe('AdminLayoutComponent', () => {
 
     expect(fixture.componentInstance.sidebarOpen).toBe(true);
     expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar-open')).toBeTruthy();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar.is-open')).toBeTruthy();
+
+    button.click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+    expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar.is-open')).toBeFalsy();
+  });
+
+  it('closes the mobile sidebar from the backdrop', () => {
+    openSidebar();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const backdrop = compiled.querySelector('.admin-sidebar-backdrop') as HTMLElement;
+
+    expect(backdrop).toBeTruthy();
+    expect(backdrop.getAttribute('aria-label')).toBe('Cerrar menu administrativo');
+    backdrop.click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+  });
+
+  it('closes the mobile sidebar when a navigation link is clicked', () => {
+    openSidebar();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar .nav-link') as HTMLElement;
+
+    expect(link).toBeTruthy();
+    link.addEventListener('click', (event) => event.preventDefault(), { capture: true });
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 1 }));
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.sidebarOpen).toBe(false);
   });
 
   function pageText(): string {
     return (fixture.nativeElement as HTMLElement).textContent ?? '';
+  }
+
+  function openSidebar(): void {
+    const button = (fixture.nativeElement as HTMLElement).querySelector(
+      '[aria-label="Abrir menu administrativo"]'
+    ) as HTMLButtonElement;
+
+    button.click();
+    fixture.detectChanges();
   }
 });

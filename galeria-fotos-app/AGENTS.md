@@ -244,6 +244,9 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - No agregar jQuery ni dependencias visuales nuevas para el AdminLayout.
 - El menu admin se organiza en grupos: Principal, Ventas, Gestion, Sitio publico y Sistema.
 - El menu admin no debe mezclarse con navbar/sidebar/footer de usuario o publico.
+- Debe existir una sola experiencia admin: Admin autenticado entra a `/admin/dashboard` y no debe renderizar gestion administrativa dentro de `MainLayout`.
+- `MainLayout` queda para Usuario/Cliente; `PublicLayout` queda para Invitado/publico; `AdminLayoutComponent` queda para todas las pantallas administrativas.
+- Las rutas administrativas legacy dentro de `MainLayout` deben redirigir a su equivalente `/admin/...` o quedar restringidas a `Usuario` si son pantallas de cliente.
 - El menu de `AdminLayoutComponent` debe apuntar solo a rutas `/admin/...`; no enlazar desde el sidebar admin a `/eventos`, `/fotos`, `/pedidos` o `/clientes` del layout comun.
 - Las pantallas de gestion compartidas tienen alias bajo AdminLayout: `/admin/eventos`, `/admin/fotos`, `/admin/pedidos`, `/admin/clientes` y `/admin/descargas/:id`.
 - Cuando un componente compartido se renderiza desde `/admin/...`, sus acciones de volver, detalle, editar y crear deben conservar el prefijo `/admin`; cuando se renderiza fuera del admin debe conservar las rutas publicas o de usuario existentes.
@@ -251,7 +254,7 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Mantener `NotificationBell`, logout y cambio de tema claro/oscuro dentro del AdminLayout.
 - El sidebar admin debe ser lateral en desktop y colapsable en mobile con botones accesibles.
 - Las rutas admin mantienen guards y `data: { roles: ['Admin'] }`; no cambiar endpoints ni payloads.
-- La ruta historica `/admin/perfil-publico` se preserva como perfil publico compatible con el layout interno existente.
+- La ruta historica `/admin/perfil-publico` se preserva como perfil publico legacy, pero no debe renderizar navegacion admin vieja dentro de `MainLayout`.
 
 ## Endpoints principales
 

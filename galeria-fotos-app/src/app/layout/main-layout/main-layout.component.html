@@ -18,11 +18,8 @@
 
   <main class="app-main">
     <div class="container-fluid app-wide-container">
-      <div class="app-content-grid">
-        <app-sidebar></app-sidebar>
-        <div class="app-content">
-          <router-outlet></router-outlet>
-        </div>
+      <div class="app-content">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </main>
@@ -39,46 +36,37 @@
         </div>
 
         <div class="col-sm-6 col-lg-3">
-          <h3 class="h6 text-white mb-3">Navegacion</h3>
+          <h3 class="h6 text-white mb-3">Panel</h3>
           <div class="footer-links">
-            <a routerLink="/">Home</a>
-            <a routerLink="/portfolio">Portfolio</a>
-            <a routerLink="/servicios">Servicios</a>
-            <a routerLink="/promociones">Promociones</a>
-            <a routerLink="/testimonios">Testimonios</a>
-            <a routerLink="/presupuesto">Solicitar presupuesto</a>
-            <a routerLink="/faq">FAQ</a>
-            <a routerLink="/contacto">Contacto</a>
             <a routerLink="/dashboard">Dashboard</a>
-            @if (session.isUser) {
-              <a routerLink="/mi-historial">Mi historial</a>
-            }
-            @if (session.isUser) {
-              <a routerLink="/notificaciones">Notificaciones</a>
-            }
             <a routerLink="/eventos">Eventos</a>
             <a routerLink="/fotos/evento">Fotos</a>
-            <a routerLink="/admin/perfil-publico">Perfil publico</a>
           </div>
         </div>
 
         <div class="col-sm-6 col-lg-4">
           <h3 class="h6 text-white mb-3">Operaciones</h3>
           <div class="footer-links">
-            @if (session.isAuthenticated) {
-              <a routerLink="/pedidos">Pedidos</a>
-            }
             @if (session.isUser) {
               <a routerLink="/carrito">Carrito</a>
             }
-            @if (session.isAuthenticated) {
-              <a routerLink="/favoritos">Favoritos</a>
-            }
-            @if (session.isAuthenticated) {
-              <a routerLink="/pagos">Pagos</a>
+            @if (session.isUser) {
+              <a routerLink="/pedidos">Pedidos</a>
             }
             @if (session.isUser) {
-              <a routerLink="/descargas">Mis descargas</a>
+              <a routerLink="/favoritos">Favoritos</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/descargas">Descargas</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/mi-historial">Historial</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/notificaciones">Notificaciones</a>
+            }
+            @if (session.isUser) {
+              <a routerLink="/clientes/mi-perfil">Perfil</a>
             }
           </div>
         </div>

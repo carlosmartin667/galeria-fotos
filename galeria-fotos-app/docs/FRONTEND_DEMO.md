@@ -87,6 +87,8 @@ Las rutas `/admin/*` usan `AdminLayoutComponent`, con sidebar vertical tipo Tabl
 
 Las pantallas operativas compartidas mantienen sus URLs existentes para Usuario/Cliente, pero el AdminLayout usa aliases `/admin/...` para no saltar al layout comun: Eventos, Fotos, Pedidos, Clientes y detalle de Descargas.
 
+Al iniciar sesion como Admin sin `returnUrl`, la app entra directamente en `/admin/dashboard`. Si un Admin intenta abrir una ruta legacy de gestion como `/clientes`, `/eventos/nuevo`, `/fotos/metadata` o `/dashboard`, se lo redirige al panel admin nuevo.
+
 ## Demo Ventas
 
 - Carrito: `/carrito`.

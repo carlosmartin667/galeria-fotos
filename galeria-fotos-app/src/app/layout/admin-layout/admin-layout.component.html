@@ -1,14 +1,16 @@
 <div class="admin-layout" [class.admin-sidebar-open]="sidebarOpen">
-  <div class="admin-mobile-backdrop" (click)="closeSidebar()" aria-hidden="true"></div>
-
-  <aside class="navbar navbar-vertical navbar-expand-lg admin-sidebar" aria-label="Menu administrativo">
+  <aside
+    class="navbar navbar-vertical navbar-expand-lg admin-sidebar"
+    [class.is-open]="sidebarOpen"
+    aria-label="Menu administrativo"
+  >
     <div class="container-fluid">
       <button
         type="button"
         class="navbar-toggler admin-sidebar-close"
         aria-label="Cerrar menu administrativo"
         [attr.aria-expanded]="sidebarOpen"
-        (click)="toggleSidebar()"
+        (click)="closeSidebar()"
       >
         <span class="bi bi-x-lg" aria-hidden="true"></span>
       </button>
@@ -21,7 +23,7 @@
         </span>
       </a>
 
-      <nav class="navbar-nav admin-nav" aria-label="Navegacion admin">
+      <nav class="navbar-nav admin-nav admin-sidebar-nav" aria-label="Navegacion admin">
         @for (group of navGroups; track trackGroup($index, group)) {
           <div class="admin-nav-group">
             <div class="admin-nav-title">{{ group.label }}</div>
@@ -44,7 +46,16 @@
     </div>
   </aside>
 
-  <div class="page-wrapper admin-page-wrapper">
+  @if (sidebarOpen) {
+    <button
+      type="button"
+      class="admin-sidebar-backdrop admin-mobile-backdrop"
+      aria-label="Cerrar menu administrativo"
+      (click)="closeSidebar()"
+    ></button>
+  }
+
+  <div class="page-wrapper admin-page-wrapper admin-page">
     <header class="navbar navbar-expand-md admin-topbar">
       <div class="container-fluid">
         <button
@@ -87,7 +98,7 @@
       </div>
     </header>
 
-    <main class="page-body admin-page-body">
+    <main class="page-body admin-page-body admin-content">
       <div class="container-fluid admin-container">
         <div class="page-header admin-page-header">
           <div>

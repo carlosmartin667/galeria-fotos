@@ -67,6 +67,16 @@ describe('LoginComponent', () => {
     expect(navigateByUrl).toHaveBeenCalledWith('/admin/dashboard');
   });
 
+  it('redirects to an admin returnUrl with query params after login', () => {
+    routeParams = { returnUrl: '/admin/bitacora?page=1' };
+    isAdmin = true;
+    fixture = createFixture();
+
+    submitValidForm();
+
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/bitacora?page=1');
+  });
+
   it('redirects Admin users to admin dashboard when there is no returnUrl', () => {
     isAdmin = true;
     fixture = createFixture();
@@ -92,6 +102,26 @@ describe('LoginComponent', () => {
     submitValidForm();
 
     expect(navigateByUrl).toHaveBeenCalledWith('/admin/dashboard');
+  });
+
+  it('normalizes legacy Admin returnUrl to the new admin dashboard', () => {
+    routeParams = { returnUrl: '/dashboard' };
+    isAdmin = true;
+    fixture = createFixture();
+
+    submitValidForm();
+
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/dashboard');
+  });
+
+  it('normalizes legacy Admin management returnUrl to AdminLayout routes', () => {
+    routeParams = { returnUrl: '/pedidos/123' };
+    isAdmin = true;
+    fixture = createFixture();
+
+    submitValidForm();
+
+    expect(navigateByUrl).toHaveBeenCalledWith('/admin/pedidos/123');
   });
 
   function createFixture(): ComponentFixture<LoginComponent> {

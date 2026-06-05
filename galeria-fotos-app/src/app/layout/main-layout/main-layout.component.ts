@@ -2,13 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import { InternalNavbarComponent } from '../navbar/navbar.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SessionService } from '../../core/services/session.service';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, InternalNavbarComponent, SidebarComponent],
+  imports: [RouterLink, RouterOutlet, InternalNavbarComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css',
 })
