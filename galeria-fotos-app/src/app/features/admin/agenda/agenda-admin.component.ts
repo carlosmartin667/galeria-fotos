@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -25,6 +31,7 @@ type AgendaControl = 'titulo' | 'tipo' | 'fechaInicio' | 'fechaFin' | 'estado';
     NotasInternasComponent,
   ],
   templateUrl: './agenda-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './agenda-admin.component.css',
 })
 export class AgendaAdminComponent implements OnInit {

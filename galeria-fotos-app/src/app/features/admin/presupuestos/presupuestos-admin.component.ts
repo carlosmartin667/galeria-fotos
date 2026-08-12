@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -38,6 +44,7 @@ type PresupuestoFormControl =
     LoadingComponent,
   ],
   templateUrl: './presupuestos-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presupuestos-admin.component.css',
 })
 export class PresupuestosAdminComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SessionService } from '../../core/services/session.service';
@@ -11,6 +11,7 @@ import { NotificationBellComponent } from '../../shared/components/notification-
   standalone: true,
   imports: [RouterLink, RouterLinkActive, GuestBadgeComponent, NotificationBellComponent],
   templateUrl: './navbar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.component.css',
 })
 export class InternalNavbarComponent {

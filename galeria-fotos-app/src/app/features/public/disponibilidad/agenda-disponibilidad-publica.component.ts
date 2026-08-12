@@ -1,5 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { finalize } from 'rxjs';
 
 import { DisponibilidadAgendaItem } from '../../../core/models/agenda.models';
@@ -13,7 +20,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [DatePipe, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './agenda-disponibilidad-publica.component.html',
-  styleUrl: './agenda-disponibilidad-publica.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './agenda-disponibilidad-publica.component.css',
 })
 export class AgendaDisponibilidadPublicaComponent implements OnInit {
   private readonly agendaService = inject(AgendaService);
@@ -38,22 +46,28 @@ export class AgendaDisponibilidadPublicaComponent implements OnInit {
     hastaDate.setDate(hastaDate.getDate() + 90);
     const hasta = this.toDateOnly(hastaDate);
 
-    this.agendaService.getDisponibilidad(desde, hasta).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.markForCheck();
-      })
-    ).subscribe({
-      next: (items) => {
-        this.items = items
-          .filter((item) => item.ocupado)
-          .sort((a, b) => new Date(a.fechaInicioUtc).getTime() - new Date(b.fechaInicioUtc).getTime())
-          .slice(0, this.compact ? 4 : 8);
-      },
-      error: (error: unknown) => {
-        this.error = error instanceof Error ? error.message : 'No se pudo cargar la disponibilidad.';
-      }
-    });
+    this.agendaService
+      .getDisponibilidad(desde, hasta)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (items) => {
+          this.items = items
+            .filter((item) => item.ocupado)
+            .sort(
+              (a, b) => new Date(a.fechaInicioUtc).getTime() - new Date(b.fechaInicioUtc).getTime(),
+            )
+            .slice(0, this.compact ? 4 : 8);
+        },
+        error: (error: unknown) => {
+          this.error =
+            error instanceof Error ? error.message : 'No se pudo cargar la disponibilidad.';
+        },
+      });
   }
 
   trackByDate(index: number, item: DisponibilidadAgendaItem): string {

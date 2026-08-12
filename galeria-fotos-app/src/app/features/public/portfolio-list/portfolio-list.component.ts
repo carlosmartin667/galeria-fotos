@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -23,6 +29,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     LoadingComponent,
   ],
   templateUrl: './portfolio-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './portfolio-list.component.css',
 })
 export class PortfolioListComponent implements OnInit {

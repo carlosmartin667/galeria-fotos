@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { AdminPerfilPublico } from '../../../core/models/admin.models';
 import { AdminService } from '../../../core/services/admin.service';
@@ -9,6 +15,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   selector: 'app-perfil-publico-admin',
   standalone: true,
   imports: [ErrorAlertComponent, LoadingComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './perfil-publico.component.html',
 })
 export class PerfilPublicoComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { SeoService } from '../../../core/services/seo.service';
 import { AgendaDisponibilidadPublicaComponent } from './agenda-disponibilidad-publica.component';
@@ -8,7 +8,8 @@ import { AgendaDisponibilidadPublicaComponent } from './agenda-disponibilidad-pu
   standalone: true,
   imports: [AgendaDisponibilidadPublicaComponent],
   templateUrl: './disponibilidad-public-page.component.html',
-  styleUrl: './disponibilidad-public-page.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './disponibilidad-public-page.component.css',
 })
 export class DisponibilidadPublicPageComponent implements OnInit {
   private readonly seo = inject(SeoService);
@@ -16,8 +17,9 @@ export class DisponibilidadPublicPageComponent implements OnInit {
   ngOnInit(): void {
     this.seo.setPublicPage({
       title: 'Disponibilidad de agenda',
-      description: 'Consulta fechas ocupadas proximas antes de solicitar un presupuesto fotografico.',
-      image: '/assets/caterserv/img/background-site.jpg'
+      description:
+        'Consulta fechas ocupadas proximas antes de solicitar un presupuesto fotografico.',
+      image: '/assets/caterserv/img/background-site.jpg',
     });
   }
 }

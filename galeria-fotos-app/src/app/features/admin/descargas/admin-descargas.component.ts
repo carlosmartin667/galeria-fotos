@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -21,6 +27,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     LoadingComponent,
   ],
   templateUrl: './admin-descargas.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './admin-descargas.component.css',
 })
 export class AdminDescargasComponent implements OnInit {

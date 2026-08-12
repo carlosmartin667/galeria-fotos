@@ -1,5 +1,11 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -33,6 +39,7 @@ interface TopProductGroup {
     LoadingComponent,
   ],
   templateUrl: './reportes-ventas-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './reportes-ventas-admin.component.css',
 })
 export class ReportesVentasAdminComponent implements OnInit {

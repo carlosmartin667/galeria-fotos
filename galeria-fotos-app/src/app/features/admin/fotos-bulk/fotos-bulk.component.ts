@@ -1,5 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -20,6 +26,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [DatePipe, ReactiveFormsModule, ErrorAlertComponent, LoadingComponent],
   templateUrl: './fotos-bulk.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './fotos-bulk.component.css',
 })
 export class FotosBulkComponent implements OnInit {

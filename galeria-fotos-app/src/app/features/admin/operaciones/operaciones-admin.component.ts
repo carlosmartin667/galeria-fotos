@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
@@ -29,6 +35,7 @@ interface OperacionSection {
   standalone: true,
   imports: [RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './operaciones-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './operaciones-admin.component.css',
 })
 export class OperacionesAdminComponent implements OnInit {

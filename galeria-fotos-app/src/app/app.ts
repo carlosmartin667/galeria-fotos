@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
@@ -11,7 +18,8 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
   selector: 'app-root',
   imports: [RouterOutlet, SpinnerComponent, BackToTopComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './app.css',
 })
 export class App implements AfterViewInit, OnDestroy {
   protected readonly title = signal('galeria-fotos-app');

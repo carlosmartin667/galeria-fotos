@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { finalize, forkJoin } from 'rxjs';
 
 import {
@@ -23,6 +23,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     LoadingComponent,
   ],
   templateUrl: './carritos-abandonados-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './carritos-abandonados-admin.component.css',
 })
 export class CarritosAbandonadosAdminComponent implements OnInit {

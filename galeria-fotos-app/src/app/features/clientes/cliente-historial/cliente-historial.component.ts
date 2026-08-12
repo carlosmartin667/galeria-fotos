@@ -1,5 +1,11 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -34,6 +40,7 @@ interface SafeEntry {
     NotasInternasComponent,
   ],
   templateUrl: './cliente-historial.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cliente-historial.component.css',
 })
 export class ClienteHistorialComponent implements OnInit {

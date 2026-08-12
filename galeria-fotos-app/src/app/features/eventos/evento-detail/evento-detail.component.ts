@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
@@ -26,6 +32,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     ErrorAlertComponent,
     LoadingComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './evento-detail.component.html',
 })
 export class EventoDetailComponent implements OnInit {

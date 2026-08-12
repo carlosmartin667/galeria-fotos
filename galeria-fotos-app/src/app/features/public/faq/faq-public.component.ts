@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -15,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [FormsModule, NgClass, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './faq-public.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './faq-public.component.css',
 })
 export class FaqPublicComponent implements OnInit {

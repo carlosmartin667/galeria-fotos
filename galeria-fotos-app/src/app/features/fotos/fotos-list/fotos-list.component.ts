@@ -1,5 +1,11 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
@@ -31,6 +37,7 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
     PaginationControlsComponent,
   ],
   templateUrl: './fotos-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './fotos-list.component.css',
 })
 export class FotosListComponent implements OnInit {

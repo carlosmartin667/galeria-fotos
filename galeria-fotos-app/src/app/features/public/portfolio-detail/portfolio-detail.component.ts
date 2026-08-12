@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
@@ -15,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './portfolio-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './portfolio-detail.component.css',
 })
 export class PortfolioDetailComponent implements OnInit {

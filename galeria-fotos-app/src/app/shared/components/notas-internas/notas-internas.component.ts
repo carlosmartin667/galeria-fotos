@@ -6,6 +6,7 @@ import {
   OnChanges,
   SimpleChanges,
   inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -28,6 +29,7 @@ import { LoadingComponent } from '../loading/loading.component';
     LoadingComponent,
   ],
   templateUrl: './notas-internas.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notas-internas.component.css',
 })
 export class NotasInternasComponent implements OnChanges {

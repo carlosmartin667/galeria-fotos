@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
@@ -37,6 +43,7 @@ type PresupuestoControl =
     AgendaDisponibilidadPublicaComponent,
   ],
   templateUrl: './presupuesto-solicitud.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presupuesto-solicitud.component.css',
 })
 export class PresupuestoSolicitudComponent implements OnInit {

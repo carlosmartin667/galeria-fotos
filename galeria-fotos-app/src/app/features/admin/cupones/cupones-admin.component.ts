@@ -1,5 +1,11 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -28,6 +34,7 @@ type CuponControl = 'codigo' | 'tipoDescuento' | 'valorDescuento' | 'fechaInicio
     LoadingComponent,
   ],
   templateUrl: './cupones-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cupones-admin.component.css',
 })
 export class CuponesAdminComponent implements OnInit {

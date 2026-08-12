@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -10,6 +10,7 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
   selector: 'app-pedido-form',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './pedido-form.component.html',
 })
 export class PedidoFormComponent {

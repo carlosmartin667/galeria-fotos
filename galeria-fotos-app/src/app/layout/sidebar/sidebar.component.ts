@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SessionService } from '../../core/services/session.service';
@@ -10,6 +10,7 @@ import { GuestBadgeComponent } from '../../shared/components/guest-badge/guest-b
   standalone: true,
   imports: [RouterLink, RouterLinkActive, GuestBadgeComponent],
   templateUrl: './sidebar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {

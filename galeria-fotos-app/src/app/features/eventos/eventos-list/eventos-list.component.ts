@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -28,6 +34,7 @@ import { PaginationControlsComponent } from '../../../shared/components/paginati
     PaginationControlsComponent,
   ],
   templateUrl: './eventos-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './eventos-list.component.css',
 })
 export class EventosListComponent implements OnInit {

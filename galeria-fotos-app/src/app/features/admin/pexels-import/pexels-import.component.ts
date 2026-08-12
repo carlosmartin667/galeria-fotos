@@ -1,5 +1,11 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -28,6 +34,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     LoadingComponent,
   ],
   templateUrl: './pexels-import.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './pexels-import.component.css',
 })
 export class PexelsImportComponent implements OnInit {

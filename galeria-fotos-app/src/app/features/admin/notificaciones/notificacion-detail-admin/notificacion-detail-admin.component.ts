@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -19,6 +25,7 @@ interface DetailEntry {
   standalone: true,
   imports: [NgClass, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './notificacion-detail-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notificacion-detail-admin.component.css',
 })
 export class NotificacionDetailAdminComponent implements OnInit {

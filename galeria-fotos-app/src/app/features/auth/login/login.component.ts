@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -11,6 +17,7 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
   templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
@@ -93,7 +100,12 @@ export class LoginComponent implements OnInit {
       return null;
     }
 
-    if (value === '/login' || value.startsWith('/login?') || value === '/register' || value.startsWith('/register?')) {
+    if (
+      value === '/login' ||
+      value.startsWith('/login?') ||
+      value === '/register' ||
+      value.startsWith('/register?')
+    ) {
       return null;
     }
 

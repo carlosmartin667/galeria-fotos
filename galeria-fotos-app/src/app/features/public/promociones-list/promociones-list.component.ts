@@ -1,5 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -15,6 +21,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [DatePipe, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
   templateUrl: './promociones-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './promociones-list.component.css',
 })
 export class PromocionesListComponent implements OnInit {

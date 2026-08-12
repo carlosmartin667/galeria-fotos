@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -24,6 +30,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
     LoadingComponent,
   ],
   templateUrl: './notificaciones-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notificaciones-admin.component.css',
 })
 export class NotificacionesAdminComponent implements OnInit {

@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -14,6 +22,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   selector: 'app-clientes-list',
   standalone: true,
   imports: [FormsModule, RouterLink, EmptyStateComponent, ErrorAlertComponent, LoadingComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './clientes-list.component.html',
 })
 export class ClientesListComponent implements OnInit {

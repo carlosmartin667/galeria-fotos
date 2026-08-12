@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject } from '@angular/core';
+import { Component, DestroyRef, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -23,7 +23,8 @@ interface AdminNavGroup {
   standalone: true,
   imports: [RouterLink, RouterOutlet, NotificationBellComponent],
   templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './admin-layout.component.css',
 })
 export class AdminLayoutComponent {
   readonly session = inject(SessionService);
@@ -39,8 +40,8 @@ export class AdminLayoutComponent {
       label: 'Principal',
       items: [
         { label: 'Dashboard Admin', path: '/admin/dashboard', icon: 'bi-speedometer2' },
-        { label: 'Operaciones', path: '/admin/operaciones', icon: 'bi-kanban' }
-      ]
+        { label: 'Operaciones', path: '/admin/operaciones', icon: 'bi-kanban' },
+      ],
     },
     {
       label: 'Ventas',
@@ -50,8 +51,8 @@ export class AdminLayoutComponent {
         { label: 'Cupones', path: '/admin/cupones', icon: 'bi-ticket-perforated' },
         { label: 'Promociones', path: '/admin/promociones', icon: 'bi-tags' },
         { label: 'Testimonios', path: '/admin/testimonios', icon: 'bi-chat-quote' },
-        { label: 'Carritos abandonados', path: '/admin/carritos-abandonados', icon: 'bi-cart-x' }
-      ]
+        { label: 'Carritos abandonados', path: '/admin/carritos-abandonados', icon: 'bi-cart-x' },
+      ],
     },
     {
       label: 'Gestión',
@@ -64,8 +65,8 @@ export class AdminLayoutComponent {
         { label: 'Clientes', path: '/admin/clientes', icon: 'bi-people' },
         { label: 'Sesiones privadas', path: '/admin/sesiones-privadas', icon: 'bi-lock' },
         { label: 'Agenda', path: '/admin/agenda', icon: 'bi-calendar-week' },
-        { label: 'Presupuestos', path: '/admin/presupuestos', icon: 'bi-file-earmark-text' }
-      ]
+        { label: 'Presupuestos', path: '/admin/presupuestos', icon: 'bi-file-earmark-text' },
+      ],
     },
     {
       label: 'Sitio público',
@@ -73,35 +74,42 @@ export class AdminLayoutComponent {
         { label: 'Portfolio', path: '/admin/portfolio', icon: 'bi-grid' },
         { label: 'Servicios', path: '/admin/servicios', icon: 'bi-camera' },
         { label: 'FAQ', path: '/admin/faq', icon: 'bi-question-circle' },
-        { label: 'Perfil fotógrafa', path: '/admin/mi-perfil', icon: 'bi-person-badge' }
-      ]
+        { label: 'Perfil fotógrafa', path: '/admin/mi-perfil', icon: 'bi-person-badge' },
+      ],
     },
     {
       label: 'Sistema',
       items: [
         { label: 'Notificaciones', path: '/admin/notificaciones', icon: 'bi-bell' },
-        { label: 'Plantillas', path: '/admin/notificaciones/plantillas', icon: 'bi-envelope-paper' },
+        {
+          label: 'Plantillas',
+          path: '/admin/notificaciones/plantillas',
+          icon: 'bi-envelope-paper',
+        },
         { label: 'Bitácora', path: '/admin/bitacora', icon: 'bi-shield-check' },
-        { label: 'DevTools', path: '/admin/dev-tools', icon: 'bi-tools' }
-      ]
-    }
+        { label: 'DevTools', path: '/admin/dev-tools', icon: 'bi-tools' },
+      ],
+    },
   ];
 
   constructor() {
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => this.closeSidebar());
   }
 
   currentTitle(): string {
     const url = this.router.url.split('?')[0];
-    return this.navGroups
-      .flatMap((group) => group.items)
-      .sort((a, b) => b.path.length - a.path.length)
-      .find((item) => url === item.path || url.startsWith(`${item.path}/`))?.label ?? 'Administracion';
+    return (
+      this.navGroups
+        .flatMap((group) => group.items)
+        .sort((a, b) => b.path.length - a.path.length)
+        .find((item) => url === item.path || url.startsWith(`${item.path}/`))?.label ??
+      'Administracion'
+    );
   }
 
   isActive(path: string): boolean {

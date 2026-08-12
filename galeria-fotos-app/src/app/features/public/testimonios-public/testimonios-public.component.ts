@@ -1,5 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
@@ -23,6 +29,7 @@ type TestimonioControl = 'nombreCliente' | 'emailCliente' | 'texto' | 'calificac
     LoadingComponent,
   ],
   templateUrl: './testimonios-public.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './testimonios-public.component.css',
 })
 export class TestimoniosPublicComponent implements OnInit {

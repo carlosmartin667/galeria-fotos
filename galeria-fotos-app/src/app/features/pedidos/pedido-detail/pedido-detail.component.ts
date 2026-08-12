@@ -1,5 +1,11 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
@@ -26,6 +32,7 @@ import { NotasInternasComponent } from '../../../shared/components/notas-interna
     LoadingComponent,
     NotasInternasComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './pedido-detail.component.html',
 })
 export class PedidoDetailComponent implements OnInit {

@@ -1,5 +1,11 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -26,6 +32,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
     LoadingComponent,
   ],
   templateUrl: './carrito.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './carrito.component.css',
 })
 export class CarritoComponent implements OnInit {

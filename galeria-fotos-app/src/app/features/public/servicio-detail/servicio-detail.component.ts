@@ -1,5 +1,11 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 
@@ -16,6 +22,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   standalone: true,
   imports: [CurrencyPipe, RouterLink, ErrorAlertComponent, LoadingComponent],
   templateUrl: './servicio-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './servicio-detail.component.css',
 })
 export class ServicioDetailComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,6 +16,7 @@ import { ErrorAlertComponent } from '../../../shared/components/error-alert/erro
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent],
   templateUrl: './register.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../login/login.component.css',
 })
 export class RegisterComponent {

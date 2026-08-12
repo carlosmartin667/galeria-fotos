@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -28,6 +34,7 @@ type FotoFormValue = {
   selector: 'app-foto-form',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, ErrorAlertComponent, LoadingComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './foto-form.component.html',
 })
 export class FotoFormComponent implements OnInit {

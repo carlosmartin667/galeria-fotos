@@ -1,5 +1,11 @@
 import { CurrencyPipe, PercentPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -29,6 +35,7 @@ interface SalesMetric {
     LoadingComponent,
   ],
   templateUrl: './ventas-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './ventas-admin.component.css',
 })
 export class VentasAdminComponent implements OnInit {

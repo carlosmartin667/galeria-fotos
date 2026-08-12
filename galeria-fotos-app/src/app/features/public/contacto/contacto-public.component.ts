@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -19,6 +25,7 @@ import { AgendaDisponibilidadPublicaComponent } from '../disponibilidad/agenda-d
     AgendaDisponibilidadPublicaComponent,
   ],
   templateUrl: './contacto-public.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contacto-public.component.css',
 })
 export class ContactoPublicComponent implements OnInit {

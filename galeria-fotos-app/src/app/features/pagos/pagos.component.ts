@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PreferenciaPagoResponse } from '../../core/models/pago.models';
@@ -9,6 +9,7 @@ import { ErrorAlertComponent } from '../../shared/components/error-alert/error-a
   selector: 'app-pagos',
   standalone: true,
   imports: [ReactiveFormsModule, ErrorAlertComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './pagos.component.html',
 })
 export class PagosComponent {

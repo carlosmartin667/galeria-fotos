@@ -1,5 +1,11 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -23,6 +29,7 @@ import { NotasInternasComponent } from '../../../shared/components/notas-interna
     NotasInternasComponent,
   ],
   templateUrl: './presupuesto-detail-admin.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presupuesto-detail-admin.component.css',
 })
 export class PresupuestoDetailAdminComponent implements OnInit {
