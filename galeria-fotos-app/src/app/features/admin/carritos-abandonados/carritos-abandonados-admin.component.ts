@@ -1,5 +1,11 @@
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { finalize, forkJoin } from 'rxjs';
 
 import {
