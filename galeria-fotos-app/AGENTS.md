@@ -179,7 +179,7 @@ Antes de modificar archivos, leer y respetar estas reglas.
 
 ## Fase 7A calidad tecnica frontend, CI, tests y bitacora
 
-- El frontend usa Angular 21 con standalone components, lazy loading y SSR configurado.
+- El frontend usa Angular 22.1 con standalone components, lazy loading y SSR configurado.
 - Mantener documentacion frontend en `docs`: arquitectura, seguridad, testing y demo.
 - Mantener CI frontend en `.github/workflows/frontend-ci.yml` usando `npm ci`, build y tests sin secretos ni deploy.
 - La Bitacora Admin vive en `/admin/bitacora`, es solo `Admin` y consume `GET /Bitacora`, `GET /Bitacora/{id}` y `GET /Bitacora/resumen`.
@@ -238,6 +238,16 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Alinear `@types/node` con la linea Node usada por CI y desarrollo (`24.x`), no con un major de tipos superior al runtime validado.
 - Actualizar dependencias no-Angular a versiones estables solo tras revisar engines, peer dependencies, build, tests, SSR y `npm audit`.
 - No usar versiones `next`, `beta`, `rc`, `alpha` ni prerelease; documentar cualquier major estable postergado por compatibilidad o riesgo.
+
+## Angular 22E modernizacion controlada
+
+- Mantener el control flow moderno ya migrado (`@if`, `@for` y `@switch`); no reintroducir `*ngIf`, `*ngFor` ni `ngSwitch` en templates nuevos o modificados.
+- Preferir `takeUntilDestroyed` para streams de larga vida en componentes tocados. Las suscripciones HTTP finitas no requieren una migracion mecanica ni masiva.
+- Mantener `ChangeDetectionStrategy.Eager` en pantallas con formularios, hidratacion o integracion de DOM externo CaterServ; aplicar `OnPush` solo con una verificacion funcional puntual.
+- Tipar integraciones de JavaScript externo con interfaces TypeScript locales en lugar de `any`, sin reemplazar ni eliminar CaterServ, jQuery o sus assets.
+- No activar zoneless, Signal Forms, `httpResource` ni una migracion masiva a signals durante esta fase.
+- Todo acceso a `window`, `document` o APIs browser debe seguir protegido por comprobaciones SSR existentes.
+- Antes de cerrar un bloque de modernizacion, ejecutar build, tests, SSR y `npm audit`; documentar tanto los cambios realizados como los patrones que se preservan por riesgo funcional.
 
 ## DevTools diagnostico frontend
 

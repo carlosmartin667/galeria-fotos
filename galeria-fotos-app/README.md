@@ -10,6 +10,7 @@ This project uses Angular 22.1.x with Angular CLI 22.1.x, TypeScript 6.0 and SSR
 - [Demo checklist](docs/FRONTEND_DEMO.md)
 - [Angular 22C post-upgrade notes](docs/ANGULAR_22C.md)
 - [Angular 22D dependency review](docs/ANGULAR_22D.md)
+- [Angular 22E controlled modernization](docs/ANGULAR_22E.md)
 
 ## Development server
 
