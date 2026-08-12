@@ -11,6 +11,46 @@ const JQUERY_TEMPLATE_SCRIPTS = [
   '/assets/caterserv/lib/owlcarousel/owl.carousel.min.js'
 ];
 
+interface CounterUpOptions {
+  delay: number;
+  time: number;
+}
+
+interface OwlCarouselOptions {
+  loop: boolean;
+  dots: boolean;
+  rtl?: boolean;
+  margin: number;
+  autoplay: boolean;
+  slideTransition: string;
+  autoplayTimeout: number;
+  autoplaySpeed: number;
+  autoplayHoverPause: boolean;
+  responsive: Record<number, { items: number }>;
+}
+
+interface JQueryCollection {
+  not(selector: string): JQueryCollection;
+  attr(name: string, value: string): JQueryCollection;
+  counterUp(options: CounterUpOptions): JQueryCollection;
+  owlCarousel(options: OwlCarouselOptions): JQueryCollection;
+}
+
+interface JQueryStatic {
+  (selector: string): JQueryCollection;
+  fn?: {
+    counterUp?: unknown;
+    owlCarousel?: unknown;
+  };
+}
+
+interface TemplateWindow extends Window {
+  WOW?: new () => { init: () => void };
+  bootstrap?: unknown;
+  jQuery?: JQueryStatic;
+  lightbox?: { option: (options: Record<string, unknown>) => void };
+}
+
 @Injectable({ providedIn: 'root' })
 export class TemplateScriptsService {
   private readonly document = inject(DOCUMENT);
@@ -58,7 +98,7 @@ export class TemplateScriptsService {
   }
 
   private setupBootstrapFallbacks(): void {
-    const win = window as Window & { bootstrap?: unknown };
+    const win = window as TemplateWindow;
 
     if (win.bootstrap) {
       return;
@@ -229,7 +269,7 @@ export class TemplateScriptsService {
       return this.scriptsPromise;
     }
 
-    const win = window as Window & { jQuery?: unknown };
+    const win = window as TemplateWindow;
     const scripts = win.jQuery ? [WOW_SCRIPT, ...JQUERY_TEMPLATE_SCRIPTS] : [WOW_SCRIPT];
 
     this.scriptsPromise = scripts.reduce(
@@ -257,11 +297,7 @@ export class TemplateScriptsService {
   }
 
   private initializePlugins(): void {
-    const win = window as Window & {
-      WOW?: new () => { init: () => void };
-      jQuery?: any;
-      lightbox?: { option: (options: Record<string, unknown>) => void };
-    };
+    const win = window as TemplateWindow;
     const $ = win.jQuery;
 
     if (win.WOW) {
