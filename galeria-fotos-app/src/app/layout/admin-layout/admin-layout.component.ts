@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -32,7 +32,7 @@ export class AdminLayoutComponent {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  sidebarOpen = false;
+  readonly sidebarOpen = signal(false);
   readonly displayName = computed(() => this.session.nombre || this.session.email || 'Admin');
 
   readonly navGroups: AdminNavGroup[] = [
@@ -129,11 +129,11 @@ export class AdminLayoutComponent {
   }
 
   toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
+    this.sidebarOpen.update((isOpen) => !isOpen);
   }
 
   closeSidebar(): void {
-    this.sidebarOpen = false;
+    this.sidebarOpen.set(false);
   }
 
   logout(): void {

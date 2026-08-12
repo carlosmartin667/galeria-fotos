@@ -8,9 +8,11 @@
     @if (message) {
       <div class="alert alert-warning">{{ message }}</div>
     }
-    <app-error-alert [message]="error"></app-error-alert>
+    <div aria-live="polite">
+      <app-error-alert [message]="error"></app-error-alert>
+    </div>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate [attr.aria-busy]="loading">
       <div class="mb-3">
         <label class="form-label" for="loginEmail">Email</label>
         <input
@@ -47,7 +49,7 @@
 
       <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3" [disabled]="loading">
         @if (loading) {
-          <span class="spinner-border spinner-border-sm me-2"></span>
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
         }
         Iniciar sesion
       </button>

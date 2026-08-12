@@ -221,6 +221,24 @@ Antes de modificar archivos, leer y respetar estas reglas.
 - Migrar a `@if`/`@for` solo de forma gradual y en templates simples o tocados; no hacer migraciones masivas.
 - Preservar CaterServ, modo claro/oscuro, responsive, roles actuales, menu dinamico y vistas existentes.
 
+## Angular 22C calidad post-upgrade
+
+- Mantener Angular 22.1.x, TypeScript 6 y Node 24.15.x sin activar zoneless, Signal Forms ni reactividad experimental.
+- Usar `@defer` solo para secciones secundarias fuera del first paint, siempre con `@placeholder`; agregar `@loading` y `@error` cuando correspondan.
+- Usar `signal` y `computed` solo para estado local visual simple; no migrar autenticacion, services HTTP, formularios criticos ni flujos de negocio completos.
+- Preferir `takeUntilDestroyed` en streams de larga vida o componentes tocados cuando sea seguro; no refactorizar masivamente suscripciones HTTP finitas.
+- Mantener `ChangeDetectionStrategy.Eager` cuando haya formularios, hidratacion, scripts CaterServ o DOM externo; usar `OnPush` solo en componentes puros ya verificados.
+- Preservar `withEventReplay()` y `withNoIncrementalHydration()`; toda API de browser debe seguir protegida para SSR.
+- Antes de introducir `httpResource` o Signal Forms, validar compatibilidad con `ApiHttpService`, `ApiErrorService`, SSR y tests; un piloto no debe reemplazar los patrones existentes globalmente.
+
+## Angular 22D dependencias estables
+
+- Mantener las dependencias Angular alineadas con el ultimo estable de la linea 22 compatible; usar `ng update` para migraciones Angular cuando corresponda y nunca `--force`.
+- TypeScript debe permanecer dentro del rango oficial de Angular 22 (`>=6.0.0 <6.1.0`); no actualizar a TypeScript 7 mientras Angular 22 no lo soporte.
+- Alinear `@types/node` con la linea Node usada por CI y desarrollo (`24.x`), no con un major de tipos superior al runtime validado.
+- Actualizar dependencias no-Angular a versiones estables solo tras revisar engines, peer dependencies, build, tests, SSR y `npm audit`.
+- No usar versiones `next`, `beta`, `rc`, `alpha` ni prerelease; documentar cualquier major estable postergado por compatibilidad o riesgo.
+
 ## DevTools diagnostico frontend
 
 - La pantalla `/admin/dev-tools` es solo `Admin` y consume el modulo backend `DevTools`.

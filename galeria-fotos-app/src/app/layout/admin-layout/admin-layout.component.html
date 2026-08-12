@@ -1,7 +1,7 @@
-<div class="admin-layout" [class.admin-sidebar-open]="sidebarOpen">
+<div class="admin-layout" [class.admin-sidebar-open]="sidebarOpen()">
   <aside
     class="navbar navbar-vertical navbar-expand-lg admin-sidebar"
-    [class.is-open]="sidebarOpen"
+    [class.is-open]="sidebarOpen()"
     aria-label="Menu administrativo"
   >
     <div class="container-fluid">
@@ -9,7 +9,7 @@
         type="button"
         class="navbar-toggler admin-sidebar-close"
         aria-label="Cerrar menu administrativo"
-        [attr.aria-expanded]="sidebarOpen"
+        [attr.aria-expanded]="sidebarOpen()"
         (click)="closeSidebar()"
       >
         <span class="bi bi-x-lg" aria-hidden="true"></span>
@@ -46,7 +46,7 @@
     </div>
   </aside>
 
-  @if (sidebarOpen) {
+  @if (sidebarOpen()) {
     <button
       type="button"
       class="admin-sidebar-backdrop admin-mobile-backdrop"
@@ -62,7 +62,7 @@
           type="button"
           class="btn admin-icon-btn d-lg-none"
           aria-label="Abrir menu administrativo"
-          [attr.aria-expanded]="sidebarOpen"
+          [attr.aria-expanded]="sidebarOpen()"
           (click)="toggleSidebar()"
         >
           <i class="bi bi-list" aria-hidden="true"></i>

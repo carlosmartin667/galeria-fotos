@@ -186,7 +186,17 @@
       </div>
 
       <aside>
-        <app-agenda-disponibilidad-publica [compact]="true"></app-agenda-disponibilidad-publica>
+        @defer (on viewport) {
+          <app-agenda-disponibilidad-publica [compact]="true"></app-agenda-disponibilidad-publica>
+        } @placeholder {
+          <div class="app-panel" role="status" aria-live="polite">
+            <div class="app-panel-body">La disponibilidad se cargara cuando este cerca.</div>
+          </div>
+        } @loading (minimum 200ms) {
+          <app-loading text="Cargando disponibilidad..."></app-loading>
+        } @error {
+          <app-empty-state text="No se pudo cargar la disponibilidad."></app-empty-state>
+        }
       </aside>
     </div>
   </div>

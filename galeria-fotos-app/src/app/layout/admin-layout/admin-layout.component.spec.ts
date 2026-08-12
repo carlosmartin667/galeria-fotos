@@ -115,18 +115,18 @@ describe('AdminLayoutComponent', () => {
       '[aria-label="Abrir menu administrativo"]'
     ) as HTMLButtonElement;
 
-    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+    expect(fixture.componentInstance.sidebarOpen()).toBe(false);
     button.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidebarOpen).toBe(true);
+    expect(fixture.componentInstance.sidebarOpen()).toBe(true);
     expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar-open')).toBeTruthy();
     expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar.is-open')).toBeTruthy();
 
     button.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+    expect(fixture.componentInstance.sidebarOpen()).toBe(false);
     expect((fixture.nativeElement as HTMLElement).querySelector('.admin-sidebar.is-open')).toBeFalsy();
   });
 
@@ -141,7 +141,7 @@ describe('AdminLayoutComponent', () => {
     backdrop.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+    expect(fixture.componentInstance.sidebarOpen()).toBe(false);
   });
 
   it('closes the mobile sidebar when a navigation link is clicked', () => {
@@ -154,7 +154,7 @@ describe('AdminLayoutComponent', () => {
     link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 1 }));
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.sidebarOpen).toBe(false);
+    expect(fixture.componentInstance.sidebarOpen()).toBe(false);
   });
 
   function pageText(): string {

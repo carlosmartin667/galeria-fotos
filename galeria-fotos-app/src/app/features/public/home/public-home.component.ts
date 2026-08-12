@@ -2,10 +2,12 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   OnInit,
   inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
@@ -45,6 +47,7 @@ export class PublicHomeComponent implements OnInit {
   private readonly testimoniosService = inject(TestimoniosService);
   private readonly seo = inject(SeoService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   home: SitioHome | null = null;
   perfil: PerfilFotografa | null = null;
@@ -72,6 +75,7 @@ export class PublicHomeComponent implements OnInit {
       testimonios: this.testimoniosService.getDestacados().pipe(catchError(() => of([]))),
     })
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.loading = false;
           this.cdr.markForCheck();

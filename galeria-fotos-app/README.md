@@ -1,6 +1,6 @@
 # GaleriaFotosApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.13.
+This project uses Angular 22.1.x with Angular CLI 22.1.x, TypeScript 6.0 and SSR.
 
 ## Frontend documentation
 
@@ -8,6 +8,8 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - [Security](docs/FRONTEND_SECURITY.md)
 - [Testing](docs/FRONTEND_TESTING.md)
 - [Demo checklist](docs/FRONTEND_DEMO.md)
+- [Angular 22C post-upgrade notes](docs/ANGULAR_22C.md)
+- [Angular 22D dependency review](docs/ANGULAR_22D.md)
 
 ## Development server
 

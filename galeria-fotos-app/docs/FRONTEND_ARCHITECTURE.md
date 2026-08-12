@@ -2,12 +2,12 @@
 
 ## Stack
 
-- Angular 21 con standalone components.
-- Angular CLI local `21.2.13`; paquetes Angular runtime instalados `21.2.15`.
-- TypeScript 5.9, RxJS 7.8 y SSR con `@angular/ssr`.
+- Angular 22.1 con standalone components.
+- Angular CLI/build/SSR 22.1.3 y paquetes runtime 22.1.1.
+- TypeScript 6.0, RxJS 7.8 y SSR con `@angular/ssr`.
 - Template visual CaterServ preservado desde `public/assets/caterserv`.
 
-El proyecto ya esta en Angular 21. No se fuerza una alineacion patch de CLI/build/SSR sin validar disponibilidad de paquetes, porque el objetivo es no romper el build ni el lockfile.
+El proyecto usa cambios modernos de Angular de forma selectiva: `@defer` solo para contenido secundario, signals para estado local visual y `takeUntilDestroyed` para streams que lo justifiquen. No se usa zoneless, Signal Forms ni una migracion masiva de change detection.
 
 ## Estructura
 
